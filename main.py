@@ -1,5 +1,7 @@
 import os
 import Controller.SpotifyAPI as SpotifyAPI
+import Model.Artist as Artist
+import Model.Track as Track
 import utils
 
 # --- Load environment variables ---
@@ -19,5 +21,15 @@ spotipy_client = api.get_spotify_client()
 
 # --- Tests ---
 
-user = spotipy_client.current_user()
-print(user)
+artistLink = 'https://open.spotify.com/artist/7LTiBdByoaUd329wCpmMcM?si=5ad5ee3bae52486a'
+
+# Get artist from link
+artist = spotipy_client.artist(artistLink)
+maisondes = Artist.Artist(artist)
+
+tracks = spotipy_client.artist_top_tracks(maisondes.id)
+# Unpack the dictionary into a list of tracks
+tracks = [track for track in tracks['tracks']]
+
+for key, value in tracks[0].items():
+		print(f"{key}: {value}")
