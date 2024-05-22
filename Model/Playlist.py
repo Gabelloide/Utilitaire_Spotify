@@ -1,5 +1,5 @@
 from typing import Dict, List
-import Artist, Track, Album, User
+from Model import Artist, Track, Album, User
 
 class Playlist:
 

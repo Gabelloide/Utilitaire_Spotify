@@ -1,5 +1,5 @@
 from typing import List, Dict
-import Artist, Album
+from Model import Artist, Album
 
 class Track:
 	def __init__(self, track_dict: Dict):

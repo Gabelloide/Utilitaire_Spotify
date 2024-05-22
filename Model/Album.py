@@ -1,4 +1,4 @@
-import Artist, Track
+from Model import Artist, Track
 
 class Album:
 
