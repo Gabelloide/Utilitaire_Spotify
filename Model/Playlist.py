@@ -1,4 +1,5 @@
 from typing import Dict, List
+import spotipy
 from Model import Artist, Track, Album, User
 
 class Playlist:
@@ -6,13 +7,13 @@ class Playlist:
 	def __init__(self, playlistDict) -> None:
 		self.collaborative: bool = playlistDict.get('collaborative')
 		self.description: str = playlistDict.get('description')
-		self.external_urls: dict = playlistDict.get('external_urls')
-		self.followers: dict = playlistDict.get('followers')
+		self.external_urls: dict = playlistDict.get('external_urls', {})
+		self.followers: dict = playlistDict.get('followers', {})
 		self.href: str = playlistDict.get('href')
 		self.id: str = playlistDict.get('id')
 		self.images: List[Dict[str, str]] = playlistDict.get('images', [])
 		self.name: str = playlistDict.get('name')
-		self.owner: User.User = None #TODO self.owner, a User object
+		self.owner: User.User = User.User(playlistDict.get('owner'))
 		self.public: bool = playlistDict.get('public')
 		# self.snapshot_id: str = playlistDict.get('snapshot_id') # Relevant ?
 		self.uri: str = playlistDict.get('uri')
