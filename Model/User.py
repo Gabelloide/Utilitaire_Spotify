@@ -56,9 +56,10 @@ class User:
     albumsScores = {}
     idAlbums = {}
     for track in topTracks:
-      albumsScores[track.album.id] = albumsScores.get(track.album.id, 0) + 1
-      idAlbums[track.album.id] = track.album
-    
+      if track.album.album_type != 'SINGLE':
+        albumsScores[track.album.id] = albumsScores.get(track.album.id, 0) + 1
+        idAlbums[track.album.id] = track.album
+
     # Sorting the dictionary by values
     sortedAlbumsIDs = [k for k, v in sorted(albumsScores.items(), key=lambda item: item[1], reverse=True)]
     sortedAlbums = [idAlbums[albumID] for albumID in sortedAlbumsIDs]
