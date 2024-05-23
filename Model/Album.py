@@ -28,3 +28,10 @@ class Album:
 
   def getTracks(self):
     return self.tracks
+  
+  def getBigCover(self):
+    imageURL = None
+    for image in self.images:
+      if image['height'] == 300:
+        imageURL = image['url']
+    return imageURL

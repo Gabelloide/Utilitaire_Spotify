@@ -1,5 +1,5 @@
 import Controller.SpotifyAPI as SpotifyAPI
-from Model import Artist, Track
+from Model import Artist, Track, Album
 from typing import List
 
 class User:
@@ -43,7 +43,7 @@ class User:
     return [Track.Track(track) for track in items[:limit]] # Limiting the number of tracks to {limit}
 
 
-  def getBigProfilePicture(self):
+  def getBigProfilePicture(self) -> str:
     imageURL = None
     for image in self.images:
       if image['height'] == 300:
@@ -51,8 +51,8 @@ class User:
     return imageURL
   
 
-  def getTopAlbums(self):
-    topTracks = self.getTopTracks(SpotifyAPI.get_spotify_client(), limit=150) # Limit will increase accuracy of score checking
+  def getTopAlbums(self, client) -> List[Album.Album]:
+    topTracks = self.getTopTracks(client, limit=150) # Limit will increase accuracy of score checking
     albumsScores = {}
     idAlbums = {}
     for track in topTracks:

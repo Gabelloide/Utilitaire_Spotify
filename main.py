@@ -107,7 +107,7 @@ spotipy_client = SpotifyAPI.get_spotify_client()
 
 # --- GUI ---
 
-# app = QApplication([])
-# window = MainWindow.MainWindow()
-# window.show()
-# app.exec()
+app = QApplication([])
+window = MainWindow.MainWindow()
+window.show()
+app.exec()

@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel
 from PyQt6 import QtCore
-from PyQt6.QtGui import QFontDatabase
+from PyQt6.QtGui import QFontDatabase, QFont
 
 from Controller import ControllerLogin, MainWindow
 
@@ -23,35 +23,19 @@ class LoginPage(QWidget):
     
     font_families = QFontDatabase.applicationFontFamilies(font_id)
     custom_font = font_families[0]
+    font = QFont(custom_font, 20)
 
-    css = f"""
-    QPushButton {{
-        font-family: {custom_font};
-        font-size: 20px;
-        background-color: #1DB954;
-        border: none;
-        border-radius: 30px;
-        padding: 20px 20px;
-        color: black;
-        min-width: 300px;
-
-    }}
-
-    QPushButton:hover {{
-        font-weight: bold;
-    }}
-    
-    QLabel {{
-        font-family: {custom_font};
-        font-size: 40px;
-    }}
-    """
+    # Read CSS
+    with open("Assets/style.css", "r") as file:
+      css = file.read()
     
     self.labelTitle = QLabel("Bienvenue sur l'Utilitaire Spotify !")
+    self.labelTitle.setFont(font)
     self.labelTitle.setStyleSheet(css)  # Set the font size to 40px
     layout.addWidget(self.labelTitle, 0, 0, 1, 1, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)  # Add the label to the layout
 
     self.buttonLogin = QPushButton("Se connecter à Spotify")
+    self.buttonLogin.setFont(font)
     self.buttonLogin.setStyleSheet(css)  # Set button style
     layout.addWidget(self.buttonLogin, 1, 0, 1, 1, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
 
