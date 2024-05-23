@@ -2,12 +2,16 @@ from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel
 from PyQt6 import QtCore
 from PyQt6.QtGui import QFontDatabase
 
-class LoginPage(QWidget):
-  def __init__(self):
-    super().__init__()
+from Controller import ControllerLogin, MainWindow
 
-    self.setWindowTitle("Utilitaire Spotify")
-    self.resize(1280, 720)  # Set the window size
+class LoginPage(QWidget):
+  def __init__(self, parentView):
+    super().__init__()
+    
+    self.parentView: MainWindow.MainWindow = parentView
+    self.loggedUser = None # The user that is currently logged in (filled by ControllerLogin)
+    self.controller = None
+
 
     layout = QGridLayout()
     
@@ -24,14 +28,17 @@ class LoginPage(QWidget):
     QPushButton {{
         font-family: {custom_font};
         font-size: 20px;
-        background-color: green;
+        background-color: #1DB954;
         border: none;
-        border-radius: 40px;
-        padding: 10px 20px;
+        border-radius: 30px;
+        padding: 20px 20px;
+        color: black;
+        min-width: 300px;
+
     }}
 
     QPushButton:hover {{
-        background-color: darkgreen;
+        font-weight: bold;
     }}
     
     QLabel {{
@@ -41,7 +48,7 @@ class LoginPage(QWidget):
     """
     
     self.labelTitle = QLabel("Bienvenue sur l'Utilitaire Spotify !")
-    self.labelTitle.setStyleSheet("font-size: 40px;")  # Set the font size to 40px
+    self.labelTitle.setStyleSheet(css)  # Set the font size to 40px
     layout.addWidget(self.labelTitle, 0, 0, 1, 1, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)  # Add the label to the layout
 
     self.buttonLogin = QPushButton("Se connecter à Spotify")
@@ -52,3 +59,4 @@ class LoginPage(QWidget):
     layout.setColumnStretch(0, 1)  # Set the first column to take 100% of the horizontal space
 
     self.setLayout(layout)
+

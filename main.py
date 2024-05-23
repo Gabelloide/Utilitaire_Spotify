@@ -5,7 +5,7 @@ import utils
 import Controller.SpotifyAPI as SpotifyAPI
 from Model import Artist, Track, Album, Playlist, User
 from Controller import ControllerLogin
-from View import LoginPage
+from Controller import MainWindow
 
 from PyQt6.QtWidgets import QApplication
 
@@ -102,13 +102,12 @@ spotipy_client = SpotifyAPI.get_spotify_client()
 # topAlbumsNames = [album.name for album in user.getTopAlbums()]
 # pprint(topAlbumsNames)
 
+
+# track = Track.Track(spotipy_client.current_user_recently_played()['items'][0]['track'])
+
 # --- GUI ---
 
 # app = QApplication([])
-
-# window = LoginPage.LoginPage()
-# controller = ControllerLogin.ControllerLogin(window)
+# window = MainWindow.MainWindow()
 # window.show()
-
 # app.exec()
-
