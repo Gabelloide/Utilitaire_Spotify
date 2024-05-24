@@ -1,10 +1,12 @@
-from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel, QHBoxLayout
+from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel, QHBoxLayout, QVBoxLayout
 from PyQt6 import QtCore, uic
 from PyQt6.QtGui import QFontDatabase, QFont, QPixmap
-from PyQt6.QtNetwork import QNetworkRequest, QNetworkAccessManager
-from PyQt6.QtCore import QUrl
+from PyQt6.QtNetwork import QNetworkAccessManager
+
+# -------
 from Model import User
 from Controller import SpotifyAPI
+from View.Components.ImageLabel import ImageLabel
 
 class ProfilePage(QWidget):
   """This class is responsible for displaying the user's profile page.
@@ -14,17 +16,20 @@ class ProfilePage(QWidget):
   def __init__(self, user: User.User, parentView):
     super().__init__()
     
+    # Attributes
     self.parentView = parentView
-    uic.loadUi("View/ProfilePage.ui", self)
+    self.user = user    
+    # Providing a QNetworkAccessManager to download images
+    self.manager = QNetworkAccessManager(self)
     
+    # Load the UI elements from the .ui file
+    uic.loadUi("View/ProfilePage.ui", self)
+
     # Add the custom font to the QFontDatabase
     font_id = QFontDatabase.addApplicationFont("Assets/HelveticaNeueMedium.otf")
     if font_id == -1:
       print("Failed to load the custom font")
       return
-    
-    font_families = QFontDatabase.applicationFontFamilies(font_id)
-    custom_font = font_families[0]
     
     # Gather UI elements from the .ui file
     self.profilePicture = self.findChild(QLabel, "profilePicture")
@@ -41,6 +46,8 @@ class ProfilePage(QWidget):
       css = file.read()
     
     # Set the custom font to the UI elements
+    font_families = QFontDatabase.applicationFontFamilies(font_id)
+    custom_font = font_families[0]
     font = QFont(custom_font, 20)
     for element in self.uiElements:
       element.setFont(font)
@@ -52,46 +59,54 @@ class ProfilePage(QWidget):
     self.containerAlbums = self.findChild(QHBoxLayout, "containerAlbums")
     
     client = SpotifyAPI.get_spotify_client()
-    user_top_tracks = user.getTopTracks(client)
-    user_top_artists = user.getTopArtists(client)
-    user_top_albums = user.getTopAlbums(client)[:5]
-    
-    print([track.name for track in user_top_tracks])
-    print([artist.name for artist in user_top_artists])
-    print([album.name for album in user_top_albums])
-    
-    # TODO : replace names by images (album covers, artist pictures, track pictures)
-    for track in user_top_tracks:
-      self.containerTracks.addWidget(QLabel(track.name))
-    for artist in user_top_artists:
-      self.containerArtists.addWidget(QLabel(artist.name))
-    for album in user_top_albums:
-      self.containerAlbums.addWidget(QLabel(album.name))
+    user_top_tracks = self.user.getTopTracks(client)
+    user_top_artists = self.user.getTopArtists(client)
+    user_top_albums = self.user.getTopAlbums(client)
 
+    # The album/artist/track ids are passed to the download manager to get them from cache if they are already downloaded
+    for track in user_top_tracks:
+      label = ImageLabel(track.name, manager=self.manager)
+      label.setMaximumSize(100, 100)
+      label.downloadAndSetImage(track.album.getBigCover(), track.id)
+      self.containerTracks.addWidget(label)
+
+    for artist in user_top_artists:
+      label = ImageLabel(artist.name, manager=self.manager)
+      label.setMaximumSize(100, 100)
+      label.downloadAndSetImage(artist.getBigPicture(), artist.id)
+      self.containerArtists.addWidget(label)
+
+    for album in user_top_albums:
+      label = ImageLabel(album.name, manager=self.manager)
+      label.setMaximumSize(100, 100)
+      label.downloadAndSetImage(album.getBigCover(), album.id)
+      self.containerAlbums.addWidget(label)
+      
+    # Adding "see more..." buttons for each row
+    seeMoreTracks = QPushButton("Voir plus...")
+    seeMoreArtists = QPushButton("Voir plus...")
+    seeMoreAlbums = QPushButton("Voir plus...")
+    
+    for button in [seeMoreTracks, seeMoreArtists, seeMoreAlbums]:
+      button.setMinimumSize(100, 100)
+      button.setMaximumSize(100, 100)
+    
+    self.containerTracks.addWidget(seeMoreTracks)
+    self.containerArtists.addWidget(seeMoreArtists)
+    self.containerAlbums.addWidget(seeMoreAlbums)
+  
 
     # TODO setup placeholder profile picture before the download is finished, or if it fails
     
     # ------ Filling UI elements with data ------
-    self.labelUsername.setText(user.display_name)
+    self.labelUsername.setText(self.user.display_name)
     
-    # Setup profile image in the QLabel
-    self.manager = QNetworkAccessManager(self)
-    self.manager.finished.connect(lambda reply: self.fetchPictureWhenFinished(reply, self.profilePicture)) # Fetch on the right QLabel (profilePicture)
-    self.downloadPicture(user.getBigProfilePicture())
 
 
-  def downloadPicture(self, url):
-    """Using the QNetworkAccessManager to download the profile picture from the URL provided by the Spotify API."""
-    request = QNetworkRequest(QUrl(url))
-    self.manager.get(request)
 
 
-  def fetchPictureWhenFinished(self, reply, component: QLabel):
-    """Triggered when the download of the  picture is finished.
-    Loads the image data into a QPixmap and sets it to the QLabel."""
-    data = reply.readAll()
-    pixmap = QPixmap()
-    pixmap.loadFromData(data)
-    component.setPixmap(pixmap)
-    component.setScaledContents(True)
-    
+
+
+
+
+

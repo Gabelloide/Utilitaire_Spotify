@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel
 from PyQt6 import QtCore
 from PyQt6.QtGui import QFontDatabase, QFont
 
-from Controller import ControllerLogin, MainWindow
+from Controller import MainWindow
 
 class LoginPage(QWidget):
   def __init__(self, parentView):

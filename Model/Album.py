@@ -31,7 +31,9 @@ class Album:
   
   def getBigCover(self):
     imageURL = None
+    max_height = 0
     for image in self.images:
-      if image['height'] == 300:
+      if image['height'] > max_height:
+        max_height = image['height']
         imageURL = image['url']
     return imageURL

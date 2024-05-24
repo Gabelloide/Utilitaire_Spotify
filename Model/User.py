@@ -45,13 +45,15 @@ class User:
 
   def getBigProfilePicture(self) -> str:
     imageURL = None
+    max_height = 0
     for image in self.images:
-      if image['height'] == 300:
+      if image['height'] > max_height:
+        max_height = image['height']
         imageURL = image['url']
     return imageURL
-  
 
-  def getTopAlbums(self, client) -> List[Album.Album]:
+
+  def getTopAlbums(self, client, limit=5) -> List[Album.Album]:
     topTracks = self.getTopTracks(client, limit=150) # Limit will increase accuracy of score checking
     albumsScores = {}
     idAlbums = {}
@@ -62,6 +64,6 @@ class User:
 
     # Sorting the dictionary by values
     sortedAlbumsIDs = [k for k, v in sorted(albumsScores.items(), key=lambda item: item[1], reverse=True)]
-    sortedAlbums = [idAlbums[albumID] for albumID in sortedAlbumsIDs]
+    sortedAlbums = [idAlbums[albumID] for albumID in sortedAlbumsIDs][:limit]
     
     return sortedAlbums

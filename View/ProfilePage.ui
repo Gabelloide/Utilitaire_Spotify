@@ -62,7 +62,7 @@
      <item>
       <widget class="QLabel" name="labelTracks">
        <property name="text">
-        <string>Piste la plus écoutée</string>
+        <string>Pistes les plus écoutées</string>
        </property>
       </widget>
      </item>
@@ -89,7 +89,7 @@
      <item>
       <widget class="QLabel" name="labelArtists">
        <property name="text">
-        <string>Artiste le plus écouté</string>
+        <string>Artistes les plus écoutés</string>
        </property>
       </widget>
      </item>
@@ -116,7 +116,7 @@
      <item>
       <widget class="QLabel" name="labelAlbums">
        <property name="text">
-        <string>Album le plus écouté</string>
+        <string>Albums les plus écoutés</string>
        </property>
       </widget>
      </item>

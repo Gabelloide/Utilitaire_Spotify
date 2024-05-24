@@ -21,3 +21,14 @@ class Artist:
 
   def getTotalFollowers(self):
     return self.followers['total']
+  
+  
+  def getBigPicture(self) -> str:
+    """Returns the URL of the biggest picture available for the artist."""
+    imageURL = None
+    max_height = 0
+    for image in self.images:
+      if image['height'] > max_height:
+        max_height = image['height']
+        imageURL = image['url']
+    return imageURL
