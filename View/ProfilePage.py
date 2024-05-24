@@ -32,15 +32,13 @@ class ProfilePage(QWidget):
       return
     
     # Gather UI elements from the .ui file
-    self.profilePicture = self.findChild(QLabel, "profilePicture")
     self.labelUsername = self.findChild(QLabel, "labelUsername")
     self.labelTracks = self.findChild(QLabel, "labelTracks")
     self.labelArtists = self.findChild(QLabel, "labelArtists")
     self.labelAlbums = self.findChild(QLabel, "labelAlbums")
     self.trendingButton = self.findChild(QPushButton, "trendingButton")
     self.recommendationsButton = self.findChild(QPushButton, "recommendationsButton")
-    
-    self.uiElements = [self.profilePicture, self.labelUsername, self.labelTracks, self.labelArtists, self.labelAlbums, self.trendingButton, self.recommendationsButton]
+    self.uiElements = [self.labelUsername, self.labelTracks, self.labelArtists, self.labelAlbums, self.trendingButton, self.recommendationsButton]
     
     with open("Assets/style.css", "r") as file:
       css = file.read()
@@ -52,6 +50,14 @@ class ProfilePage(QWidget):
     for element in self.uiElements:
       element.setFont(font)
       element.setStyleSheet(css)
+
+    # ImageLabel without text for the profile picture before the username
+    self.profilePicture = ImageLabel("", manager=self.manager)
+    self.profilePicture.setMaximumSize(100, 100)
+    self.profilePicture.downloadAndSetImage(self.user.getBigProfilePicture(), self.user.id)
+    self.layoutProfilePicture = self.findChild(QHBoxLayout, "containerUsername")
+    usernameLabel_index = self.layoutProfilePicture.indexOf(self.labelUsername)
+    self.layoutProfilePicture.insertWidget(usernameLabel_index, self.profilePicture)
       
     # Filling containers
     self.containerTracks = self.findChild(QHBoxLayout, "containerTracks")
@@ -99,7 +105,7 @@ class ProfilePage(QWidget):
     # TODO setup placeholder profile picture before the download is finished, or if it fails
     
     # ------ Filling UI elements with data ------
-    self.labelUsername.setText(self.user.display_name)
+    self.labelUsername.setText(f"Bienvenue, {self.user.display_name} !")
     
 
 

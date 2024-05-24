@@ -13,12 +13,9 @@ class ControllerProfilePage:
 
     self.view.trendingButton.clicked.connect(self.showTrending)
     self.view.recommendationsButton.clicked.connect(self.showRecommendations)
-    
-    
-    self.downloadAndSetPicture(self.view.user.getBigProfilePicture(), self.view.profilePicture, self.view.user.id)
-    
-    
-  
+
+
+
   def showTrending(self):
     pass
 
