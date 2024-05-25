@@ -18,7 +18,7 @@ class ProfilePage(QWidget):
     
     # Attributes
     self.parentView = parentView
-    self.user = user    
+    self.user = user
     # Providing a QNetworkAccessManager to download images
     self.manager = QNetworkAccessManager(self)
     
@@ -96,6 +96,7 @@ class ProfilePage(QWidget):
     for button in [seeMoreTracks, seeMoreArtists, seeMoreAlbums]:
       button.setMinimumSize(100, 100)
       button.setMaximumSize(100, 100)
+      button.setStyleSheet("color: white")
     
     self.containerTracks.addWidget(seeMoreTracks)
     self.containerArtists.addWidget(seeMoreArtists)

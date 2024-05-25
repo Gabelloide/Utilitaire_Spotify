@@ -12,7 +12,6 @@ class LoginPage(QWidget):
     self.loggedUser = None # The user that is currently logged in (filled by ControllerLogin)
     self.controller = None
 
-
     layout = QGridLayout()
     
     # Add the custom font to the QFontDatabase

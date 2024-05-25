@@ -15,6 +15,7 @@ class ImageLabel(QWidget):
     self.layout = QVBoxLayout(self)
     self.image_label = QLabel()
     self.text_label = QLabel(text)
+    self.text_label.setStyleSheet("color: white;")
     self.layout.addWidget(self.image_label)
     self.layout.addWidget(self.text_label)
     self.manager = manager
