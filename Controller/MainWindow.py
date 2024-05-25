@@ -26,8 +26,6 @@ class MainWindow(QMainWindow):
     self.setCentralWidget(self.centralWidget)
     
     
-
-
   def addPage(self, page: QWidget):
     self.stackedWidget.addWidget(page)
     self.pages.append(page)

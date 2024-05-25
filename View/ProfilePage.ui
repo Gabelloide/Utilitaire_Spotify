@@ -69,7 +69,7 @@
      <item>
       <widget class="QLabel" name="labelTracks">
        <property name="text">
-        <string>Pistes les plus écoutées</string>
+        <string>Titres les plus écoutées</string>
        </property>
       </widget>
      </item>

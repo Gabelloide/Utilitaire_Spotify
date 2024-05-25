@@ -14,6 +14,7 @@ def check_cache_folder():
 
 def save_to_cache(filename, data, extension='jpg'):
   """Saves the data to the cache folder."""
+  check_cache_folder()
   with open(f'cache/{filename}.{extension}', 'wb') as file:
     file.write(data)
 
