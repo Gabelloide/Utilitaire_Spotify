@@ -14,6 +14,8 @@ class ControllerLogin:
 
   def logUser(self):
     self.view.buttonLogin.setText("Connexion en cours...")
+    # Repaint the button to refresh the text
+    self.view.buttonLogin.repaint()
     
     client_id, client_secret, redirect_uri, scopes = SpotifyAPI.getClientParameters()
     if SpotifyAPI.get_spotify_client() is None:
@@ -23,8 +25,9 @@ class ControllerLogin:
     user = User(client.current_user())
     self.view.loggedUser = user
     
-    # Getting client user is done after the user logs in
-    self.view.buttonLogin.setText("Connexion réussie !")
+    # Getting client user is done after the user logs in    
+    self.view.buttonLogin.setText("Chargement de votre profil...")
+    self.view.buttonLogin.repaint()
     
     profilePage = ProfilePage(user, self.view.parentView)
     ControllerProfilePage(profilePage) # Controller for the profile page
