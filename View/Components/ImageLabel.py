@@ -1,16 +1,16 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
-from PyQt6.QtGui import QPixmap,  QTextOption, QTextDocument
-from PyQt6.QtNetwork import QNetworkRequest, QNetworkAccessManager
-from PyQt6.QtCore import QUrl
-from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
+import requests
+import threading
+
 import utils
 
 class ImageLabel(QWidget):
   """This class is a custom widget that displays an image and a text label.
-  The image is downloaded from the internet using a URL.
+  The image is a QPixmap.
   """
   
-  def __init__(self, text:str, parent=None, manager:QNetworkAccessManager=None):
+  def __init__(self, text:str, parent=None):
     super().__init__(parent)
     self.layout = QVBoxLayout(self)
     self.image_label = QLabel()
@@ -18,37 +18,44 @@ class ImageLabel(QWidget):
     self.text_label.setStyleSheet("color: white;")
     self.layout.addWidget(self.image_label)
     self.layout.addWidget(self.text_label)
-    self.manager = manager
-
 
 
   def downloadAndSetImage(self, url, filename):
-    """Downloads the image from the internet and sets it to the QLabel by calling setImage().
-    If the image is already in the cache, it is fetched from there. Otherwise, it is downloaded and saved to the cache."""
+    """Downloads the image from the internet and sets it to the QLabel.
+    - Checks for the image existence in the cache.
+    - If the image is not in the cache, it downloads it in a separate thread.
+    """
     if utils.exists_in_cache(filename):
       data = utils.load_from_cache(filename)
-      self.setImageFromCache(data)
-      return
-    
-    request = QNetworkRequest(QUrl(url))
-    reply = self.manager.get(request)
-    reply.finished.connect(lambda: self.setImage(reply, filename))
+      self.setImage(data)
+    else:
+      # Downloading the image in a separate thread
+      threading.Thread(target=self.thread_download, args=(url, filename)).start()
 
 
-  def setImage(self, reply, filename: str):
-    """Sets the image to the QLabel when the download is finished.
-    Is triggered by the QNetworkAccessManager.finished signal."""
-    data = reply.readAll()
-    pixmap = QPixmap()
-    pixmap.loadFromData(data)
-    self.image_label.setPixmap(pixmap)
-    self.image_label.setScaledContents(True)
-    reply.deleteLater()
-    utils.save_to_cache(filename, data)
+  def thread_download(self, url, filename):
+    """Used by a separate thread to download the image from the internet.
+    - Gets the image data from the URL via a GET request.
+    - Saves the image data to the cache.
+    - Sets the image to the QLabel using the data downloaded.
+    """
+    try:
+      response = requests.get(url)
+      response.raise_for_status()
+      data = response.content
+      utils.save_to_cache(filename, data)
+      self.setImage(data)
+
+    except requests.RequestException as e:
+      print(f"Error downloading image: {e}")
+      # Fallback on the image placeholder
+      with open("Assets/icons/cover_placeholder.png", "rb") as file:
+        data = file.read()
+        self.setImage(data)
 
 
-  def setImageFromCache(self, data):
-    """Sets the image to the QLabel from the cache."""
+  def setImage(self, data):
+    """Sets the image to the QLabel."""
     pixmap = QPixmap()
     pixmap.loadFromData(data)
     self.image_label.setPixmap(pixmap)

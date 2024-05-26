@@ -52,7 +52,7 @@ class ProfilePage(QWidget):
       element.setStyleSheet(css)
 
     # ImageLabel without text for the profile picture before the username
-    self.profilePicture = ImageLabel("", manager=self.manager)
+    self.profilePicture = ImageLabel("")
     self.profilePicture.setMaximumSize(100, 100)
     self.profilePicture.downloadAndSetImage(self.user.getBigProfilePicture(), self.user.id)
     self.layoutProfilePicture = self.findChild(QHBoxLayout, "containerUsername")
@@ -71,19 +71,19 @@ class ProfilePage(QWidget):
 
     # The album/artist/track ids are passed to the download manager to get them from cache if they are already downloaded
     for track in user_top_tracks:
-      label = ImageLabel(track.name, manager=self.manager)
+      label = ImageLabel(track.name)
       label.setMaximumSize(100, 100)
       label.downloadAndSetImage(track.album.getBigCover(), track.id)
       self.containerTracks.addWidget(label)
 
     for artist in user_top_artists:
-      label = ImageLabel(artist.name, manager=self.manager)
+      label = ImageLabel(artist.name)
       label.setMaximumSize(100, 100)
       label.downloadAndSetImage(artist.getBigPicture(), artist.id)
       self.containerArtists.addWidget(label)
 
     for album in user_top_albums:
-      label = ImageLabel(album.name, manager=self.manager)
+      label = ImageLabel(album.name)
       label.setMaximumSize(100, 100)
       label.downloadAndSetImage(album.getBigCover(), album.id)
       self.containerAlbums.addWidget(label)
