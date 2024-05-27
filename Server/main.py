@@ -62,8 +62,13 @@ def main():
 
           # Check how many json files are in the zip to process them
           folder_inside_zip = "Spotify Extended Streaming History" # The folder inside the zip file
+          
+          # Raise an error if {folder_inside_zip} doesn't exist in the zip
+          if not os.path.exists(f"{ZIP_DESTINATION}\\{folder_inside_zip}"):
+            raise FileNotFoundError(f"The folder {folder_inside_zip} doesn't exist in the zip file.")
+          
+          # List & load the json files
           json_files = [f for f in os.listdir(f"{ZIP_DESTINATION}\\{folder_inside_zip}") if f.endswith('.json')]
-          # Load the json files
           data = []
           for file in json_files:
             with open(f"{ZIP_DESTINATION}/{folder_inside_zip}/{file}", 'r', encoding='utf-8') as f:
@@ -83,6 +88,7 @@ def main():
               print("The table 'History' doesn't exist in the database, creating it...")
               db.create_history_table()
 
+            print("Attempting to insert the tracks in the database...")
             db.populate_history_table(tracklist)
             print(f"Inserted {len(tracklist)} tracks in the database.")
             
