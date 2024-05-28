@@ -3,9 +3,17 @@ from Model.User import User
 from View.LoginPage import LoginPage
 from View.ProfilePage import ProfilePage
 from View.StatisticsPage import StatisticsPage
+from View.FriendsPage import FriendsPage
+from View.TrendingPage import TrendingPage
+from View.RecommendationPage import RecommendationPage
+from View.SearchPage import SearchPage
 
 from Controller.ControllerProfilePage import ControllerProfilePage
 from Controller.ControllerStatistics import ControllerStatistics
+from Controller.ControllerFriendsPage import ControllerFriendsPage
+from Controller.ControllerTrendingPage import ControllerTrendingPage
+from Controller.ControllerRecommendationPage import ControllerRecommendationPage
+from Controller.ControllerSearchPage import ControllerSearchPage
 from Controller import SpotifyAPI
 
 
@@ -43,3 +51,18 @@ class ControllerLogin:
     ControllerStatistics(user, statsPage)
     self.view.parentView.addPage("StatisticsPage", statsPage)
 
+    friendsPage = FriendsPage(self.view.parentView)
+    ControllerFriendsPage(user, friendsPage)
+    self.view.parentView.addPage("FriendsPage", friendsPage)
+    
+    trendingPage = TrendingPage(self.view.parentView)
+    ControllerTrendingPage(user, trendingPage)
+    self.view.parentView.addPage("TrendingPage", trendingPage)
+    
+    recommendationPage = RecommendationPage(self.view.parentView)
+    ControllerRecommendationPage(user, recommendationPage)
+    self.view.parentView.addPage("RecommendationPage", recommendationPage)
+
+    searchPage = SearchPage(self.view.parentView)
+    ControllerSearchPage(user, searchPage)
+    self.view.parentView.addPage("SearchPage", searchPage)

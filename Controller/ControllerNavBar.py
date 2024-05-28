@@ -9,6 +9,7 @@ class ControllerNavBar:
     self.navBar.btnTrend.clicked.connect(self.showTrendPage)
     self.navBar.btnFriends.clicked.connect(self.showFriendsPage)
     self.navBar.btnStats.clicked.connect(self.showStatsPage)
+    self.navBar.btnReco.clicked.connect(self.showRecoPage)
 
   def showStatsPage(self):
     self.navBar.parentView.showPage("StatisticsPage")
@@ -19,13 +20,20 @@ class ControllerNavBar:
     self.setFocusedIcon(self.navBar.btnProfile)
     
   def showSearchPage(self):
-    pass
+    self.navBar.parentView.showPage("SearchPage")
+    self.setFocusedIcon(self.navBar.btnSearch)
+  
+  def showRecoPage(self):
+    self.navBar.parentView.showPage("RecommendationPage")
+    self.setFocusedIcon(self.navBar.btnReco)
 
   def showTrendPage(self):
-    pass
+    self.navBar.parentView.showPage("TrendingPage")
+    self.setFocusedIcon(self.navBar.btnTrend)
   
   def showFriendsPage(self):
-    pass
+    self.navBar.parentView.showPage("FriendsPage")
+    self.setFocusedIcon(self.navBar.btnFriends)
   
   def setFocusedIcon(self, focusedButton):
     for button in self.navBar.buttons:

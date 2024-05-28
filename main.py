@@ -22,7 +22,7 @@ client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
 redirect_uri = "http://localhost:12345" # Must match this address (registered in the Spotify Developer Dashboard)
 
 # It is possible to accumulate scopes by separating them with a space (temporary solution for test purposes)
-scopes = "user-library-read user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-top-read"
+scopes = "user-library-read user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played user-top-read user-follow-read"
 
 
 SpotifyAPI.setup_client(client_id, client_secret, redirect_uri, scopes)

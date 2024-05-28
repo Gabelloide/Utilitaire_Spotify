@@ -16,6 +16,7 @@ class NavBar(QWidget):
         self.btnTrend = QPushButton()
         self.btnFriends = QPushButton()
         self.btnStats = QPushButton()
+        self.btnReco = QPushButton()
 
         self.buttonStyleSheet = """
           QPushButton {
@@ -39,25 +40,21 @@ class NavBar(QWidget):
           }
         """
         
-        self.setStyleSheet("background-color: #000000;") # ! Fix
-
-        self.buttons = [self.btnProfile, self.btnSearch, self.btnTrend, self.btnFriends, self.btnStats]
-        for button in self.buttons:
-            button.setFixedSize(64, 64)
-            button.setIconSize(QSize(64, 64))
-            button.setStyleSheet(self.buttonStyleSheet)
+        self.setStyleSheet("background-color: #000000;") # ! Fix, color not applied
 
         self.btnProfile.setIcon(QIcon("Assets/icons/profile.png"))
         self.btnSearch.setIcon(QIcon("Assets/icons/search.png"))
         self.btnTrend.setIcon(QIcon("Assets/icons/trend.png"))
         self.btnFriends.setIcon(QIcon("Assets/icons/friends.png"))
         self.btnStats.setIcon(QIcon("Assets/icons/stats.png"))
-
-        layout.addWidget(self.btnProfile)
-        layout.addWidget(self.btnStats)
-        layout.addWidget(self.btnSearch)
-        layout.addWidget(self.btnTrend)
-        layout.addWidget(self.btnFriends)
+        self.btnReco.setIcon(QIcon("Assets/icons/recommendations.png"))
+        
+        self.buttons = [self.btnProfile, self.btnSearch, self.btnTrend, self.btnFriends, self.btnStats, self.btnReco]
+        for button in self.buttons:
+            button.setFixedSize(64, 64)
+            button.setIconSize(QSize(64, 64))
+            button.setStyleSheet(self.buttonStyleSheet)
+            layout.addWidget(button)
 
 
         self.setLayout(layout)
