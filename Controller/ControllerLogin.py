@@ -1,13 +1,18 @@
-from View import LoginPage
-from Controller import SpotifyAPI
 from Model.User import User
+
+from View.LoginPage import LoginPage
 from View.ProfilePage import ProfilePage
+from View.StatisticsPage import StatisticsPage
+
 from Controller.ControllerProfilePage import ControllerProfilePage
+from Controller.ControllerStatistics import ControllerStatistics
+from Controller import SpotifyAPI
+
 
 class ControllerLogin:
   
   def __init__(self, view: LoginPage):
-    self.view: LoginPage.LoginPage = view
+    self.view: LoginPage = view
 
     buttonLogin = view.buttonLogin
     buttonLogin.clicked.connect(self.logUser)
@@ -29,8 +34,12 @@ class ControllerLogin:
     self.view.buttonLogin.setText("Chargement de votre profil...")
     self.view.buttonLogin.repaint()
     
-    profilePage = ProfilePage(user, self.view.parentView)
-    ControllerProfilePage(profilePage) # Controller for the profile page
-    self.view.parentView.addPage(profilePage)
-    self.view.parentView.showPage(profilePage)
+    profilePage = ProfilePage(self.view.parentView)
+    ControllerProfilePage(user, profilePage) # Controller for the profile page
+    self.view.parentView.addPage("ProfilePage", profilePage)
+    self.view.parentView.showPage("ProfilePage")
+    
+    statsPage = StatisticsPage(self.view.parentView)
+    ControllerStatistics(user, statsPage)
+    self.view.parentView.addPage("StatisticsPage", statsPage)
 

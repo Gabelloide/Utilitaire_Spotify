@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel, QHBoxLayout, QVBoxLayout
+from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
 from PyQt6 import QtCore, uic
 from PyQt6.QtGui import QFontDatabase, QFont, QPixmap
 from PyQt6.QtNetwork import QNetworkAccessManager
@@ -6,6 +6,7 @@ from PyQt6.QtNetwork import QNetworkAccessManager
 # -------
 from Model import User
 from Controller import SpotifyAPI
+from Controller import MainWindow
 from View.Components.ImageLabel import ImageLabel
 
 class ProfilePage(QWidget):
@@ -13,17 +14,56 @@ class ProfilePage(QWidget):
   UI elements are loaded from the ProfilePage.ui file.
   CSS is loaded from the assets/style.css file."""
   
-  def __init__(self, user: User.User, parentView):
+  def __init__(self, parentView):
     super().__init__()
     
     # Attributes
     self.parentView = parentView
-    self.user = user
     # Providing a QNetworkAccessManager to download images
     self.manager = QNetworkAccessManager(self)
     
-    # Load the UI elements from the .ui file
-    uic.loadUi("View/ProfilePage.ui", self)
+    # UI elements
+       # UI elements
+    self.verticalLayout = QVBoxLayout()
+    self.layoutProfilePicture = QHBoxLayout()
+    spacerItem_left = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+    self.layoutProfilePicture.addItem(spacerItem_left)
+    self.labelUsername = QLabel()
+    self.layoutProfilePicture.addWidget(self.labelUsername)
+    spacerItem_right = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+    self.layoutProfilePicture.addItem(spacerItem_right)
+    self.verticalLayout.addLayout(self.layoutProfilePicture)
+    
+    spacerUsernameTracks = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.verticalLayout.addItem(spacerUsernameTracks)
+    
+    self.containerTracks = MainWindow.MainWindow.createDataRow("Titres les plus écoutés")
+    self.verticalLayout.addWidget(self.containerTracks)
+    
+    spacerTracksArtists = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.verticalLayout.addItem(spacerTracksArtists)
+
+    self.containerArtists = MainWindow.MainWindow.createDataRow("Artistes les plus écoutés")
+    self.verticalLayout.addWidget(self.containerArtists)
+    
+    spacerArtistsAlbums = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.verticalLayout.addItem(spacerArtistsAlbums)
+    
+    self.containerAlbums = MainWindow.MainWindow.createDataRow("Albums les plus écoutés")
+    self.verticalLayout.addWidget(self.containerAlbums)
+    
+    spacerAlbumsButtons = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.verticalLayout.addItem(spacerAlbumsButtons)
+    
+    self.containerButtons = QHBoxLayout()
+    self.trendingButton = QPushButton("Tendances")
+    self.recommendationsButton = QPushButton("Recommandations")
+    self.containerButtons.addWidget(self.trendingButton)
+    self.containerButtons.addWidget(self.recommendationsButton)
+    self.verticalLayout.addLayout(self.containerButtons)
+    
+    self.setLayout(self.verticalLayout)
+    
 
     # Add the custom font to the QFontDatabase
     font_id = QFontDatabase.addApplicationFont("Assets/HelveticaNeueMedium.otf")
@@ -32,13 +72,7 @@ class ProfilePage(QWidget):
       return
     
     # Gather UI elements from the .ui file
-    self.labelUsername = self.findChild(QLabel, "labelUsername")
-    self.labelTracks = self.findChild(QLabel, "labelTracks")
-    self.labelArtists = self.findChild(QLabel, "labelArtists")
-    self.labelAlbums = self.findChild(QLabel, "labelAlbums")
-    self.trendingButton = self.findChild(QPushButton, "trendingButton")
-    self.recommendationsButton = self.findChild(QPushButton, "recommendationsButton")
-    self.uiElements = [self.labelUsername, self.labelTracks, self.labelArtists, self.labelAlbums, self.trendingButton, self.recommendationsButton]
+    self.uiElements = [self.trendingButton, self.recommendationsButton]
     
     with open("Assets/style.css", "r") as file:
       css = file.read()
@@ -51,44 +85,11 @@ class ProfilePage(QWidget):
       element.setFont(font)
       element.setStyleSheet(css)
 
-    # ImageLabel without text for the profile picture before the username
-    self.profilePicture = ImageLabel("")
-    self.profilePicture.setMaximumSize(100, 100)
-    self.profilePicture.downloadAndSetImage(self.user.getBigProfilePicture(), self.user.id)
-    self.layoutProfilePicture = self.findChild(QHBoxLayout, "containerUsername")
-    usernameLabel_index = self.layoutProfilePicture.indexOf(self.labelUsername)
-    self.layoutProfilePicture.insertWidget(usernameLabel_index, self.profilePicture)
-      
-    # Filling containers
-    self.containerTracks = self.findChild(QHBoxLayout, "containerTracks")
-    self.containerArtists = self.findChild(QHBoxLayout, "containerArtists")
-    self.containerAlbums = self.findChild(QHBoxLayout, "containerAlbums")
-    
-    client = SpotifyAPI.get_spotify_client()
-    user_top_tracks = self.user.getTopTracks(client)
-    user_top_artists = self.user.getTopArtists(client)
-    user_top_albums = self.user.getTopAlbums(client)
+    # UI attributes for controller
+    self.profilePicture = None # Manager by controller
+ 
 
-    # The album/artist/track ids are passed to the download manager to get them from cache if they are already downloaded
-    for track in user_top_tracks:
-      label = ImageLabel(track.name)
-      label.setMaximumSize(100, 100)
-      label.downloadAndSetImage(track.album.getBigCover(), track.id)
-      self.containerTracks.addWidget(label)
-
-    for artist in user_top_artists:
-      label = ImageLabel(artist.name)
-      label.setMaximumSize(100, 100)
-      label.downloadAndSetImage(artist.getBigPicture(), artist.id)
-      self.containerArtists.addWidget(label)
-
-    for album in user_top_albums:
-      label = ImageLabel(album.name)
-      label.setMaximumSize(100, 100)
-      label.downloadAndSetImage(album.getBigCover(), album.id)
-      self.containerAlbums.addWidget(label)
-      
-    # Adding "see more..." buttons for each row
+  def createMoreButtons(self):
     seeMoreTracks = QPushButton("Voir plus...")
     seeMoreArtists = QPushButton("Voir plus...")
     seeMoreAlbums = QPushButton("Voir plus...")
@@ -98,22 +99,8 @@ class ProfilePage(QWidget):
       button.setMaximumSize(100, 100)
       button.setStyleSheet("color: white")
     
-    self.containerTracks.addWidget(seeMoreTracks)
-    self.containerArtists.addWidget(seeMoreArtists)
-    self.containerAlbums.addWidget(seeMoreAlbums)
-  
-
-    # TODO setup placeholder profile picture before the download is finished, or if it fails
-    
-    # ------ Filling UI elements with data ------
-    self.labelUsername.setText(f"Bienvenue, {self.user.display_name} !")
-    
-
-
-
-
-
-
-
+    self.containerTracks.addComponent(seeMoreTracks)
+    self.containerArtists.addComponent(seeMoreArtists)
+    self.containerAlbums.addComponent(seeMoreAlbums)
 
 

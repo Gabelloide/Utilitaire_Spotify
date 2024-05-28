@@ -4,7 +4,10 @@ from PyQt6.QtGui import QFontDatabase
 
 from View import LoginPage, NavBar
 from View.ProfilePage import ProfilePage
+from View.Components.ImageLabel import ImageLabel
+from View.Components.DataRow import DataRow
 from Controller import ControllerLogin
+from Controller import ControllerNavBar
 
 
 class MainWindow(QMainWindow):
@@ -12,8 +15,9 @@ class MainWindow(QMainWindow):
     super().__init__()
 
     self.stackedWidget = QStackedWidget()
-    self.pages = []
-    self.navBar = NavBar.NavBar()
+    self.pages = {} # Dict of String:QWidget to store the pages by name
+    self.navBar = NavBar.NavBar(self) # Transmetting the parent to the NavBar
+    self.navBar.controller = ControllerNavBar.ControllerNavBar(self.navBar)
 
     self.setWindowTitle("Utilitaire Spotify")
     self.setStyleSheet("background-color: #211f1f;")
@@ -22,31 +26,44 @@ class MainWindow(QMainWindow):
     self.loginPage = LoginPage.LoginPage(self)
     self.loginPage.controller = ControllerLogin.ControllerLogin(self.loginPage)
 
-    self.addPage(self.loginPage)
+    self.addPage("LoginPage", self.loginPage)
 
-    # Créer un layout horizontal et ajouter la NavBar et le stackedWidget
+    # Create a layout to hold the NavBar and the stackedWidget
     layout = QHBoxLayout()
     layout.addWidget(self.navBar)
     layout.addWidget(self.stackedWidget)
 
-    # Créer un widget pour contenir le layout et le définir comme widget central
+    # Create a container widget to hold the layout
     container = QWidget()
     container.setLayout(layout)
     self.setCentralWidget(container)
 
 
-  def addPage(self, page: QWidget):
+  def addPage(self, pageName: str, page: QWidget):
     self.stackedWidget.addWidget(page)
-    self.pages.append(page)
+    self.pages[pageName] = page
 
-    # Si la page est la page de login, rendre la NavBar invisible
+    # If we are on the login page, hide the NavBar
     if isinstance(page, LoginPage.LoginPage):
         self.navBar.setVisible(False)
     else:
         self.navBar.setVisible(True)
 
-  def showPage(self, pagePointer: QWidget):
-    for i, page in enumerate(self.pages):
-      if page == pagePointer:
-        self.stackedWidget.setCurrentIndex(i)
-        break
+  def showPage(self, pageName: str):
+    self.stackedWidget.setCurrentWidget(self.pages[pageName])
+    self.repaint()
+    
+    
+    
+  # Utils 
+  @staticmethod
+  def createImageLabel(text:str):
+    """Creates an ImageLabel with the given text."""
+    label = ImageLabel(text)
+    label.setMaximumSize(100, 100)
+    return label
+  
+  @staticmethod
+  def createDataRow(title: str):
+    """Creates a DataRow component."""
+    return DataRow(title)

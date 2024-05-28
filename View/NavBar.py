@@ -1,11 +1,13 @@
-import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QStackedWidget 
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton 
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QSize
 
 class NavBar(QWidget):
-    def __init__(self):
+    def __init__(self, parentView):
         super().__init__()
+        
+        self.parentView = parentView
+        self.controller = None
 
         layout = QVBoxLayout()
 
@@ -13,17 +15,20 @@ class NavBar(QWidget):
         self.btnSearch = QPushButton()
         self.btnTrend = QPushButton()
         self.btnFriends = QPushButton()
+        self.btnStats = QPushButton()
 
         self.btnProfile.setIcon(QIcon("Assets/icons/profile.png"))
         self.btnSearch.setIcon(QIcon("Assets/icons/search.png"))
         self.btnTrend.setIcon(QIcon("Assets/icons/trend.png"))
         self.btnFriends.setIcon(QIcon("Assets/icons/friends.png"))
+        self.btnStats.setIcon(QIcon("Assets/icons/stats.png"))
 
-        iconSize = QSize(50, 50) 
+        iconSize = QSize(64, 64) 
         self.btnProfile.setIconSize(iconSize)
         self.btnSearch.setIconSize(iconSize)
         self.btnTrend.setIconSize(iconSize)
         self.btnFriends.setIconSize(iconSize)
+        self.btnStats.setIconSize(iconSize)
 
         self.setStyleSheet("""
             QPushButton {
@@ -35,5 +40,6 @@ class NavBar(QWidget):
         layout.addWidget(self.btnSearch)
         layout.addWidget(self.btnTrend)
         layout.addWidget(self.btnFriends)
+        layout.addWidget(self.btnStats)
         
         self.setLayout(layout)
