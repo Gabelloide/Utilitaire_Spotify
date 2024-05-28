@@ -23,3 +23,6 @@ class DataRow(QWidget):
   def addComponent(self, component):
     """Adds a component to the data layout."""
     self.data_layout.addWidget(component)
+
+  def setStyleSheet(self, styleSheet: str):
+    self.title_label.setStyleSheet(styleSheet)

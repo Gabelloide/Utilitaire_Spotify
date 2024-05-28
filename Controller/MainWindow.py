@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel, QStackedWidget, QVBoxLayout, QHBoxLayout, QMainWindow
+from PyQt6.QtWidgets import QWidget, QStackedWidget, QHBoxLayout, QMainWindow
 from PyQt6 import QtCore
-from PyQt6.QtGui import QFontDatabase
+from PyQt6.QtGui import QFontDatabase, QIcon
 
 from View import LoginPage, NavBar
 from View.ProfilePage import ProfilePage
@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
     self.navBar = NavBar.NavBar(self) # Transmetting the parent to the NavBar
     self.navBar.controller = ControllerNavBar.ControllerNavBar(self.navBar)
 
-    self.setWindowTitle("Utilitaire Spotify")
+    self.setWindowTitle("SpotInsights")
     self.setStyleSheet("background-color: #211f1f;")
     self.resize(1280, 720)
 
@@ -49,13 +49,13 @@ class MainWindow(QMainWindow):
     else:
         self.navBar.setVisible(True)
 
+
   def showPage(self, pageName: str):
     self.stackedWidget.setCurrentWidget(self.pages[pageName])
     self.repaint()
-    
-    
-    
-  # Utils 
+
+
+  # Utils - Controllers themselves are not supposed to create UI elements, so we provide a way to create them here
   @staticmethod
   def createImageLabel(text:str):
     """Creates an ImageLabel with the given text."""

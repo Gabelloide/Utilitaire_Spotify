@@ -28,12 +28,12 @@ class LoginPage(QWidget):
     with open("Assets/style.css", "r") as file:
       css = file.read()
     
-    self.labelTitle = QLabel("Bienvenue sur l'Utilitaire Spotify !")
+    self.labelTitle = QLabel("Bienvenue sur SpotInsights !")
     self.labelTitle.setFont(font)
     self.labelTitle.setStyleSheet(css)  # Set the font size to 40px
     layout.addWidget(self.labelTitle, 0, 0, 1, 1, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)  # Add the label to the layout
 
-    self.buttonLogin = QPushButton("Se connecter à Spotify")
+    self.buttonLogin = QPushButton("Se connecter via Spotify")
     self.buttonLogin.setFont(font)
     self.buttonLogin.setStyleSheet(css)  # Set button style
     layout.addWidget(self.buttonLogin, 1, 0, 1, 1, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)

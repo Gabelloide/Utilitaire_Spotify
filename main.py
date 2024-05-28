@@ -8,6 +8,7 @@ from Controller import ControllerLogin
 from Controller import MainWindow
 
 from PyQt6.QtWidgets import QApplication
+from PyQt6.QtGui import QIcon
 
 
 
@@ -107,7 +108,12 @@ spotipy_client = SpotifyAPI.get_spotify_client()
 
 # --- GUI ---
 
+# Force change the python taskbar icon to the app icon
+import ctypes
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID('company.app.1')
+
 app = QApplication([])
+app.setWindowIcon(QIcon("Assets/icons/appIcon.png"))
 window = MainWindow.MainWindow()
 window.show()
 app.exec()

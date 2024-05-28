@@ -15,9 +15,6 @@ class ControllerProfilePage:
     self.view: ProfilePage = view
     self.user = user
 
-    self.view.trendingButton.clicked.connect(self.showTrending)
-    self.view.recommendationsButton.clicked.connect(self.showRecommendations)
-
     # ------ Filling UI elements with data ------
     self.view.labelUsername.setText(f"Bienvenue, {self.user.display_name} !")
 
@@ -27,7 +24,7 @@ class ControllerProfilePage:
     # Download the image and set it to the label
     self.view.profilePicture.downloadAndSetImage(self.user.getBigProfilePicture(), self.user.id)
     # TODO setup placeholder profile picture before the download is finished, or if it fails
-    self.view.layoutProfilePicture.insertWidget(0, self.view.profilePicture)
+    self.view.layoutProfilePicture.insertWidget(1, self.view.profilePicture) # Index 0 is the left spacer
 
     # Download the user's top tracks, artists and albums
     client = SpotifyAPI.get_spotify_client()
@@ -53,11 +50,3 @@ class ControllerProfilePage:
 
     # Adding "more" buttons after the last element of each container
     self.view.createMoreButtons()
-
-
-  def showTrending(self):
-    pass
-
-
-  def showRecommendations(self):
-    pass

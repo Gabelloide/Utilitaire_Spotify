@@ -12,9 +12,11 @@ class ControllerNavBar:
 
   def showStatsPage(self):
     self.navBar.parentView.showPage("StatisticsPage")
+    self.setFocusedIcon(self.navBar.btnStats)
 
   def showProfilePage(self):
     self.navBar.parentView.showPage("ProfilePage")
+    self.setFocusedIcon(self.navBar.btnProfile)
     
   def showSearchPage(self):
     pass
@@ -24,3 +26,10 @@ class ControllerNavBar:
   
   def showFriendsPage(self):
     pass
+  
+  def setFocusedIcon(self, focusedButton):
+    for button in self.navBar.buttons:
+      if button == focusedButton:
+        button.setStyleSheet(self.navBar.focusedButtonStyleSheet)
+      else:
+        button.setStyleSheet(self.navBar.buttonStyleSheet)

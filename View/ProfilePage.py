@@ -23,8 +23,8 @@ class ProfilePage(QWidget):
     self.manager = QNetworkAccessManager(self)
     
     # UI elements
-       # UI elements
-    self.verticalLayout = QVBoxLayout()
+    self.mainLayout = QVBoxLayout()
+    
     self.layoutProfilePicture = QHBoxLayout()
     spacerItem_left = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     self.layoutProfilePicture.addItem(spacerItem_left)
@@ -32,58 +32,46 @@ class ProfilePage(QWidget):
     self.layoutProfilePicture.addWidget(self.labelUsername)
     spacerItem_right = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     self.layoutProfilePicture.addItem(spacerItem_right)
-    self.verticalLayout.addLayout(self.layoutProfilePicture)
+    
+    self.mainLayout.addLayout(self.layoutProfilePicture)
     
     spacerUsernameTracks = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.verticalLayout.addItem(spacerUsernameTracks)
+    self.mainLayout.addItem(spacerUsernameTracks)
     
     self.containerTracks = MainWindow.MainWindow.createDataRow("Titres les plus écoutés")
-    self.verticalLayout.addWidget(self.containerTracks)
+    self.mainLayout.addWidget(self.containerTracks)
     
     spacerTracksArtists = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.verticalLayout.addItem(spacerTracksArtists)
+    self.mainLayout.addItem(spacerTracksArtists)
 
     self.containerArtists = MainWindow.MainWindow.createDataRow("Artistes les plus écoutés")
-    self.verticalLayout.addWidget(self.containerArtists)
+    self.mainLayout.addWidget(self.containerArtists)
     
     spacerArtistsAlbums = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.verticalLayout.addItem(spacerArtistsAlbums)
+    self.mainLayout.addItem(spacerArtistsAlbums)
     
     self.containerAlbums = MainWindow.MainWindow.createDataRow("Albums les plus écoutés")
-    self.verticalLayout.addWidget(self.containerAlbums)
+    self.mainLayout.addWidget(self.containerAlbums)
     
-    spacerAlbumsButtons = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.verticalLayout.addItem(spacerAlbumsButtons)
+    self.setLayout(self.mainLayout)
     
-    self.containerButtons = QHBoxLayout()
-    self.trendingButton = QPushButton("Tendances")
-    self.recommendationsButton = QPushButton("Recommandations")
-    self.containerButtons.addWidget(self.trendingButton)
-    self.containerButtons.addWidget(self.recommendationsButton)
-    self.verticalLayout.addLayout(self.containerButtons)
-    
-    self.setLayout(self.verticalLayout)
-    
-
-    # Add the custom font to the QFontDatabase
+    # Add the custom font
     font_id = QFontDatabase.addApplicationFont("Assets/HelveticaNeueMedium.otf")
     if font_id == -1:
       print("Failed to load the custom font")
       return
-    
-    # Gather UI elements from the .ui file
-    self.uiElements = [self.trendingButton, self.recommendationsButton]
-    
-    with open("Assets/style.css", "r") as file:
-      css = file.read()
-    
-    # Set the custom font to the UI elements
     font_families = QFontDatabase.applicationFontFamilies(font_id)
     custom_font = font_families[0]
     font = QFont(custom_font, 20)
-    for element in self.uiElements:
-      element.setFont(font)
-      element.setStyleSheet(css)
+
+    with open("Assets/style.css", "r") as file:
+      css = file.read()
+    
+    self.labelUsername.setFont(font)
+    self.labelUsername.setStyleSheet(css)
+    self.containerTracks.setStyleSheet('font-size: 20px;')
+    self.containerArtists.setStyleSheet('font-size: 20px;')
+    self.containerAlbums.setStyleSheet('font-size: 20px;')
 
     # UI attributes for controller
     self.profilePicture = None # Manager by controller
