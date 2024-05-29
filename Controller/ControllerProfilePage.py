@@ -1,13 +1,7 @@
-from PyQt6.QtCore import QUrl
-from PyQt6.QtNetwork import QNetworkRequest
-from PyQt6.QtGui import QPixmap
-from PyQt6.QtWidgets import QLabel
-
 from Model.User import User
 from View.ProfilePage import ProfilePage
 from Controller.MainWindow import MainWindow
 from Controller import SpotifyAPI
-import utils
 
 class ControllerProfilePage:
   
@@ -18,33 +12,29 @@ class ControllerProfilePage:
     # ------ Filling UI elements with data ------
     self.view.labelUsername.setText(f"Bienvenue, {self.user.display_name} !")
 
-    # ImageLabel for the profile picture before the username
-    self.view.profilePicture = MainWindow.createImageLabel("")
-    
     # Download the image and set it to the label
     self.view.profilePicture.downloadAndSetImage(self.user.getBigProfilePicture(), self.user.id)
     # TODO setup placeholder profile picture before the download is finished, or if it fails
-    self.view.layoutProfilePicture.insertWidget(1, self.view.profilePicture) # Index 0 is the left spacer
 
     # Download the user's top tracks, artists and albums
     client = SpotifyAPI.get_spotify_client()
-    user_top_tracks = self.user.getTopTracks(client)
-    user_top_artists = self.user.getTopArtists(client)
-    user_top_albums = self.user.getTopAlbums(client)
+    user_top_tracks = self.user.getTopTracks(client, limit=8)
+    user_top_artists = self.user.getTopArtists(client, limit=8)
+    user_top_albums = self.user.getTopAlbums(client, limit=8)
 
     # The album/artist/track ids are passed to the download manager to get them from cache if they are already downloaded
-    for track in user_top_tracks:
-      label = MainWindow.createImageLabel(track.name)
+    for i, track in enumerate(user_top_tracks):
+      label = MainWindow.createImageLabel(f"{i+1}. {track.name}")
       label.downloadAndSetImage(track.album.getBigCover(), track.id)
       self.view.containerTracks.addComponent(label)
 
-    for artist in user_top_artists:
-      label = MainWindow.createImageLabel(artist.name)
+    for i, artist in enumerate(user_top_artists):
+      label = MainWindow.createImageLabel(f"{i+1}. {artist.name}")
       label.downloadAndSetImage(artist.getBigPicture(), artist.id)
       self.view.containerArtists.addComponent(label)
 
-    for album in user_top_albums:
-      label = MainWindow.createImageLabel(album.name)
+    for i, album in enumerate(user_top_albums):
+      label = MainWindow.createImageLabel(f"{i+1}. {album.name}")
       label.downloadAndSetImage(album.getBigCover(), album.id)
       self.view.containerAlbums.addComponent(label)
 

@@ -15,7 +15,7 @@ class LoginPage(QWidget):
     layout = QGridLayout()
     
     # Add the custom font to the QFontDatabase
-    font_id = QFontDatabase.addApplicationFont("Assets/HelveticaNeueMedium.otf")
+    font_id = QFontDatabase.addApplicationFont("Assets/fonts/HelveticaNeueMedium.otf")
     if font_id == -1:
       print("Failed to load the custom font")
       return

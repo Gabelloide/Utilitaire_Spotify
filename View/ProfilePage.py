@@ -4,10 +4,8 @@ from PyQt6.QtGui import QFontDatabase, QFont, QPixmap
 from PyQt6.QtNetwork import QNetworkAccessManager
 
 # -------
-from Model import User
-from Controller import SpotifyAPI
 from Controller import MainWindow
-from View.Components.ImageLabel import ImageLabel
+from View.Components.FlowLayout import FlowLayout
 
 class ProfilePage(QWidget):
   """This class is responsible for displaying the user's profile page.
@@ -24,11 +22,18 @@ class ProfilePage(QWidget):
     
     # UI elements
     self.mainLayout = QVBoxLayout()
-    
+      
+    spacerTop = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.mainLayout.addItem(spacerTop)
+
     self.layoutProfilePicture = QHBoxLayout()
     spacerItem_left = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     self.layoutProfilePicture.addItem(spacerItem_left)
+
+    self.profilePicture = MainWindow.MainWindow.createImageLabel("")
     self.labelUsername = QLabel()
+    
+    self.layoutProfilePicture.addWidget(self.profilePicture)
     self.layoutProfilePicture.addWidget(self.labelUsername)
     spacerItem_right = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     self.layoutProfilePicture.addItem(spacerItem_right)
@@ -52,11 +57,14 @@ class ProfilePage(QWidget):
     
     self.containerAlbums = MainWindow.MainWindow.createDataRow("Albums les plus écoutés")
     self.mainLayout.addWidget(self.containerAlbums)
+  
+    spacerBottom = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.mainLayout.addItem(spacerBottom)
     
     self.setLayout(self.mainLayout)
     
     # Add the custom font
-    font_id = QFontDatabase.addApplicationFont("Assets/HelveticaNeueMedium.otf")
+    font_id = QFontDatabase.addApplicationFont("Assets/fonts/HelveticaNeueMedium.otf")
     if font_id == -1:
       print("Failed to load the custom font")
       return
@@ -71,11 +79,7 @@ class ProfilePage(QWidget):
     self.labelUsername.setStyleSheet(css)
     self.containerTracks.setStyleSheet('font-size: 20px;')
     self.containerArtists.setStyleSheet('font-size: 20px;')
-    self.containerAlbums.setStyleSheet('font-size: 20px;')
-
-    # UI attributes for controller
-    self.profilePicture = None # Manager by controller
- 
+    self.containerAlbums.setStyleSheet('font-size: 20px;') 
 
   def createMoreButtons(self):
     seeMoreTracks = QPushButton("Voir plus...")

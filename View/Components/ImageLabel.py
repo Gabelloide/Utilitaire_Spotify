@@ -15,6 +15,7 @@ class ImageLabel(QWidget):
     self.layout = QVBoxLayout(self)
     self.image_label = QLabel()
     self.text_label = QLabel(text)
+    self.text_label.setWordWrap(True)
     self.text_label.setStyleSheet("color: white;")
     self.layout.addWidget(self.image_label)
     self.layout.addWidget(self.text_label)
@@ -65,4 +66,4 @@ class ImageLabel(QWidget):
   def setMaximumSize(self, width, height):
     """Overrides the setMaximumSize method to apply it to both the image and text labels."""
     self.image_label.setMaximumSize(width, height)
-    self.text_label.setMaximumSize(width, height)
+    self.text_label.setMaximumWidth(width)
