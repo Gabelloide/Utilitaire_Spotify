@@ -108,9 +108,10 @@ spotipy_client = SpotifyAPI.get_spotify_client()
 
 # --- GUI ---
 
-# Force change the python taskbar icon to the app icon
-import ctypes
-ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID('company.app.1')
+# If working on windows :
+if os.name == 'nt':
+  import ctypes
+  ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID('company.app.1') # Force change the python taskbar icon to the app icon
 
 app = QApplication([])
 app.setWindowIcon(QIcon("Assets/icons/appIcon.png"))
