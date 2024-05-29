@@ -67,3 +67,12 @@ class ImageLabel(QWidget):
     """Overrides the setMaximumSize method to apply it to both the image and text labels."""
     self.image_label.setMaximumSize(width, height)
     self.text_label.setMaximumWidth(width)
+
+
+  def contextMenuEvent(self, event):
+    from View.Components.RightClickMenu import RightClickMenu
+    """Reimplement the context menu event to display a custom context menu."""
+    contextMenu = RightClickMenu(self)
+
+    # Show the context menu at the event position
+    contextMenu.exec(event.globalPos())
