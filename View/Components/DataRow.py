@@ -13,7 +13,9 @@ class DataRow(QWidget):
     self.mainLayout = QVBoxLayout()
 
     self.title_label = QLabel(title)
+    self.title_label.setStyleSheet("color: white;")
     self.mainLayout.addWidget(self.title_label)
+
 
     self.data_layout = FlowLayout()
     self.mainLayout.addLayout(self.data_layout)

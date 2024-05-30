@@ -7,6 +7,7 @@ from View.FriendsPage import FriendsPage
 from View.TrendingPage import TrendingPage
 from View.RecommendationPage import RecommendationPage
 from View.SearchPage import SearchPage
+from View.ZipUploadPage import ZipUploadPage
 
 from Controller.ControllerProfilePage import ControllerProfilePage
 from Controller.ControllerStatistics import ControllerStatistics
@@ -14,6 +15,7 @@ from Controller.ControllerFriendsPage import ControllerFriendsPage
 from Controller.ControllerTrendingPage import ControllerTrendingPage
 from Controller.ControllerRecommendationPage import ControllerRecommendationPage
 from Controller.ControllerSearchPage import ControllerSearchPage
+from Controller.ControllerZipUpload import ControllerZipUpload
 from Controller import SpotifyAPI
 
 
@@ -66,3 +68,9 @@ class ControllerLogin:
     searchPage = SearchPage(self.view.parentView)
     ControllerSearchPage(user, searchPage)
     self.view.parentView.addPage("SearchPage", searchPage)
+
+    zipUploadPage = ZipUploadPage(self.view.parentView)
+    ControllerZipUpload(zipUploadPage)
+    self.view.parentView.addPage("ZipUploadPage", zipUploadPage)
+
+

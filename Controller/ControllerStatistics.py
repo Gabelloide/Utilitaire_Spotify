@@ -8,6 +8,7 @@ class ControllerStatistics:
   def __init__(self, user:User, view: StatisticsPage) -> None:
     self.view = view
     
+    self.view.btnOpenPageZip.clicked.connect(lambda: self.view.parentView.showPage("ZipUploadPage"))
     # Get model information to fill the view
     client = SpotifyAPI.get_spotify_client()
     placeholderTracks = user.getTopTracks(client, 10)
