@@ -12,6 +12,9 @@ class ImageLabel(QWidget):
   
   def __init__(self, text:str, parent=None):
     super().__init__(parent)
+
+    self.attachedObject = None # The object attached to the image label, will be defined by Controllers (Track, Artist, Album, etc.)
+
     self.layout = QVBoxLayout(self)
     self.image_label = QLabel()
     self.text_label = QLabel(text)
@@ -73,6 +76,61 @@ class ImageLabel(QWidget):
     from View.Components.RightClickMenu import RightClickMenu
     """Reimplement the context menu event to display a custom context menu."""
     contextMenu = RightClickMenu(self)
+    contextMenu.exec(event.globalPos()) # Show the context menu at the event position
 
-    # Show the context menu at the event position
+
+class TrackImageLabel(ImageLabel):    
+  def __init__(self, track, parent=None):
+    super().__init__(track, parent)
+    
+  # Overriding the context menu event to display a custom context menu
+  def contextMenuEvent(self, event):
+    from View.Components.RightClickMenu import TrackRightClickMenu
+    contextMenu = TrackRightClickMenu(self)
     contextMenu.exec(event.globalPos())
+
+
+class ArtistImageLabel(ImageLabel):
+  def __init__(self, artist, parent=None):
+    super().__init__(artist, parent)
+
+  def contextMenuEvent(self, event):
+    from View.Components.RightClickMenu import ArtistRightClickMenu
+    contextMenu = ArtistRightClickMenu(self)
+    contextMenu.exec(event.globalPos())
+
+
+class AlbumImageLabel(ImageLabel):
+  def __init__(self, album, parent=None):
+    super().__init__(album, parent)
+
+  def contextMenuEvent(self, event):
+    from View.Components.RightClickMenu import AlbumRightClickMenu
+    contextMenu = AlbumRightClickMenu(self)
+    contextMenu.exec(event.globalPos())
+
+
+class ProfilePictureImageLabel(ImageLabel):
+  def __init__(self, text, parent=None):
+    super().__init__(text, parent)
+    
+  def contextMenuEvent(self, event):
+    from View.Components.RightClickMenu import ProfilePictureRightClickMenu
+    contextMenu = ProfilePictureRightClickMenu(self)
+    contextMenu.exec(event.globalPos())
+
+  # Overriding the method to use the profile picture placeholder
+  def thread_download(self, url, filename):
+    try:
+      response = requests.get(url)
+      response.raise_for_status()
+      data = response.content
+      utils.save_to_cache(filename, data)
+      self.setImage(data)
+
+    except requests.RequestException as e:
+      print(f"Error downloading image: {e}")
+      # Fallback on the image placeholder
+      with open("Assets/icons/user_placeholder.png", "rb") as file:
+        data = file.read()
+        self.setImage(data)

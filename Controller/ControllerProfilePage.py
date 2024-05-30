@@ -14,7 +14,6 @@ class ControllerProfilePage:
 
     # Download the image and set it to the label
     self.view.profilePicture.downloadAndSetImage(self.user.getBigProfilePicture(), self.user.id)
-    # TODO setup placeholder profile picture before the download is finished, or if it fails
 
     # Download the user's top tracks, artists and albums
     client = SpotifyAPI.get_spotify_client()
@@ -24,17 +23,20 @@ class ControllerProfilePage:
 
     # The album/artist/track ids are passed to the download manager to get them from cache if they are already downloaded
     for i, track in enumerate(user_top_tracks):
-      label = MainWindow.createImageLabel(f"{i+1}. {track.name}")
+      label = MainWindow.createImageLabel(f"{i+1}. {track.name}", "track")
+      label.attachedObject = track
       label.downloadAndSetImage(track.album.getBigCover(), track.id)
       self.view.containerTracks.addComponent(label)
 
     for i, artist in enumerate(user_top_artists):
-      label = MainWindow.createImageLabel(f"{i+1}. {artist.name}")
+      label = MainWindow.createImageLabel(f"{i+1}. {artist.name}", "artist")
+      label.attachedObject = artist
       label.downloadAndSetImage(artist.getBigPicture(), artist.id)
       self.view.containerArtists.addComponent(label)
 
     for i, album in enumerate(user_top_albums):
-      label = MainWindow.createImageLabel(f"{i+1}. {album.name}")
+      label = MainWindow.createImageLabel(f"{i+1}. {album.name}", "album")
+      label.attachedObject = album
       label.downloadAndSetImage(album.getBigCover(), album.id)
       self.view.containerAlbums.addComponent(label)
 

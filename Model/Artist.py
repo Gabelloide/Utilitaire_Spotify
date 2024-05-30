@@ -22,7 +22,12 @@ class Artist:
   def getTotalFollowers(self):
     return self.followers['total']
   
-  
+
+  def getFormattedFollowers(self):
+    """Returns a string with the number of followers formatted to space digets every 3 digits"""
+    return f"{self.getTotalFollowers():,}"
+
+
   def getBigPicture(self) -> str:
     """Returns the URL of the biggest picture available for the artist."""
     imageURL = None

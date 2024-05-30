@@ -30,7 +30,7 @@ class ProfilePage(QWidget):
     spacerItem_left = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     self.layoutProfilePicture.addItem(spacerItem_left)
 
-    self.profilePicture = MainWindow.MainWindow.createImageLabel("")
+    self.profilePicture = MainWindow.MainWindow.createImageLabel("", "profilePicture")
     self.labelUsername = QLabel()
     
     self.layoutProfilePicture.addWidget(self.profilePicture)

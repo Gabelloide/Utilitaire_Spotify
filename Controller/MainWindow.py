@@ -4,7 +4,7 @@ from PyQt6.QtGui import QFontDatabase, QIcon
 
 from View import LoginPage, NavBar
 from View.ProfilePage import ProfilePage
-from View.Components.ImageLabel import ImageLabel
+from View.Components.ImageLabel import ImageLabel, AlbumImageLabel, ArtistImageLabel, TrackImageLabel, ProfilePictureImageLabel
 from View.Components.DataRow import DataRow
 from Controller import ControllerLogin
 from Controller import ControllerNavBar
@@ -57,12 +57,25 @@ class MainWindow(QMainWindow):
 
   # Utils - Controllers themselves are not supposed to create UI elements, so we provide a way to create them here
   @staticmethod
-  def createImageLabel(text:str):
-    """Creates an ImageLabel with the given text."""
-    label = ImageLabel(text)
+  def createImageLabel(text:str, labelType: str = "default"):
+    """Creates an ImageLabel with the given text. Type is used to specify which daughter class to use."""
+    allowedTypes = ["default", "track", "artist", "album", "profilePicture"]
+    if labelType not in allowedTypes:
+      raise ValueError(f"Label type must be one of {allowedTypes}")
+    match labelType:
+      case "track":
+        label = TrackImageLabel(text)
+      case "artist":
+        label = ArtistImageLabel(text)
+      case "album":
+        label = AlbumImageLabel(text)
+      case "profilePicture":
+        label = ProfilePictureImageLabel(text)
+      case _:
+        label = ImageLabel(text)
     label.setMaximumSize(100, 100)
     return label
-  
+
   @staticmethod
   def createDataRow(title: str):
     """Creates a DataRow component."""

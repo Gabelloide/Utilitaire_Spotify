@@ -16,7 +16,8 @@ class ControllerStatistics:
     # * DATAROW 1 *
     tracksRow = MainWindow.createDataRow("Plein de tracks")
     for track in placeholderTracks:
-      imageLabel = MainWindow.createImageLabel(track.name)
+      imageLabel = MainWindow.createImageLabel(track.name, "track")
+      imageLabel.attachedObject = track
       imageLabel.downloadAndSetImage(track.album.getBigCover(), track.id)
       tracksRow.addComponent(imageLabel)
     self.view.mainLayout.addWidget(tracksRow)
@@ -25,7 +26,8 @@ class ControllerStatistics:
     # * DATAROW 2 *
     tracksRow = MainWindow.createDataRow("Plein de tracks")
     for track in placeholderTracks:
-      imageLabel = MainWindow.createImageLabel(track.name)
+      imageLabel = MainWindow.createImageLabel(track.name, "track")
+      imageLabel.attachedObject = track
       imageLabel.downloadAndSetImage(track.album.getBigCover(), track.id)
       tracksRow.addComponent(imageLabel)
     self.view.mainLayout.addWidget(tracksRow)
@@ -34,7 +36,8 @@ class ControllerStatistics:
     # * DATAROW 3 *
     tracksRow = MainWindow.createDataRow("Plein de tracks")
     for track in placeholderTracks:
-      imageLabel = MainWindow.createImageLabel(track.name)
+      imageLabel = MainWindow.createImageLabel(track.name, "track")
+      imageLabel.attachedObject = track
       imageLabel.downloadAndSetImage(track.album.getBigCover(), track.id)
       tracksRow.addComponent(imageLabel)
     self.view.mainLayout.addWidget(tracksRow)

@@ -14,7 +14,7 @@ class ZipUploadPage(QWidget):
         with open("Assets/style.css", "r") as file:
             stylesheet = file.read()
             
-        self.labelTitle = QLabel("Pourquoi Importer mes données ?")
+        self.labelTitle = QLabel("Pourquoi importer mes données ?")
         # Add the custom font to the QFontDatabase
         font_id = QFontDatabase.addApplicationFont("Assets/fonts/HelveticaNeueMedium.otf")
         if font_id == -1:
