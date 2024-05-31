@@ -29,6 +29,8 @@ class ImageLabel(QWidget):
     - Checks for the image existence in the cache.
     - If the image is not in the cache, it downloads it in a separate thread.
     """
+    if url is None:
+      return
     if utils.exists_in_cache(filename):
       data = utils.load_from_cache(filename)
       self.setImage(data)
@@ -44,8 +46,6 @@ class ImageLabel(QWidget):
     - Sets the image to the QLabel using the data downloaded.
     """
     try:
-      if url is None:
-        return
       response = requests.get(url)
       response.raise_for_status()
       data = response.content
