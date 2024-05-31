@@ -4,6 +4,7 @@ import utils
 
 import Controller.SpotifyAPI as SpotifyAPI
 from Model import Artist, Track, Album, Playlist, User
+import Model.Statistics as Statistics
 from Controller import ControllerLogin
 from Controller import MainWindow
 

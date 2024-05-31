@@ -12,14 +12,14 @@ from typing import List
 
 def getRecentListeningDuration(client):
   """Will get the total listening duration (ms) of the user in the last 50 tracks."""
-  recently_played_tracks = get_50_recently_played(client)
+  recently_played_tracks = get_50_recently_played_tracks(client)
   total_duration = 0
   for track, played_at in recently_played_tracks.items():
     total_duration += track.duration_ms
   return total_duration
 
 
-def get_50_recently_played(client):
+def get_50_recently_played_tracks(client):
   """Returns a dictionary containing the 50 most recently played tracks associated with their played_at date."""
   recently_played_tracks = client.current_user_recently_played()
   recently_played_tracks = recently_played_tracks['items']
@@ -76,13 +76,66 @@ def getTopAlbums(client, limit=5, time_range="short_term") -> List[Album]:
   return sortedAlbums
 
 
-def getNbPlayedTracks():
-  return len(get_50_recently_played())
+def getRecentListeningGenres(client, limit=5):
+  """Returns the top {limit} genres of the user's recent tracks."""
+  recently_played_tracks = get_50_recently_played_tracks(client)
+  genres_count = {}
+  
+  # Artists fetched from the creation of Track objects are not complete (no genre for instance), so we need to fetch them again
+  # Using custom endpoint to fetch all the artists at once : https://api.spotify.com/v1/artists
+  # This is much quicker than fetching each artist individually by the artist (singular) endpoint
+  requestBase = "https://api.spotify.com/v1/artists?ids="
+  
+  ids = []
+  for track in recently_played_tracks.keys():
+    for artist in track.artists:
+      ids.append(artist.id)
+  
+  # We must make batches of 50 artists per call to not exceed the api limit
+  batchs = [ids[i:i+50] for i in range(0, len(ids), 50)] # a list of lists of artists ids, each list containing 50 artists max.
+  
+  for batch in batchs:
+    requestURL = requestBase + ",".join(batch)
+    response = client._get(requestURL)["artists"] # Fetching the artists
+    fullArtists = [Artist(artist) for artist in response] # Creating Artist objects
+    
+    for fullArtist in fullArtists: # Filling the genres_count dictionary
+      for genre in fullArtist.genres:
+        genres_count[genre] = genres_count.get(genre, 0) + 1
+
+  # Sorting the dictionary by values
+  sorted_genres = sorted(genres_count.items(), key=lambda item: item[1], reverse=True)
+  
+  return sorted_genres[:limit]
 
 
-def getNbPlayedArtists():
-  return len(getTopArtists())
+def getNbPlayedTracks(client):
+  return len(get_50_recently_played_tracks(client))
 
 
-def getNbPlayedAlbums():
-  return len(getTopAlbums())
+def getNbUniquePlayedTracks(client):
+  tracks = get_50_recently_played_tracks(client)
+  # Filtering on the ID
+  uniqueTracks = []
+  for track in tracks.keys():
+    if track.id not in [t.id for t in uniqueTracks]:
+      uniqueTracks.append(track)
+  return len(uniqueTracks)
+
+
+def getNbPlayedArtists(client):
+  return len(getTopArtists(client)) # TODO : make artists come from the 50 most recently played tracks
+
+
+def getNbUniquePlayedArtists(client):
+  artists = getTopArtists(client) # TODO : make artists come from the 50 most recently played tracks
+  # Filtering on the ID
+  uniqueArtists = []
+  for artist in artists:
+    if artist.id not in [a.id for a in uniqueArtists]:
+      uniqueArtists.append(artist)
+  return len(uniqueArtists)
+
+
+def getNbPlayedAlbums(client):
+  return len(getTopAlbums(client)) # TODO : make albums come from the 50 most recently played tracks
