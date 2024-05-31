@@ -27,8 +27,11 @@ def get_50_recently_played(client):
   return recently_played_dict
 
 
-def getTopArtists(client, limit=5) -> List[Artist]:
-  results = client.current_user_top_artists(time_range='short_term') # 4 weeks
+def getTopArtists(client, limit=5, time_range="short_term") -> List[Artist]:
+  """Returns the top {limit} artists of the user in the last {time_range}."""
+  if time_range not in ['short_term', 'medium_term', 'long_term']:
+    raise ValueError("Time range must be 'short_term', 'medium_term' or 'long_term'.")
+  results = client.current_user_top_artists(time_range=time_range) # 4 weeks
   items = results['items']
   # Filling the list with all the artists
   while results['next'] and len(items) < limit:
@@ -39,8 +42,11 @@ def getTopArtists(client, limit=5) -> List[Artist]:
   return [Artist(artist) for artist in items[:limit]]
 
 
-def getTopTracks(client, limit=5) -> List[Track]:
-  results = client.current_user_top_tracks(time_range='short_term') # 4 weeks
+def getTopTracks(client, limit=5, time_range="short_term") -> List[Track]:
+  """Returns the top {limit} tracks of the user in the last {time_range}."""
+  if time_range not in ['short_term', 'medium_term', 'long_term']:
+    raise ValueError("Time range must be 'short_term', 'medium_term' or 'long_term'.")
+  results = client.current_user_top_tracks(time_range=time_range) # 4 weeks
   items = results['items']
   # Filling the list with all the tracks
   while results['next'] and len(items) < limit: # If there are less than {limit} items, we need to fetch more
@@ -51,8 +57,11 @@ def getTopTracks(client, limit=5) -> List[Track]:
   return [Track(track) for track in items[:limit]] # Limiting the number of tracks to {limit}
 
 
-def getTopAlbums(client, limit=5) -> List[Album]:
-  topTracks = getTopTracks(client, limit=150) # Limit will increase accuracy of score checking
+def getTopAlbums(client, limit=5, time_range="short_term") -> List[Album]:
+  """Returns the top {limit} albums of the user in the last {time_range}."""
+  if time_range not in ['short_term', 'medium_term', 'long_term']:
+    raise ValueError("Time range must be 'short_term', 'medium_term' or 'long_term'.")
+  topTracks = getTopTracks(client, limit=150, time_range=time_range) # Limit will increase accuracy of score checking
   albumsScores = {}
   idAlbums = {}
   for track in topTracks:
@@ -65,3 +74,15 @@ def getTopAlbums(client, limit=5) -> List[Album]:
   sortedAlbums = [idAlbums[albumID] for albumID in sortedAlbumsIDs][:limit]
   
   return sortedAlbums
+
+
+def getNbPlayedTracks():
+  return len(get_50_recently_played())
+
+
+def getNbPlayedArtists():
+  return len(getTopArtists())
+
+
+def getNbPlayedAlbums():
+  return len(getTopAlbums())
