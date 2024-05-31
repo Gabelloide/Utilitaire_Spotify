@@ -1,7 +1,3 @@
-import Controller.SpotifyAPI as SpotifyAPI
-from Model import Artist, Track, Album
-from typing import List
-
 class User:
 
   def __init__(self, userDict) -> None:
