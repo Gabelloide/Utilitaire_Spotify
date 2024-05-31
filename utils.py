@@ -26,3 +26,11 @@ def load_from_cache(filename, extension='jpg'):
   """Loads the data from the cache folder."""
   with open(f'cache/{filename}.{extension}', 'rb') as file:
     return file.read()
+  
+def set_format_duration(duration_ms : int)-> str:
+    # Convertir les millisecondes en secondes
+    duration_s = duration_ms // 1000
+    # Obtenir les minutes et les secondes
+    minutes, seconds = divmod(duration_s, 60)
+    # Retourner la durée formatée
+    return f"{minutes}:{seconds:02d}"
