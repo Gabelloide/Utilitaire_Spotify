@@ -3,7 +3,7 @@ from PyQt6.QtGui import QFontDatabase, QFont
 from PyQt6.QtCore import Qt
 import ui_utils
 
-class LabelSousTitre(QLabel):
+class LabelSubTitle(QLabel):
     def __init__(self,text:str,parent=None):
         super().__init__(parent)
 
@@ -11,6 +11,6 @@ class LabelSousTitre(QLabel):
         self.setFont(font)
         self.setText(text)
         self.setStyleSheet("""
-            color: white;                    
+            color: white;
         """)
 
