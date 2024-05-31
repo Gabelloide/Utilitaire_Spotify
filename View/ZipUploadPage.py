@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QPushButton, QVBoxLayout, QWidget, QLabel
 from PyQt6.QtGui import QFont, QFontDatabase
 from PyQt6.QtCore import Qt
-
+import ui_utils
 
 class ZipUploadPage(QWidget):
     def __init__(self, parentView):
@@ -16,14 +16,7 @@ class ZipUploadPage(QWidget):
             
         self.labelTitle = QLabel("Pourquoi importer mes données ?")
         # Add the custom font to the QFontDatabase
-        font_id = QFontDatabase.addApplicationFont("Assets/fonts/HelveticaNeueMedium.otf")
-        if font_id == -1:
-            print("Failed to load the custom font")
-            return
-
-        font_families = QFontDatabase.applicationFontFamilies(font_id)
-        custom_font = font_families[0]
-        font = QFont(custom_font, 14)
+        font = ui_utils.getFont(20)
 
         textLabelInfo = """
         <p>Dans le cadre de notre engagement à fournir des statistiques précises et détaillées sur votre utilisation de Spotify, nous vous demandons de fournir un fichier zip de vos données Spotify. Ce fichier contient des informations détaillées sur votre historique d'écoute, vos playlists, vos recherches, et plus encore. Ces données nous permettent de générer des statistiques plus précises et personnalisées.</p>
@@ -58,7 +51,7 @@ class ZipUploadPage(QWidget):
             border-radius: 25px;
             padding: 15px;
             font-size: 14px;
-            margin-top : 100px;
+            margin-top : 90px;
         """)  # Style the button
 
         self.mainLayout.addWidget(self.labelTitle,  alignment=Qt.AlignmentFlag.AlignCenter)

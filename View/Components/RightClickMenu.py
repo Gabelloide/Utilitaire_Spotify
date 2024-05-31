@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QMenu, QLabel
 from PyQt6.QtGui import QAction
 from PyQt6.QtGui import QFontDatabase, QFont
-
+import ui_utils
 from View.Components.ImageLabel import ImageLabel
 from View.Components.OverlayInfo import OverlayTrackInfo, OverlayArtistInfo, OverlayAlbumInfo
 
@@ -11,13 +11,7 @@ class RightClickMenu(QMenu):
     self.parentComponent: ImageLabel = parent
 
     # Import font
-    font_id = QFontDatabase.addApplicationFont("Assets/fonts/HelveticaNeueMedium.otf")
-    if font_id == -1:
-      print("Failed to load the custom font")
-      return
-    font_families = QFontDatabase.applicationFontFamilies(font_id)
-    custom_font = font_families[0]
-    font = QFont(custom_font, 20)
+    font = ui_utils.getFont(20)
     self.setFont(font)
 
     self.setStyleSheet("""

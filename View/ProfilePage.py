@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel, QHBoxLayo
 from PyQt6 import QtCore, uic
 from PyQt6.QtGui import QFontDatabase, QFont, QPixmap
 from PyQt6.QtNetwork import QNetworkAccessManager
-
+import ui_utils
 # -------
 from Controller import MainWindow
 from View.Components.FlowLayout import FlowLayout
@@ -64,22 +64,13 @@ class ProfilePage(QWidget):
     self.setLayout(self.mainLayout)
     
     # Add the custom font
-    font_id = QFontDatabase.addApplicationFont("Assets/fonts/HelveticaNeueMedium.otf")
-    if font_id == -1:
-      print("Failed to load the custom font")
-      return
-    font_families = QFontDatabase.applicationFontFamilies(font_id)
-    custom_font = font_families[0]
-    font = QFont(custom_font, 20)
+    font = ui_utils.getFont(20)
 
     with open("Assets/style.css", "r") as file:
       css = file.read()
     
     self.labelUsername.setFont(font)
     self.labelUsername.setStyleSheet(css)
-    self.containerTracks.setStyleSheet('font-size: 20px;')
-    self.containerArtists.setStyleSheet('font-size: 20px;')
-    self.containerAlbums.setStyleSheet('font-size: 20px;') 
 
   def createMoreButtons(self):
     """Creates the 'see more' buttons at the end of each row of the profile page."""

@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel
 from PyQt6 import QtCore
 from PyQt6.QtGui import QFontDatabase, QFont
-
+import ui_utils
 from Controller import MainWindow
 
 class LoginPage(QWidget):
@@ -15,14 +15,7 @@ class LoginPage(QWidget):
     layout = QGridLayout()
     
     # Add the custom font to the QFontDatabase
-    font_id = QFontDatabase.addApplicationFont("Assets/fonts/HelveticaNeueMedium.otf")
-    if font_id == -1:
-      print("Failed to load the custom font")
-      return
-    
-    font_families = QFontDatabase.applicationFontFamilies(font_id)
-    custom_font = font_families[0]
-    font = QFont(custom_font, 20)
+    font = ui_utils.getFont(20)
 
     # Read CSS
     with open("Assets/style.css", "r") as file:

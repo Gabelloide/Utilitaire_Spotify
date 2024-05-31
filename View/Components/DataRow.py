@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from View.Components.FlowLayout import FlowLayout
+from View.Components.LabelSousTitre import LabelSousTitre
 
 class DataRow(QWidget):
   """This class is a custom widget that displays a row of data.
@@ -12,8 +13,7 @@ class DataRow(QWidget):
 
     self.mainLayout = QVBoxLayout()
 
-    self.title_label = QLabel(title)
-    self.title_label.setStyleSheet("color: white;")
+    self.title_label = LabelSousTitre(title)
     self.mainLayout.addWidget(self.title_label)
 
 
