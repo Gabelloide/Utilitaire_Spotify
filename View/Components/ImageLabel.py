@@ -44,6 +44,8 @@ class ImageLabel(QWidget):
     - Sets the image to the QLabel using the data downloaded.
     """
     try:
+      if url is None:
+        return
       response = requests.get(url)
       response.raise_for_status()
       data = response.content

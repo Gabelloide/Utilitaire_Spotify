@@ -45,7 +45,7 @@ class OverlayTrackInfo(OverlayInfo):
 
 
   def createContent(self, trackObject: Track):
-    labelTitle = QLabel("Crédits")
+    labelTitle = QLabel("Informations sur ce morceau")
     labelTitle.setStyleSheet("font-size: 20px; font-weight: bold;")
     
     label_name = QLabel(trackObject.name)
@@ -75,7 +75,7 @@ class OverlayArtistInfo(OverlayInfo):
 
 
   def createContent(self, artistObject: Artist):
-    labelTitle = QLabel("Crédits")
+    labelTitle = QLabel("Informations sur cet artiste")
     labelTitle.setStyleSheet("font-size: 20px; font-weight: bold;")
     
     label_name = QLabel(artistObject.name)
@@ -106,7 +106,7 @@ class OverlayAlbumInfo(OverlayInfo):
     super().__init__(parent)
     
   def createContent(self, albumObject: Album):
-    labelTitle = QLabel("Crédits")
+    labelTitle = QLabel("Informations sur cet album")
     labelTitle.setStyleSheet("font-size: 20px; font-weight: bold;")
     
     label_name = QLabel(albumObject.name)

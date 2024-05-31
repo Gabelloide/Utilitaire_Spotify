@@ -82,6 +82,7 @@ class ProfilePage(QWidget):
     self.containerAlbums.setStyleSheet('font-size: 20px;') 
 
   def createMoreButtons(self):
+    """Creates the 'see more' buttons at the end of each row of the profile page."""
     seeMoreTracks = QPushButton("Voir plus...")
     seeMoreArtists = QPushButton("Voir plus...")
     seeMoreAlbums = QPushButton("Voir plus...")

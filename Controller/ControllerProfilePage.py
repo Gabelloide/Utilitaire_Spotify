@@ -41,4 +41,4 @@ class ControllerProfilePage:
       self.view.containerAlbums.addComponent(label)
 
     # Adding "more" buttons after the last element of each container
-    self.view.createMoreButtons()
+    # self.view.createMoreButtons()
