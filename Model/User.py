@@ -18,30 +18,6 @@ class User:
   def __str__(self) -> str:
     return self.display_name
   
-  
-  def getTopArtists(self, client, limit=5) -> List[Artist.Artist]:
-    results = client.current_user_top_artists(time_range='short_term') # 4 weeks
-    items = results['items']
-    # Filling the list with all the artists
-    while results['next'] and len(items) < limit:
-      results = client.next(results)
-      items.extend(results['items'])
-    
-    # Creating Artist objects
-    return [Artist.Artist(artist) for artist in items[:limit]]
-  
-  
-  def getTopTracks(self, client, limit=5) -> List[Track.Track]:
-    results = client.current_user_top_tracks(time_range='short_term') # 4 weeks
-    items = results['items']
-    # Filling the list with all the tracks
-    while results['next'] and len(items) < limit: # If there are less than {limit} items, we need to fetch more
-      results = client.next(results)
-      items.extend(results['items'])
-
-    # Creating Track objects
-    return [Track.Track(track) for track in items[:limit]] # Limiting the number of tracks to {limit}
-
 
   def getBigProfilePicture(self) -> str:
     imageURL = None
@@ -51,19 +27,3 @@ class User:
         max_height = image['height']
         imageURL = image['url']
     return imageURL
-
-
-  def getTopAlbums(self, client, limit=5) -> List[Album.Album]:
-    topTracks = self.getTopTracks(client, limit=150) # Limit will increase accuracy of score checking
-    albumsScores = {}
-    idAlbums = {}
-    for track in topTracks:
-      if track.album.album_type != 'SINGLE':
-        albumsScores[track.album.id] = albumsScores.get(track.album.id, 0) + 1
-        idAlbums[track.album.id] = track.album
-
-    # Sorting the dictionary by values
-    sortedAlbumsIDs = [k for k, v in sorted(albumsScores.items(), key=lambda item: item[1], reverse=True)]
-    sortedAlbums = [idAlbums[albumID] for albumID in sortedAlbumsIDs][:limit]
-    
-    return sortedAlbums

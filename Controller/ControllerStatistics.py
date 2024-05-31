@@ -1,4 +1,5 @@
 from Model.User import User
+from Model import Statistics
 from View.StatisticsPage import StatisticsPage
 from Controller import SpotifyAPI
 from Controller.MainWindow import MainWindow
@@ -11,7 +12,7 @@ class ControllerStatistics:
     self.view.btnOpenPageZip.clicked.connect(lambda: self.view.parentView.showPage("ZipUploadPage"))
     # Get model information to fill the view
     client = SpotifyAPI.get_spotify_client()
-    placeholderTracks = user.getTopTracks(client, 10)
+    placeholderTracks = Statistics.getTopTracks(client, 10)
     
     # * DATAROW 1 *
     tracksRow = MainWindow.createDataRow("Plein de tracks")

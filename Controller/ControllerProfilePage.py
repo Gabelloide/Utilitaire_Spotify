@@ -1,4 +1,5 @@
 from Model.User import User
+from Model import Statistics
 from View.ProfilePage import ProfilePage
 from Controller.MainWindow import MainWindow
 from Controller import SpotifyAPI
@@ -17,9 +18,9 @@ class ControllerProfilePage:
 
     # Download the user's top tracks, artists and albums
     client = SpotifyAPI.get_spotify_client()
-    user_top_tracks = self.user.getTopTracks(client, limit=8)
-    user_top_artists = self.user.getTopArtists(client, limit=8)
-    user_top_albums = self.user.getTopAlbums(client, limit=8)
+    user_top_tracks = Statistics.getTopTracks(client, limit=8)
+    user_top_artists = Statistics.getTopArtists(client, limit=8)
+    user_top_albums = Statistics.getTopAlbums(client, limit=8)
 
     # The album/artist/track ids are passed to the download manager to get them from cache if they are already downloaded
     for i, track in enumerate(user_top_tracks):
