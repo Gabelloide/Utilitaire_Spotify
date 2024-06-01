@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QSpacerItem, QSizePolicy, QPushButton
 
+from View.Components.LabelSubTitle import LabelSubTitle
 
 class StatisticsPage(QWidget):
   """This class is responsible for displaying the user's statistics page.
@@ -27,7 +28,7 @@ class StatisticsPage(QWidget):
     self.labelTitle = QLabel("Statistiques d'écoute")
     self.labelTitle.setStyleSheet(stylesheet)
 
-    self.labelImport = QLabel("Pour avoir accès à des statistiques plus détaillées, importez vos données en cliquant sur le bouton ci-dessous.")
+    self.labelImport = LabelSubTitle("Pour avoir accès à des statistiques plus détaillées, importez vos données en cliquant sur le bouton ci-dessous.")
     self.btnOpenPageZip = QPushButton("Importer mon fichier de données")
     self.labelImport.setStyleSheet("color: white;") 
     self.btnOpenPageZip.setStyleSheet("color: white;")
