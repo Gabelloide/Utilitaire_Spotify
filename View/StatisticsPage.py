@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QSpacerItem, QSizePolicy, QPushButton
-
+from PyQt6.QtCore import Qt
 from View.Components.LabelSubTitle import LabelSubTitle
 
 class StatisticsPage(QWidget):
@@ -28,10 +28,10 @@ class StatisticsPage(QWidget):
     self.labelTitle = QLabel("Statistiques d'écoute")
     self.labelTitle.setStyleSheet(stylesheet)
 
-    self.labelImport = LabelSubTitle("Pour avoir accès à des statistiques plus détaillées, importez vos données en cliquant sur le bouton ci-dessous.")
-    self.btnOpenPageZip = QPushButton("Importer mon fichier de données")
+    self.labelImport = LabelSubTitle("Pour avoir accès à des statistiques plus détaillées, <a href='link' style='color:#1DB954;text-decoration:underline;'>importez vos données</a>.")
+    self.labelImport.setTextFormat(Qt.TextFormat.RichText)
     self.labelImport.setStyleSheet("color: white;") 
-    self.btnOpenPageZip.setStyleSheet("color: white;")
+
 
     spacerItem_left = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     self.containerTitle.addItem(spacerItem_left)
@@ -40,9 +40,7 @@ class StatisticsPage(QWidget):
     self.containerTitle.addItem(spacerItem_right)
     
     self.mainLayout.addLayout(self.containerTitle)
-    
     self.mainLayout.addWidget(self.labelImport)
-    self.mainLayout.addWidget(self.btnOpenPageZip)
     
     self.setLayout(self.mainLayout)
     

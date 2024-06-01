@@ -6,6 +6,7 @@ from View import LoginPage, NavBar
 from View.ProfilePage import ProfilePage
 from View.Components.ImageLabel import ImageLabel, AlbumImageLabel, ArtistImageLabel, TrackImageLabel, ProfilePictureImageLabel
 from View.Components.DataRow import DataRow
+from View.Components.FigureLabel import FigureLabel
 from Controller import ControllerLogin
 from Controller import ControllerNavBar
 
@@ -76,7 +77,14 @@ class MainWindow(QMainWindow):
     label.setMaximumSize(100, 100)
     return label
 
+
   @staticmethod
   def createDataRow(title: str):
     """Creates a DataRow component."""
     return DataRow(title)
+
+
+  @staticmethod
+  def createFigureLabel(number: str, text: str):
+    """Creates a FigureLabel component."""
+    return FigureLabel(number, text)

@@ -27,6 +27,31 @@ def get_50_recently_played_tracks(client):
   return recently_played_dict
 
 
+def get_recently_played_artists(client):
+  """Returns a list of Artist objects present in the 50 most recently played tracks.
+  If an artist is present multiple times, it will only be counted once."""
+  recently_played_dict = get_50_recently_played_tracks(client)
+  artists = []
+  for track in recently_played_dict.keys():
+    for artist in track.artists:
+      # Before adding, check if artist id is already in the list
+      if artist.id not in [a.id for a in artists]:
+        artists.append(artist)
+  return artists
+
+
+def get_recently_played_albums(client):
+  """Returns a list of Album objects present in the 50 most recently played tracks.
+  If an album is present multiple times, it will only be counted once."""
+  recently_played_dict = get_50_recently_played_tracks(client)
+  albums = []
+  for track in recently_played_dict.keys():
+    # Before adding, check if album id is already in the list
+    if track.album.id not in [a.id for a in albums]:
+      albums.append(track.album)
+  return albums
+
+
 def getTopArtists(client, limit=5, time_range="short_term") -> List[Artist]:
   """Returns the top {limit} artists of the user in the last {time_range}."""
   if time_range not in ['short_term', 'medium_term', 'long_term']:
@@ -124,18 +149,8 @@ def getNbUniquePlayedTracks(client):
 
 
 def getNbPlayedArtists(client):
-  return len(getTopArtists(client)) # TODO : make artists come from the 50 most recently played tracks
-
-
-def getNbUniquePlayedArtists(client):
-  artists = getTopArtists(client) # TODO : make artists come from the 50 most recently played tracks
-  # Filtering on the ID
-  uniqueArtists = []
-  for artist in artists:
-    if artist.id not in [a.id for a in uniqueArtists]:
-      uniqueArtists.append(artist)
-  return len(uniqueArtists)
+  return len(get_recently_played_artists(client))
 
 
 def getNbPlayedAlbums(client):
-  return len(getTopAlbums(client)) # TODO : make albums come from the 50 most recently played tracks
+  return len(get_recently_played_albums(client))

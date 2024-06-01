@@ -13,4 +13,3 @@ class LabelSubTitle(QLabel):
         self.setStyleSheet("""
             color: white;
         """)
-

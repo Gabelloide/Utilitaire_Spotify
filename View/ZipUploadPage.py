@@ -19,20 +19,24 @@ class ZipUploadPage(QWidget):
         font = ui_utils.getFont(20)
 
         textLabelInfo = """
-        <p>Dans le cadre de notre engagement à fournir des statistiques précises et détaillées sur votre utilisation de Spotify, nous vous demandons de fournir un fichier zip de vos données Spotify. Ce fichier contient des informations détaillées sur votre historique d'écoute, vos playlists, vos recherches, et plus encore. Ces données nous permettent de générer des statistiques plus précises et personnalisées.</p>
+        <p>Spotify fournit des données concernant vos écoutes à travers leur API (Application Programming Interface), mais ne permet pas de préciser le nombre de fois que vous avez écouté un titre, un album ou un artiste. Pour avoir accès à des fonctionnalités plus précises, vous devrez importer votre historique d'écoutes.</p>
 
-        <p>Sans ces données, nous sommes limités à utiliser l'API Spotify, qui ne fournit que les 50 dernières chansons écoutées, les 20 meilleurs artistes et les 20 meilleures chansons sur une période de 4 semaines ou 6 mois. De plus, l'API ne fournit pas d'informations sur les recherches ou les playlists.</p>
+        <p>Si vous fournissez un fichier de données Spotify, vous aurez accès à :
+        <ul>
+        <li>Le nombre d'écoutes d'un morceau/artiste/album</li>
+        <li>Votre historique d'écoutes au delà de 50 musiques, ce qui permet de calculer plus précisément tout le reste</li>
+        </ul>
+        </p>
 
-        <p>En fournissant le fichier zip de vos données Spotify, vous nous permettez d'analyser votre historique d'écoute sur une période plus longue et de prendre en compte des informations supplémentaires, comme vos recherches et vos playlists. Cela nous permet de fournir des statistiques plus précises et détaillées.</p>
+        <p>Veuillez noter que nous ne prendrons pas en compte les écoutes ayant duré moins de 30 secondes, et l'écoute de podcasts.</p>
 
-        <p>Nous tenons à vous assurer que vos données seront utilisées uniquement à des fins d'analyse. Nous respectons le Règlement Général sur la Protection des Données (RGPD) et nous nous engageons à protéger vos données. Vous avez le droit d'accéder à vos données, de les rectifier, de demander leur suppression, de limiter leur traitement et de vous opposer à leur traitement.</p>
         """
 
         self.labelTitle.setFont(font)
         self.labelTitle.setFixedHeight(50)
         self.labelTitle.setStyleSheet("""
             font-size: 30px;
-            color: white;                    
+            color: white;
         """)
 
         self.labelInformations= QLabel(textLabelInfo)
@@ -44,14 +48,22 @@ class ZipUploadPage(QWidget):
             color: white;
         """) # Center the text
 
-        self.btnZipUpload = QPushButton("Upload un zip")
-        self.btnZipUpload.setStyleSheet("""
-            background-color: #1DB954;
-            color: white;
-            border-radius: 25px;
-            padding: 15px;
-            font-size: 14px;
-            margin-top : 90px;
+        self.btnZipUpload = QPushButton("Téléverser mon fichier de données Spotify")
+        self.setStyleSheet("""
+        QPushButton {
+          font-size: 20px;
+          background-color: #1DB954;
+          border: none;
+          border-radius: 30px;
+          padding: 20px 20px;
+          color: black;
+          min-width: 300px;
+
+        }
+
+        QPushButton:hover {
+            font-weight: bold;
+        }
         """)  # Style the button
 
         self.mainLayout.addWidget(self.labelTitle,  alignment=Qt.AlignmentFlag.AlignCenter)
