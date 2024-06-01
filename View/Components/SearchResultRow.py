@@ -60,12 +60,12 @@ class SearchResultRow(QWidget):
             print(f"Error downloading image: {e}")
             
     def set_image(self, data):
-        if self.image_label:
-            pixmap = QPixmap()
-            pixmap.loadFromData(data)
-            self.image_label.setPixmap(pixmap)
-            self.image_label.setScaledContents(True)
-            self.image_label.setMaximumWidth(50)
+        """Sets the image to the QLabel."""
+        pixmap = QPixmap()
+        pixmap.loadFromData(data)
+        self.image_label.setPixmap(pixmap)
+        self.image_label.setScaledContents(True)
+        self.image_label.setMaximumWidth(50)
 
 
 class TrackResult(SearchResultRow):
@@ -101,7 +101,10 @@ class ArtistResult(SearchResultRow):
         
         self.info_layout.addWidget(self.artist_label)
         self.info_layout.addWidget(self.listeners_label)
-    
+        
+        spacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.main_layout.insertSpacerItem(2, spacer)
+        
     def set_artist(self, artist):
         self.artist_label.setText(artist)
     
