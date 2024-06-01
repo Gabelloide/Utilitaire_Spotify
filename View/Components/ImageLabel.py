@@ -30,7 +30,11 @@ class ImageLabel(QWidget):
     - If the image is not in the cache, it downloads it in a separate thread.
     """
     if url is None:
-      return
+      # Fallback on the image placeholder
+      with open("Assets/icons/user_placeholder.png", "rb") as file:
+        data = file.read()
+        self.setImage(data)
+        return
     if utils.exists_in_cache(filename):
       data = utils.load_from_cache(filename)
       self.setImage(data)
@@ -54,10 +58,7 @@ class ImageLabel(QWidget):
 
     except requests.RequestException as e:
       print(f"Error downloading image: {e}")
-      # Fallback on the image placeholder
-      with open("Assets/icons/cover_placeholder.png", "rb") as file:
-        data = file.read()
-        self.setImage(data)
+      
 
 
   def setImage(self, data):
