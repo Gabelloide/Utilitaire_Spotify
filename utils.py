@@ -39,3 +39,15 @@ def set_format_duration(duration_ms : int)-> str:
     minutes, seconds = divmod(duration_s, 60)
     # Retourner la durée formatée
     return f"{minutes}:{seconds:02d}"
+
+
+def receive_all(sock):
+    """This function is used to receive all data from a socket"""
+    data = b''
+    while True:
+        part = sock.recv(1024)
+        data += part
+        if len(part) < 1024:
+            # either 0 or end of data
+            break
+    return data

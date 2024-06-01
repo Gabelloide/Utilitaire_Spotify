@@ -22,9 +22,16 @@ class DataRow(QWidget):
 
     self.setLayout(self.mainLayout)
 
+
   def addComponent(self, component):
     """Adds a component to the data layout."""
     self.data_layout.addWidget(component)
 
+
   def setStyleSheet(self, styleSheet: str):
     self.title_label.setStyleSheet(styleSheet)
+
+
+  def getDataCount(self):
+    """Returns the number of data components in the layout."""
+    return self.data_layout.count()

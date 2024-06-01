@@ -1,4 +1,4 @@
-import socket, pickle, json, threading
+import socket, pickle, json, threading, os
 import constants
 
 # SOCKET PORT : 23456
@@ -9,6 +9,12 @@ def wait_for_track():
   """This function is used to wait for a track to be sent by the client. This track is then inserted into a shared trend dict, which contains the added tracks."""
 
   trendDict = {}
+  
+  # Looking for the trends.json file, if it doesn't exist, create it
+  if not os.path.exists("trends.json"):
+    with open("trends.json", "w") as file:
+      json.dump({}, file)
+  
   # Filling back the trendDict from trends.json file to be up to date
   try:
     with open("trends.json", "r") as file:
@@ -21,7 +27,7 @@ def wait_for_track():
     server_socket.bind((constants.SERVER_ADDRESS, constants.SERVER_TREND_PORT))
     server_socket.listen()
     
-    print(f"trendThread is listening on {server_socket.getsockname()}")
+    print(f"trendReceiverThread is listening on {server_socket.getsockname()}")
     
     while True:
       connection, adress = server_socket.accept()
@@ -52,6 +58,7 @@ def wait_for_track():
               print(e)
 
         except Exception as e:
+          print("Exception in trendReceiverThread")
           print(e)
         
       connection.close()
