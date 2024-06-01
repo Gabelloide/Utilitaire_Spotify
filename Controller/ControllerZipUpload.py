@@ -3,6 +3,8 @@ from tkinter.filedialog import FileDialog
 from View.ZipUploadPage import ZipUploadPage
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
+import constants
+
 class ControllerZipUpload:
   def __init__(self, view: ZipUploadPage):
     self.view = view
@@ -19,7 +21,7 @@ class ControllerZipUpload:
         msg.setWindowTitle("Error")
         msg.exec()
     else:
-        self.send_file('localhost', 12345, fileName)
+        self.send_file(constants.SERVER_ADDRESS, constants.SERVER_ZIP_PORT, fileName)
   
   def send_file(self, server_address, server_port, file_name):
     try:

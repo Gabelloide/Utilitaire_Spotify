@@ -44,13 +44,17 @@ class TrackRightClickMenu(RightClickMenu):
 
     self.addToTrends = QAction("Ajouter ce titre aux tendances...", self)
     self.addAction(self.addToTrends)
-    
+    self.addToTrends.triggered.connect(self.addTrend)    
     
   def showOverlay(self):
     mainWindow = self.parentComponent.window()
     overlay = OverlayTrackInfo(mainWindow)
     overlay.createContent(self.parentComponent.attachedObject)
     overlay.show()
+    
+  def addTrend(self):
+    from Controller.ControllerTrendingPage import ControllerTrendingPage
+    ControllerTrendingPage.sendTrackToTrends(self.parentComponent.attachedObject)
 
 
 class ArtistRightClickMenu(RightClickMenu):

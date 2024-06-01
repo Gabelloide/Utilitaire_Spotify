@@ -1,4 +1,5 @@
 import zipfile, os, json, shutil, socket
+import constants
 
 from Database import Database
 from HistoryTrack import HistoryTrack
@@ -33,7 +34,7 @@ def clean_data(data):
 def wait_for_zip_file():
   # Create a socket object, to bind it to the server
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-    server_socket.bind(('localhost', 12345))
+    server_socket.bind((constants.SERVER_ADDRESS, constants.SERVER_ZIP_PORT))
     server_socket.listen()
     
     print("zipThread is listening on {0}".format(server_socket.getsockname()))
