@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
 from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
 import requests
 import threading
 
@@ -82,35 +83,61 @@ class ImageLabel(QWidget):
     contextMenu.exec(event.globalPos()) # Show the context menu at the event position
 
 
-class TrackImageLabel(ImageLabel):    
+class TrackImageLabel(ImageLabel):
   def __init__(self, track, parent=None):
     super().__init__(track, parent)
-    
+    self.image_label.mousePressEvent = self.showInfo
+
   # Overriding the context menu event to display a custom context menu
   def contextMenuEvent(self, event):
     from View.Components.RightClickMenu import TrackRightClickMenu
     contextMenu = TrackRightClickMenu(self)
     contextMenu.exec(event.globalPos())
 
+  def showInfo(self, event):
+    if event.button() == Qt.MouseButton.LeftButton:
+      from View.Components.OverlayInfo import OverlayTrackInfo
+      mainWindow = self.window()
+      overlay = OverlayTrackInfo(mainWindow)
+      overlay.createContent(self.attachedObject)
+      overlay.show()
+
 
 class ArtistImageLabel(ImageLabel):
   def __init__(self, artist, parent=None):
     super().__init__(artist, parent)
+    self.image_label.mousePressEvent = self.showInfo
 
   def contextMenuEvent(self, event):
     from View.Components.RightClickMenu import ArtistRightClickMenu
     contextMenu = ArtistRightClickMenu(self)
     contextMenu.exec(event.globalPos())
 
+  def showInfo(self, event):
+    if event.button() == Qt.MouseButton.LeftButton:
+      from View.Components.OverlayInfo import OverlayArtistInfo
+      mainWindow = self.window()
+      overlay = OverlayArtistInfo(mainWindow)
+      overlay.createContent(self.attachedObject)
+      overlay.show()
 
 class AlbumImageLabel(ImageLabel):
   def __init__(self, album, parent=None):
     super().__init__(album, parent)
+    self.image_label.mousePressEvent = self.showInfo
 
   def contextMenuEvent(self, event):
     from View.Components.RightClickMenu import AlbumRightClickMenu
     contextMenu = AlbumRightClickMenu(self)
     contextMenu.exec(event.globalPos())
+
+  def showInfo(self, event):
+    if event.button() == Qt.MouseButton.LeftButton:
+      from View.Components.OverlayInfo import OverlayAlbumInfo
+      mainWindow = self.window()
+      overlay = OverlayAlbumInfo(mainWindow)
+      overlay.createContent(self.attachedObject)
+      overlay.show()
 
 
 class ProfilePictureImageLabel(ImageLabel):
