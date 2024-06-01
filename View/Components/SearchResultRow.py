@@ -60,12 +60,12 @@ class SearchResultRow(QWidget):
             print(f"Error downloading image: {e}")
             
     def set_image(self, data):
-        """Sets the image to the QLabel."""
-        pixmap = QPixmap()
-        pixmap.loadFromData(data)
-        self.image_label.setPixmap(pixmap)
-        self.image_label.setScaledContents(True)
-        self.image_label.setMaximumWidth(50)
+        if self.image_label:
+            pixmap = QPixmap()
+            pixmap.loadFromData(data)
+            self.image_label.setPixmap(pixmap)
+            self.image_label.setScaledContents(True)
+            self.image_label.setMaximumWidth(50)
 
 
 class TrackResult(SearchResultRow):
