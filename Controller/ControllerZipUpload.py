@@ -1,5 +1,4 @@
 import socket
-from tkinter.filedialog import FileDialog
 from View.ZipUploadPage import ZipUploadPage
 from PyQt6.QtWidgets import QFileDialog, QMessageBox
 
@@ -13,14 +12,15 @@ class ControllerZipUpload:
 
   def open_file_dialog(self):
     fileName, _ = QFileDialog.getOpenFileName(None, "QFileDialog.getOpenFileName()", "", "All Files (*)")
-    if not fileName.endswith('.zip'):
+    if fileName:
+      if not fileName.endswith('.zip'):
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Warning)
         msg.setText("Error")
         msg.setInformativeText('Please select a zip file')
         msg.setWindowTitle("Error")
         msg.exec()
-    else:
+      else:
         self.send_file(constants.SERVER_ADDRESS, constants.SERVER_ZIP_PORT, fileName)
   
   def send_file(self, server_address, server_port, file_name):
