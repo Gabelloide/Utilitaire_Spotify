@@ -2,7 +2,6 @@ import random
 from Model.User import User
 from View.SearchPage import SearchPage
 from View.Components.SearchResultRow import TrackResult, ArtistResult, AlbumResult
-from Controller.MainWindow import MainWindow
 from Controller import SpotifyAPI
 from Model.Track import Track
 from Model.Artist import Artist
