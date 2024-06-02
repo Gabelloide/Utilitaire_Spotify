@@ -1,7 +1,5 @@
 from Model.User import User
 from View.RecommendationPage import RecommendationPage
-from Controller.MainWindow import MainWindow
-from Controller import SpotifyAPI
 
 
 class ControllerRecommendationPage:

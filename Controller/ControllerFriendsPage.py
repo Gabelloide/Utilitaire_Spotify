@@ -1,7 +1,5 @@
 from Model.User import User
 from View.FriendsPage import FriendsPage
-from Controller.MainWindow import MainWindow
-from Controller import SpotifyAPI
 
 
 class ControllerFriendsPage:
