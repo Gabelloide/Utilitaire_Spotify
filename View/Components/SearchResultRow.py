@@ -7,6 +7,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QSpacerItem, QSizePolicy
 
 class SearchResultRow(QWidget):
+
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -69,6 +70,7 @@ class SearchResultRow(QWidget):
 
 
 class TrackResult(SearchResultRow):
+
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -93,6 +95,7 @@ class TrackResult(SearchResultRow):
 
 
 class ArtistResult(SearchResultRow):
+
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -113,6 +116,7 @@ class ArtistResult(SearchResultRow):
 
 
 class AlbumResult(SearchResultRow):
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -122,6 +126,9 @@ class AlbumResult(SearchResultRow):
         self.info_layout.addWidget(self.album_title_label)
         self.info_layout.addWidget(self.artist_label)
     
+        spacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.main_layout.insertSpacerItem(2, spacer)
+        
     def set_album_title(self, title):
         self.album_title_label.setText(title)
     

@@ -1,4 +1,5 @@
 import os
+import unicodedata
 
 def load_env():
   """Loads environment variables from .env file."""
@@ -51,3 +52,11 @@ def receive_all(sock):
             # either 0 or end of data
             break
     return data
+
+
+def enlever_accents(chaine):
+    # Normaliser la chaîne pour séparer les caractères accentués en caractères de base + diacritiques
+    chaine_normalisee = unicodedata.normalize('NFD', chaine)
+    # Filtrer les diacritiques (accents) en gardant uniquement les caractères de base
+    chaine_sans_accents = ''.join(c for c in chaine_normalisee if unicodedata.category(c) != 'Mn')
+    return chaine_sans_accents
