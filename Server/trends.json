@@ -1,30 +1,52 @@
 {
-  "0vMBqdJIkmflvFk728hKH7": {
-      "upvotes": 1,
-      "addedBy": "kzf7pt1jzss01f4rwg1evg7ah"
-  },
-  "5HPsZwo40KA3GThqBFZFac": {
-      "upvotes": 7,
-      "addedBy": "kzf7pt1jzss01f4rwg1evg7ah"
-  },
-  "3gmn76fCtpDazGMnN0QMHX": {
-      "upvotes": 6,
-      "addedBy": "kzf7pt1jzss01f4rwg1evg7ah"
-  },
-  "2AnvQvVqWORCmgRzLR0sHe": {
-      "upvotes": 6,
-      "addedBy": "kzf7pt1jzss01f4rwg1evg7ah"
-  },
-  "32zpHDchUY83w80C8mMtOs": {
-      "upvotes": 1,
-      "addedBy": "kzf7pt1jzss01f4rwg1evg7ah"
-  },
-  "2drddXvwwO2AUR7EooatUy": {
-      "upvotes": 1,
-      "addedBy": "rszlsv78umi2nsvhta3m9dxbk"
-  },
-  "0u0fZBgvRjNbzmiLyW6ITX": {
-      "upvotes": 999,
-      "addedBy": "rszlsv78umi2nsvhta3m9dxbk"
-  }
+    "2AnvQvVqWORCmgRzLR0sHe": {
+        "upvotes": 101,
+        "addedBy": "rszlsv78umi2nsvhta3m9dxbk",
+        "upvotedBy": [
+            "rszlsv78umi2nsvhta3m9dxbk",
+            "kzf7pt1jzss01f4rwg1evg7ah"
+        ]
+    },
+    "5vCNAauCaecW0tT2mZDLG9": {
+        "upvotes": 1,
+        "addedBy": "kzf7pt1jzss01f4rwg1evg7ah",
+        "upvotedBy": [
+            "kzf7pt1jzss01f4rwg1evg7ah"
+        ]
+    },
+    "0vMBqdJIkmflvFk728hKH7": {
+        "upvotes": 1,
+        "addedBy": "kzf7pt1jzss01f4rwg1evg7ah",
+        "upvotedBy": [
+            "kzf7pt1jzss01f4rwg1evg7ah"
+        ]
+    },
+    "2qHW7U1LRU9F9HPUnJ6ffk": {
+        "upvotes": 1,
+        "addedBy": "kzf7pt1jzss01f4rwg1evg7ah",
+        "upvotedBy": [
+            "kzf7pt1jzss01f4rwg1evg7ah"
+        ]
+    },
+    "3gmn76fCtpDazGMnN0QMHX": {
+        "upvotes": 1,
+        "addedBy": "kzf7pt1jzss01f4rwg1evg7ah",
+        "upvotedBy": [
+            "kzf7pt1jzss01f4rwg1evg7ah"
+        ]
+    },
+    "2drddXvwwO2AUR7EooatUy": {
+        "upvotes": 1,
+        "addedBy": "kzf7pt1jzss01f4rwg1evg7ah",
+        "upvotedBy": [
+            "kzf7pt1jzss01f4rwg1evg7ah"
+        ]
+    },
+    "32zpHDchUY83w80C8mMtOs": {
+        "upvotes": 1,
+        "addedBy": "kzf7pt1jzss01f4rwg1evg7ah",
+        "upvotedBy": [
+            "kzf7pt1jzss01f4rwg1evg7ah"
+        ]
+    }
 }

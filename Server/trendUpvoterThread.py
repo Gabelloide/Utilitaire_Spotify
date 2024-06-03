@@ -1,25 +1,25 @@
 import socket, pickle, json, threading, os
 import constants
 
-# SOCKET PORT : 23456
+# SOCKET PORT : 23458
 
 lock = threading.Lock()
 
-def wait_for_track():
-  """This function is used to wait for a track to be sent by the client. This track is then inserted into a shared trend dict, which contains the added tracks."""
+def wait_for_upvote():
+  """Will wait for a message to upvote a track"""
   global trendDict
 
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-    server_socket.bind((constants.SERVER_ADDRESS, constants.SERVER_TREND_PORT))
+    server_socket.bind((constants.SERVER_ADDRESS, constants.SERVER_TREND_UPVOTING_PORT))
     server_socket.listen()
     
-    print(f"trendReceiverThread is listening on {server_socket.getsockname()}")
+    print(f"trendUpvoterThread is listening on {server_socket.getsockname()}")
     
     while True:
       connection, adress = server_socket.accept()
       with connection:
         print(f"Connected by {adress}")
-
+        
         # Looking for the trends.json file, if it doesn't exist, create it
         if not os.path.exists("trends.json"):
           with open("trends.json", "w") as file:
@@ -27,42 +27,45 @@ def wait_for_track():
         
         # Filling back the trendDict from trends.json file to be up to date
         try:
-          with open("trends.json", "r") as file:
-            trendDict = json.load(file)
+          if os.path.getsize("trends.json") > 0:
+            with open("trends.json", "r") as file:
+              trendDict = json.load(file)
         except Exception as e:
           print("Error in reading trends.json file")
           print(e)
 
         # Process received data w/ pickle
-        # Data received is a tuple of (trackID, userID)
+        # Data received is a tuple (trackID, userID)
         
         data = receive_all(connection)
         try:
           trackID, userID = pickle.loads(data)
-
+          
           # Acquiring the lock before modifying the shared trendDict json file
-          with lock: # With block is charged of acquiring and releasing the lock
+          with lock:
             if trackID in trendDict:
-              trendDict[trackID]["upvotes"] += 1
-              # Original user that added remains unchanged
-              # The user that upvoted is added to the list of upvoters
-              if userID not in trendDict[trackID]["upvotedBy"]:
+              if userID in trendDict[trackID]["upvotedBy"]:
+                # User has already upvoted the track
+                # Remove the upvote
+                trendDict[trackID]["upvotes"] -= 1
+                trendDict[trackID]["upvotedBy"].remove(userID)
+              else:
+                # User hasn't upvoted the track
+                # Add the upvote
+                trendDict[trackID]["upvotes"] += 1
                 trendDict[trackID]["upvotedBy"].append(userID)
-            else:
-              trendDict[trackID] = {"upvotes": 1, "addedBy": userID, "upvotedBy": [userID]} # The user that added the track is the first to upvote it
-
-            # Save the updated trendDict to trends.json
+              
             try:
               with open("trends.json", "w") as file:
                 json.dump(trendDict, file, indent=4)
             except Exception as e:
               print("Error in writing to trends.json file")
               print(e)
-
+          
         except Exception as e:
-          print("Exception in trendReceiverThread")
+          print("Exception in trendUpvoterThread")
           print(e)
-        
+      
       connection.close()
 
 

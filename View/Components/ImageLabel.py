@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 import requests
@@ -164,3 +164,88 @@ class ProfilePictureImageLabel(ImageLabel):
       with open("Assets/icons/user_placeholder.png", "rb") as file:
         data = file.read()
         self.setImage(data)
+
+
+class TrendImageLabel(ImageLabel):
+  def __init__(self, text, upvoteCount, attachedTrack, parent=None):
+    super().__init__(text, parent)
+    
+    self.attachedObject = attachedTrack
+    # Removed inherited widgets to add a custom layout
+    self.layout.removeWidget(self.text_label)
+    self.layout.removeWidget(self.image_label)
+
+    self.container_upvote_text = QHBoxLayout()
+    self.image_label = QLabel()
+    
+    self.upvote_counter = QLabel("0")
+    self.upvote_counter.setStyleSheet("color: white; font-size: 20px;")
+    self.setUpvoteCounter(upvoteCount)
+    
+    self.upvote_icon = QLabel()
+    
+    if self.getUpvoteState():
+      self.upvote_icon.setPixmap(QPixmap("Assets/icons/trend_like_full.png").scaled(50, 50))
+    else:
+      self.upvote_icon.setPixmap(QPixmap("Assets/icons/trend_like_empty.png").scaled(50, 50))
+    
+    self.text_label = QLabel(text)
+    self.text_label.setWordWrap(True)
+    self.text_label.setStyleSheet("color: white;")
+    
+    self.container_upvote_text.addWidget(self.upvote_counter)
+    self.container_upvote_text.addWidget(self.upvote_icon)
+    self.container_upvote_text.addWidget(self.text_label)
+    
+    self.layout.addWidget(self.image_label)
+    self.layout.addLayout(self.container_upvote_text)
+    
+    self.upvote_icon.mousePressEvent = self.upvote
+
+
+  # Trends are tracks, same behavior as TrackImageLabel
+  def contextMenuEvent(self, event):
+    from View.Components.RightClickMenu import TrackRightClickMenu
+    contextMenu = TrackRightClickMenu(self)
+    contextMenu.exec(event.globalPos())
+
+
+  def showInfo(self, event):
+    if event.button() == Qt.MouseButton.LeftButton:
+      from View.Components.OverlayInfo import OverlayTrackInfo
+      mainWindow = self.window()
+      overlay = OverlayTrackInfo(mainWindow)
+      overlay.createContent(self.attachedObject)
+      overlay.show()
+
+
+  def setMaximumSize(self, width, height):
+    """Overrides the setMaximumSize method to apply it to both the image and text labels."""
+    self.image_label.setMaximumSize(width, height)
+    self.upvote_icon.setMaximumSize(50, 50)
+    self.upvote_counter.setMaximumSize(50, 50)
+    self.text_label.setMaximumWidth(width-100)
+
+
+  def setUpvoteCounter(self, count):
+    self.upvote_counter.setText(str(count))
+    self.repaint()
+
+
+  def upvote(self, event):
+    if event.button() == Qt.MouseButton.LeftButton:
+      from Controller.ControllerTrendingPage import ControllerTrendingPage
+      ControllerTrendingPage.upvoteTrack(self.attachedObject.id)
+      
+      # Refreshing the view
+      if self.getUpvoteState():
+        self.upvote_icon.setPixmap(QPixmap("Assets/icons/trend_like_full.png").scaled(50, 50))
+      else:
+        self.upvote_icon.setPixmap(QPixmap("Assets/icons/trend_like_empty.png").scaled(50, 50))
+
+      self.setUpvoteCounter(ControllerTrendingPage.getUpvoteCount(self.attachedObject.id))
+  
+  
+  def getUpvoteState(self):
+    from Controller.ControllerTrendingPage import ControllerTrendingPage
+    return ControllerTrendingPage.getUpvoteState(self.attachedObject.id)

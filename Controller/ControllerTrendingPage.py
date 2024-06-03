@@ -15,7 +15,7 @@ class ControllerTrendingPage:
     self.view = view
     self.user = user
     
-    self.trends = self.fetchTrends() # Fetch the trends from the server once upon instanciation
+    self.trends = ControllerTrendingPage.fetchTrends() # Fetch the trends from the server once upon instanciation
     
     # FetchTrends also when the user clicks the refreshButton
     self.view.refreshButton.clicked.connect(lambda: self.refreshView())
@@ -41,13 +41,12 @@ class ControllerTrendingPage:
     
     # Adding the track objects to the datarow
     for track in trackObjects:
-      
       trackScore = self.trends[track.id]['upvotes']
       addedBy = ControllerTrendingPage.userID_to_User(self.trends[track.id]['addedBy'], client)
 
-      label = MainWindow.createImageLabel(f"{track.name} : ajoutée par {addedBy.display_name} - {trackScore} upvotes", "track")
-      label.attachedObject = track
+      label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, track)
       label.downloadAndSetImage(track.album.getBigCover(), track.id)
+
       trendingDataRow.addComponent(label)
 
     return trendingDataRow
@@ -61,15 +60,13 @@ class ControllerTrendingPage:
       if child.widget():
         child.widget().deleteLater()
     # Adding the new trends
-    self.trends = self.fetchTrends()
+    self.trends = ControllerTrendingPage.fetchTrends()
     trendingDataRow = self.createTrends()
     if trendingDataRow.getDataCount() > 0:
       self.view.containerTrends.addWidget(trendingDataRow)
     else:
       labelNothing = LabelSubTitle("On dirait qu'il n'y a rien ici pour le moment. Essayez d'ajouter des pistes aux tendances !")
       self.view.containerTrends.addWidget(labelNothing)
-
-
 
 
   @staticmethod
@@ -121,9 +118,10 @@ class ControllerTrendingPage:
       print(f"Socket error: {e}")
 
 
-  def fetchTrends(self):
+  @staticmethod
+  def fetchTrends():
     """Static method to fetch the trending tracks from the server
-    This is called by the TrendingPage class, regardless of any instanciation"""
+    This is called regardless of any instanciation"""
 
     try:
       with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -147,3 +145,61 @@ class ControllerTrendingPage:
       print(f"Unexpected error: {e}")
       
     return {}
+
+
+  @staticmethod
+  def getUpvoteState(trackID:str):
+    """Returns the upvote state of the current user given a trackID"""
+    # Fetching trends from the server
+    trends = ControllerTrendingPage.fetchTrends()
+    
+    # Fetching the current user
+    client = SpotifyAPI.get_spotify_client()
+    currentUser = User(client.current_user())
+    
+    # If the trackID is not in the trends, return False
+    if trackID not in trends:
+      return False
+    
+    # If the trackID is in the trends, check if the current user has upvoted it
+    upvotedBy = trends[trackID]['upvotedBy']
+    if currentUser.id in upvotedBy:
+      return True
+    
+    return False
+  
+  
+  @staticmethod
+  def getUpvoteCount(trackID:str):
+    """Returns the upvote count of a track given its trackID"""
+    # Fetching trends from the server
+    trends = ControllerTrendingPage.fetchTrends()
+    
+    # If the trackID is not in the trends, return 0
+    if trackID not in trends:
+      return 0
+    
+    # If the trackID is in the trends, return the upvote count
+    return trends[trackID]['upvotes']
+  
+
+  @staticmethod
+  def upvoteTrack(trackID:str):
+    """Will contact the server to upvote the track
+    If the user has already upvoted the track, it will remove the upvote"""
+    # Fetching the current user
+    client = SpotifyAPI.get_spotify_client()
+    currentUser = User(client.current_user())
+    
+    # Connecting to the server
+    try:
+      with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((constants.SERVER_ADDRESS, constants.SERVER_TREND_UPVOTING_PORT))
+        
+        # Sending the userID and the track ID. Tuple must be serialized w/ pickle
+        data = (trackID, currentUser.id)
+        serizalized_tuple = pickle.dumps(data)
+        s.sendall(serizalized_tuple)
+
+    except socket.error as e:
+      print(f"Socket error: {e}")

@@ -4,7 +4,7 @@ from PyQt6.QtGui import QFontDatabase, QIcon
 
 from View import LoginPage, NavBar
 from View.ProfilePage import ProfilePage
-from View.Components.ImageLabel import ImageLabel, AlbumImageLabel, ArtistImageLabel, TrackImageLabel, ProfilePictureImageLabel
+from View.Components.ImageLabel import ImageLabel, AlbumImageLabel, ArtistImageLabel, TrackImageLabel, ProfilePictureImageLabel, TrendImageLabel
 from View.Components.DataRow import DataRow
 from View.Components.FigureLabel import FigureLabel
 from Controller import ControllerLogin
@@ -77,6 +77,14 @@ class MainWindow(QMainWindow):
     label.setMaximumSize(100, 100)
     return label
 
+
+  @staticmethod
+  def createTrendImageLabel(text:str, counter:int, attachedTrack):
+    """Creates a TrendImageLabel with the given text and counter."""
+    label = TrendImageLabel(text, counter, attachedTrack)
+    label.setMaximumSize(200,200)
+    return label
+  
 
   @staticmethod
   def createDataRow(title: str):
