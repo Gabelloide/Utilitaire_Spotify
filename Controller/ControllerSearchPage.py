@@ -39,7 +39,7 @@ class ControllerSearchPage:
         artistResult = ArtistResult()
         artistResult.set_artist(artist.name)
         artistResult.downloadAndSetImage(artist.getBigPicture(), artist.id)
-        artistResult.set_logo("Assets/icons/search.png")
+        artistResult.set_logo("Assets/icons/artist.png")
         artistResult.set_listeners(artist.getFormattedFollowers() + " followers")
         
         # Si le nom de l'artiste contient la recherche, ajouter le résultat à la liste des résultats pertinents
@@ -54,7 +54,7 @@ class ControllerSearchPage:
         albumResult = AlbumResult()
         albumResult.set_album_title(album.name)
         albumResult.downloadAndSetImage(album.getBigCover(), album.id)
-        albumResult.set_logo("Assets/icons/search.png")
+        albumResult.set_logo("Assets/icons/album.png")
         albumResult.set_artist(album.artists[0].name)
         
         # Si le nom de l'album ou de l'artiste contient la recherche, ajouter le résultat à la liste des résultats pertinents
@@ -72,7 +72,7 @@ class ControllerSearchPage:
         trackResult = TrackResult()
         trackResult.set_title(track.name)
         trackResult.downloadAndSetImage(track.album.getBigCover(), track.id)
-        trackResult.set_logo("Assets/icons/search.png")
+        trackResult.set_logo("Assets/icons/track.png")
         trackResult.set_artist(track.artists[0].name)
         trackResult.set_duration(utils.set_format_duration(track.duration_ms))
         

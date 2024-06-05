@@ -27,7 +27,6 @@ class SearchResultRow(QWidget):
         
         # Logo
         self.logo_label = QLabel(self)
-        self.logo_label.setPixmap(QPixmap("default_logo.png"))  # Remplacez par un logo par défaut
         self.main_layout.addWidget(self.logo_label)
     
     def set_logo(self, logo_path):
