@@ -122,6 +122,9 @@ def trendThreadMainLoop():
                     # Remove the upvote
                     trendDict[trackID]["upvotes"] -= 1
                     trendDict[trackID]["upvotedBy"].remove(userID)
+                    # If the track has no more upvotes, remove it from the trends
+                    if trendDict[trackID]["upvotes"] == 0:
+                      del trendDict[trackID]
                   else:
                     # User hasn't upvoted the track
                     # Add the upvote
