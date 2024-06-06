@@ -167,10 +167,11 @@ class ProfilePictureImageLabel(ImageLabel):
 
 
 class TrendImageLabel(ImageLabel):
-  def __init__(self, text, upvoteCount, attachedTrack, parent=None):
+  def __init__(self, text, upvoteCount, upvoteState, attachedTrack, parent=None):
     super().__init__(text, parent)
     
     self.attachedObject = attachedTrack
+    self.upvoteState = upvoteState
     # Removed inherited widgets to add a custom layout
     self.layout.removeWidget(self.text_label)
     self.layout.removeWidget(self.image_label)
@@ -184,7 +185,7 @@ class TrendImageLabel(ImageLabel):
     
     self.upvote_icon = QLabel()
     
-    if self.getUpvoteState():
+    if self.upvoteState:
       self.upvote_icon.setPixmap(QPixmap("Assets/icons/trend_like_full.png").scaled(50, 50))
     else:
       self.upvote_icon.setPixmap(QPixmap("Assets/icons/trend_like_empty.png").scaled(50, 50))
