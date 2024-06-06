@@ -1,5 +1,5 @@
 import socket, pickle, json, threading, os
-import constants
+import constants, utils
 
 # SOCKET PORT : 23456
 
@@ -30,7 +30,7 @@ def trendThreadMainLoop():
             json.dump({}, file)
 
         # ---- WAIT FOR CORRECT ASKING MESSAGES TO RESPOND ----
-        data = receive_all(connection)
+        data = utils.receive_all(connection)
         
         try:
 
@@ -65,7 +65,7 @@ def trendThreadMainLoop():
             
             # Process received data w/ pickle
             # Data received is a tuple of (trackID, userID)
-            data = receive_all(connection)
+            data = utils.receive_all(connection)
             try:
               trackID, userID = pickle.loads(data)
 
@@ -110,7 +110,7 @@ def trendThreadMainLoop():
             
             # Process received data w/ pickle
             # Data received is a tuple (trackID, userID)
-            data = receive_all(connection)
+            data = utils.receive_all(connection)
             try:
               trackID, userID = pickle.loads(data)
               
@@ -146,31 +146,3 @@ def trendThreadMainLoop():
 
         except Exception as e:
           print(f"Error in trendThreadMainLoop: {e}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def receive_all(sock):
-    """This function is used to receive all data from a socket"""
-    data = b''
-    while True:
-        part = sock.recv(1024)
-        data += part
-        if len(part) < 1024:
-            # either 0 or end of data
-            break
-    return data

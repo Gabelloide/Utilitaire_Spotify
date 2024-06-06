@@ -79,9 +79,9 @@ class MainWindow(QMainWindow):
 
 
   @staticmethod
-  def createTrendImageLabel(text:str, counter:int, upvoteState:bool, attachedTrack):
+  def createTrendImageLabel(text:str, counter:int, upvoteState:bool, attachedTrack, attachedController):
     """Creates a TrendImageLabel with the given text and counter."""
-    label = TrendImageLabel(text, counter, upvoteState, attachedTrack)
+    label = TrendImageLabel(text, counter, upvoteState, attachedTrack, attachedController)
     label.setMaximumSize(200,200)
     return label
   

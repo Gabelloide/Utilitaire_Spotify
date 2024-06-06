@@ -45,7 +45,7 @@ class ControllerTrendingPage:
       addedBy = ControllerTrendingPage.userID_to_User(self.trends[track.id]['addedBy'], client)
       upvoteState = addedBy.id in self.trends[track.id]['upvotedBy']
 
-      label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, upvoteState, track)
+      label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, upvoteState, track, self)
       label.downloadAndSetImage(track.album.getBigCover(), track.id)
 
       trendingDataRow.addComponent(label)
