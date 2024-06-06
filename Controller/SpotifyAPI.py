@@ -1,7 +1,6 @@
 import spotipy
 import os
 
-
 spotify_client = None
 
 def setup_client(client_id, client_secret, redirect_uri, scope):
