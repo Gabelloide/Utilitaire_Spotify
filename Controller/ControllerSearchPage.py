@@ -41,6 +41,7 @@ class ControllerSearchPage:
         artistResult.downloadAndSetImage(artist.getBigPicture(), artist.id)
         artistResult.set_logo("Assets/icons/artist.png")
         artistResult.set_listeners(artist.getFormattedFollowers() + " followers")
+        artistResult.attachedObject = artist
         
         # If the artist name contains the search, add the result to the relevant results list
         if(search.lower() in artist.name.lower() or search.lower() in utils.remove_accents(artist.name.lower())):
@@ -56,6 +57,7 @@ class ControllerSearchPage:
         albumResult.downloadAndSetImage(album.getBigCover(), album.id)
         albumResult.set_logo("Assets/icons/album.png")
         albumResult.set_artist(album.artists[0].name)
+        albumResult.attachedObject = album
         
         # If the album name or artist contains the search, add the result to the relevant results list
         if(search.lower() in album.name.lower() or search.lower() in utils.remove_accents(album.name.lower()) or search.lower() in album.artists[0].name.lower()):
@@ -75,6 +77,7 @@ class ControllerSearchPage:
         trackResult.set_logo("Assets/icons/track.png")
         trackResult.set_artist(track.artists[0].name)
         trackResult.set_duration(utils.set_format_duration(track.duration_ms))
+        trackResult.attachedObject = track
         
         added_tracks.add(track.name)
         

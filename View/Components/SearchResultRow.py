@@ -25,6 +25,8 @@ class SearchResultRow(QWidget):
         # Logo
         self.logo_label = QLabel(self)
         self.main_layout.addWidget(self.logo_label)
+        
+        self.attachedObject = None
     
     def set_logo(self, logo_path):
         self.logo_label.setPixmap(QPixmap(logo_path))
@@ -79,6 +81,15 @@ class TrackResult(SearchResultRow):
         spacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.main_layout.insertSpacerItem(2, spacer)
         self.main_layout.insertWidget(3,self.duration_label)
+        self.mousePressEvent = self.showInfo
+
+    def showInfo(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            from View.Components.OverlayInfo import OverlayTrackInfo
+            mainWindow = self.window()
+            overlay = OverlayTrackInfo(mainWindow)
+            overlay.createContent(self.attachedObject)
+            overlay.show()
     
     def set_title(self, title):
         self.title_label.setText(title)
@@ -104,11 +115,21 @@ class ArtistResult(SearchResultRow):
         spacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.main_layout.insertSpacerItem(2, spacer)
         
+        self.mousePressEvent = self.showInfo
+        
     def set_artist(self, artist):
         self.artist_label.setText(artist)
     
     def set_listeners(self, listeners):
         self.listeners_label.setText(listeners)
+        
+    def showInfo(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            from View.Components.OverlayInfo import OverlayArtistInfo
+            mainWindow = self.window()
+            overlay = OverlayArtistInfo(mainWindow)
+            overlay.createContent(self.attachedObject)
+            overlay.show()
 
 
 class AlbumResult(SearchResultRow):
@@ -125,8 +146,18 @@ class AlbumResult(SearchResultRow):
         spacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self.main_layout.insertSpacerItem(2, spacer)
         
+        self.mousePressEvent = self.showInfo
+        
     def set_album_title(self, title):
         self.album_title_label.setText(title)
     
     def set_artist(self, artist):
         self.artist_label.setText(artist)
+        
+    def showInfo(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            from View.Components.OverlayInfo import OverlayAlbumInfo
+            mainWindow = self.window()
+            overlay = OverlayAlbumInfo(mainWindow)
+            overlay.createContent(self.attachedObject)
+            overlay.show()
