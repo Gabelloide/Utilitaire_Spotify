@@ -6,7 +6,7 @@ from View.Components.LabelSubTitle import LabelSubTitle
 from Controller import SpotifyAPI
 from Controller.MainWindow import MainWindow
 
-import constants, utils
+import constants, utils, network
 import socket, pickle, json
 
 class ControllerTrendingPage:
@@ -43,8 +43,9 @@ class ControllerTrendingPage:
     for track in trackObjects:
       trackScore = self.trends[track.id]['upvotes']
       addedBy = ControllerTrendingPage.userID_to_User(self.trends[track.id]['addedBy'], client)
+      upvoteState = addedBy.id in self.trends[track.id]['upvotedBy']
 
-      label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, track)
+      label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, upvoteState, track, self)
       label.downloadAndSetImage(track.album.getBigCover(), track.id)
 
       trendingDataRow.addComponent(label)
@@ -106,13 +107,22 @@ class ControllerTrendingPage:
     
     # Connecting to the server
     try:
-      with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((constants.SERVER_ADDRESS, constants.SERVER_TREND_PORT))
-        
-        # Sending the userID and the track ID. Tuple must be serialized w/ pickle
-        data = (track.id, currentUser.id)
-        serizalized_tuple = pickle.dumps(data)
-        s.sendall(serizalized_tuple)
+        with network.connect_to_trends_server() as s:
+          # Send the request to the server
+          s.sendall(b"SEND_TRACK") # Asking the authorization to send the track to be added to trends
+          
+          # Waiting for the server to be ready
+          response = utils.receive_all(s)
+          
+          if response != b"READY":
+            print(f"Server response: {response}")
+            return
+          
+          # If the server is ready, sending the track
+          # Sending the userID and the track ID. Tuple must be serialized w/ pickle
+          data = (track.id, currentUser.id)
+          serizalized_tuple = pickle.dumps(data)
+          s.sendall(serizalized_tuple)
 
     except socket.error as e:
       print(f"Socket error: {e}")
@@ -124,25 +134,22 @@ class ControllerTrendingPage:
     This is called regardless of any instanciation"""
 
     try:
-      with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((constants.SERVER_ADDRESS, constants.SERVER_TREND_FETCHING_PORT))
-        
-        # Send the request to the server
-        s.sendall(b"GET_TRENDS") # Send a simple string to request the trends
-        
-        # Receive the data : data is a json dict
-        data = utils.receive_all(s)
-        
-        # Deserialize the data
-        trends = json.loads(data)
+        with network.connect_to_trends_server() as s:
+          # Send the request to the server
+          s.sendall(b"ASKING_TRENDS") # Send a simple string to request the trends
+          
+          # Receive the data : a json dict
+          data = utils.receive_all(s)
+          # Deserialize the data
+          trends = json.loads(data)
 
-        return trends
+          return trends
         
     except socket.error as e:
-      print(f"Socket error: {e}")
+      print(f"Socket error while fetching trends: {e}")
       
     except Exception as e:
-      print(f"Unexpected error: {e}")
+      print(f"Unexpected error in ControllerTrendingPage: {e}")
       
     return {}
 
@@ -193,13 +200,21 @@ class ControllerTrendingPage:
     
     # Connecting to the server
     try:
-      with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((constants.SERVER_ADDRESS, constants.SERVER_TREND_UPVOTING_PORT))
-        
-        # Sending the userID and the track ID. Tuple must be serialized w/ pickle
-        data = (trackID, currentUser.id)
-        serizalized_tuple = pickle.dumps(data)
-        s.sendall(serizalized_tuple)
+        with network.connect_to_trends_server() as s:
+          # Tell the server that we want to upvote a track
+          s.sendall(b"ASKING_UPVOTE")
+          
+          # Waiting for the server to be ready
+          response = utils.receive_all(s)
+          if response != b"READY":
+            print(f"Server response: {response}")
+            return
+
+          # If the server is ready, sending the track ID & user ID
+          # Sending the userID and the track ID. Tuple must be serialized w/ pickle
+          data = (trackID, currentUser.id)
+          serizalized_tuple = pickle.dumps(data)
+          s.sendall(serizalized_tuple)
 
     except socket.error as e:
       print(f"Socket error: {e}")
