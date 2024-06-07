@@ -91,6 +91,11 @@ class TrackResult(SearchResultRow):
             overlay.createContent(self.attachedObject)
             overlay.show()
     
+    def contextMenuEvent(self, event):
+        from View.Components.RightClickMenu import TrackRightClickMenu
+        contextMenu = TrackRightClickMenu(self)
+        contextMenu.exec(event.globalPos())
+    
     def set_title(self, title):
         self.title_label.setText(title)
     
@@ -130,6 +135,11 @@ class ArtistResult(SearchResultRow):
             overlay = OverlayArtistInfo(mainWindow)
             overlay.createContent(self.attachedObject)
             overlay.show()
+            
+    def contextMenuEvent(self, event):
+        from View.Components.RightClickMenu import ArtistRightClickMenu
+        contextMenu = ArtistRightClickMenu(self)
+        contextMenu.exec(event.globalPos())
 
 
 class AlbumResult(SearchResultRow):
@@ -161,3 +171,8 @@ class AlbumResult(SearchResultRow):
             overlay = OverlayAlbumInfo(mainWindow)
             overlay.createContent(self.attachedObject)
             overlay.show()
+
+    def contextMenuEvent(self, event):
+        from View.Components.RightClickMenu import AlbumRightClickMenu
+        contextMenu = AlbumRightClickMenu(self)
+        contextMenu.exec(event.globalPos())
