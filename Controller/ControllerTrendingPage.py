@@ -38,12 +38,13 @@ class ControllerTrendingPage:
     # Gathering all track objects from API
     client = SpotifyAPI.get_spotify_client()
     trackObjects = ControllerTrendingPage.trackIDs_to_Objects(trackIDs, client)
+    currentUserID = self.user.id
     
     # Adding the track objects to the datarow
     for track in trackObjects:
       trackScore = self.trends[track.id]['upvotes']
       addedBy = ControllerTrendingPage.userID_to_User(self.trends[track.id]['addedBy'], client)
-      upvoteState = addedBy.id in self.trends[track.id]['upvotedBy']
+      upvoteState = currentUserID in self.trends[track.id]['upvotedBy']
 
       label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, upvoteState, track, self)
       label.downloadAndSetImage(track.album.getBigCover(), track.id)
