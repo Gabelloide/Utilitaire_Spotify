@@ -12,16 +12,13 @@ class SearchResultRow(QWidget):
         super().__init__(parent)
         
         self.setMaximumHeight(65)
-
-        # Layout principal
         self.main_layout = QHBoxLayout(self)
         
         # Image Track
         self.image_label = QLabel(self)
-        self.image_label.setPixmap(QPixmap("default_image.png"))  # Remplacez par une image par défaut
         self.main_layout.addWidget(self.image_label)
         
-        # Layout pour les informations
+        # Layout for the information
         self.info_layout = QVBoxLayout()
         self.main_layout.addLayout(self.info_layout)
         

@@ -14,10 +14,10 @@ class ControllerSearchPage:
   def __init__(self, user:User, view: SearchPage):
     self.view = view
     self.user = user
-    self.timer = QTimer()  # Ajoutez cette ligne
-    self.timer.setSingleShot(True)  # Ajoutez cette ligne
+    self.timer = QTimer() 
+    self.timer.setSingleShot(True)  
     self.timer.timeout.connect(self.search)  
-    self.view.searchInput.textChanged.connect(lambda : self.timer.start(500))  # Modifiez cette ligne
+    self.view.searchInput.textChanged.connect(lambda : self.timer.start(500))
     self.spotify = SpotifyAPI.get_spotify_client()
     
   def search(self):
@@ -30,7 +30,7 @@ class ControllerSearchPage:
       all_results = [] 
       relevant_results = []
       
-      # Pour éviter les doublons de tracks quand elles sont sorties en single et dans un album
+      # To avoid duplicates of tracks when they are released as a single and in an album
       added_tracks = set()
       
       for result in results['artists']['items']:
@@ -42,8 +42,8 @@ class ControllerSearchPage:
         artistResult.set_logo("Assets/icons/artist.png")
         artistResult.set_listeners(artist.getFormattedFollowers() + " followers")
         
-        # Si le nom de l'artiste contient la recherche, ajouter le résultat à la liste des résultats pertinents
-        if(search.lower() in artist.name.lower() or search.lower() in utils.enlever_accents(artist.name.lower())):
+        # If the artist name contains the search, add the result to the relevant results list
+        if(search.lower() in artist.name.lower() or search.lower() in utils.remove_accents(artist.name.lower())):
           relevant_results.append(artistResult)
         else:
           all_results.append(artistResult)
@@ -57,8 +57,8 @@ class ControllerSearchPage:
         albumResult.set_logo("Assets/icons/album.png")
         albumResult.set_artist(album.artists[0].name)
         
-        # Si le nom de l'album ou de l'artiste contient la recherche, ajouter le résultat à la liste des résultats pertinents
-        if(search.lower() in album.name.lower() or search.lower() in utils.enlever_accents(album.name.lower()) or search.lower() in album.artists[0].name.lower()):
+        # If the album name or artist contains the search, add the result to the relevant results list
+        if(search.lower() in album.name.lower() or search.lower() in utils.remove_accents(album.name.lower()) or search.lower() in album.artists[0].name.lower()):
           relevant_results.append(albumResult)
         else:
           all_results.append(albumResult)
@@ -78,8 +78,8 @@ class ControllerSearchPage:
         
         added_tracks.add(track.name)
         
-        # Si le nom de la piste ou de l'artiste contient la recherche, ajouter le résultat à la liste des résultats pertinents
-        if(search.lower() in track.name.lower() or search.lower() in utils.enlever_accents(track.name.lower()) or search.lower() in track.artists[0].name.lower()):
+        #If the track name or artist contains the search, add the result to the relevant results list
+        if(search.lower() in track.name.lower() or search.lower() in utils.remove_accents(track.name.lower()) or search.lower() in track.artists[0].name.lower()):
           relevant_results.append(trackResult)
         else:
           all_results.append(trackResult)
@@ -87,13 +87,13 @@ class ControllerSearchPage:
       for result in relevant_results:
         self.view.results.addWidget(result)
       
-      # Mélanger les résultats non pertinents pour les afficher aléatoirement
+      #Shuffle the non-relevant results to display them randomly
       random.shuffle(all_results)
       for result in all_results:
         self.view.results.addWidget(result)
       
   def clearResults(self):
-    # Clear tous les résultats de la recherche
+    # Clear all the results
     while self.view.results.count():
       child = self.view.results.takeAt(0)
       if child.widget():

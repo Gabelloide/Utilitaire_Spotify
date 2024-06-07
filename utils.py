@@ -54,9 +54,9 @@ def receive_all(sock):
     return data
 
 
-def enlever_accents(chaine):
-    # Normaliser la chaîne pour séparer les caractères accentués en caractères de base + diacritiques
-    chaine_normalisee = unicodedata.normalize('NFD', chaine)
-    # Filtrer les diacritiques (accents) en gardant uniquement les caractères de base
-    chaine_sans_accents = ''.join(c for c in chaine_normalisee if unicodedata.category(c) != 'Mn')
-    return chaine_sans_accents
+def remove_accents(string):
+  # Normalize the string to separate accented characters into base characters + diacritics
+  normalized_string = unicodedata.normalize('NFD', string)
+  # Filter out diacritics (accents) by keeping only the base characters
+  string_without_accents = ''.join(c for c in normalized_string if unicodedata.category(c) != 'Mn')
+  return string_without_accents
