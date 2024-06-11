@@ -1,13 +1,12 @@
 import zipfile, os, json, shutil, socket
 import constants
-from pathlib import Path
 
 from Database import Database
 from HistoryTrack import HistoryTrack
 
 # Constants
-SAVE_PATH = Path(f"{os.getcwd()}/received_zips")
-ZIP_DESTINATION = Path(f"{os.getcwd()}/received_data")
+SAVE_PATH = f"{os.getcwd()}/received_zips"
+ZIP_DESTINATION = f"{os.getcwd()}/received_data"
 
 
 def create_random_seed():
