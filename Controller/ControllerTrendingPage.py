@@ -18,11 +18,12 @@ class ControllerTrendingPage:
     self.trends = ControllerTrendingPage.fetchTrends() # Fetch the trends from the server once upon instanciation
     
     # FetchTrends also when the user clicks the refreshButton
-    self.view.refreshButton.clicked.connect(lambda: self.refreshView())
-    
+    self.view.refreshButton.clicked.connect(lambda: self.refreshFilteredByGenre("Tous les genres"))
+    self.view.genreChangedSignal.connect(lambda genre: self.refreshFilteredByGenre(genre))
     # Creating a datarow to display trends
-    trendingDataRow = self.createTrends()
+    trendingDataRow = self.createTrends("Tous les genres")
     
+
     if trendingDataRow.getDataCount() > 0:
       self.view.containerTrends.addWidget(trendingDataRow)
     else:
@@ -30,29 +31,69 @@ class ControllerTrendingPage:
       self.view.containerTrends.addWidget(labelNothing)
 
 
-  def createTrends(self):
+  def createTrends(self,selected_genre="Tous les genres"):
     """Method to create the trends datarow"""
     trackIDs = [trackID for trackID in self.trends.keys()]
     trendingDataRow = MainWindow.createDataRow("Pistes du moment")
+    
     
     # Gathering all track objects from API
     client = SpotifyAPI.get_spotify_client()
     trackObjects = ControllerTrendingPage.trackIDs_to_Objects(trackIDs, client)
     currentUserID = self.user.id
     
+    # Create a set to store unique genres and add the genres to the genreFilter(comboBox)
+    self.view.clearComboBox()
+    unique_genres = set()
+    for track in trackObjects:
+        track_genre = Track.get_track_genre(track.id, client) 
+        # Add the genre to the set of unique genres
+        unique_genres.update(track_genre)
+    # Convert the set back to a list
+    unique_genres = list(unique_genres)
+    # adding unique genres to the genreFilter of the DataRow
+    self.view.genreFilter.addItem("Tous les genres")
+    for genre in unique_genres:
+          self.view.genreFilter.addItem(genre)
+
+    self.view.genreFilter.setCurrentText(selected_genre)
+    self.view.connectComboBox()
+
+    
+    
+    
     # Adding the track objects to the datarow
     for track in trackObjects:
-      trackScore = self.trends[track.id]['upvotes']
-      addedBy = ControllerTrendingPage.userID_to_User(self.trends[track.id]['addedBy'], client)
-      upvoteState = currentUserID in self.trends[track.id]['upvotedBy']
+      track_genre = Track.get_track_genre(track.id, client)
+      # If the genre is in the selected genre or if the selected genre is "Tous les genres"
+      if selected_genre in track_genre or selected_genre == "Tous les genres":
+        trackScore = self.trends[track.id]['upvotes']
+        addedBy = ControllerTrendingPage.userID_to_User(self.trends[track.id]['addedBy'], client)
+        upvoteState = currentUserID in self.trends[track.id]['upvotedBy']
 
-      label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, upvoteState, track, self)
-      label.downloadAndSetImage(track.album.getBigCover(), track.id)
+        label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, upvoteState, track, self)
+        label.downloadAndSetImage(track.album.getBigCover(), track.id)
 
-      trendingDataRow.addComponent(label)
+        trendingDataRow.addComponent(label)
 
     return trendingDataRow
-
+  
+  def refreshFilteredByGenre(self, genre:str):
+    """Method to filter the trends by genre"""
+    # Clearing the mainLayout, rebuilding the trends and adding them to the layout
+    while self.view.containerTrends.count():
+      child = self.view.containerTrends.takeAt(0)
+      if child.widget():
+        child.widget().deleteLater() 
+    # Adding the new trends
+    self.trends = ControllerTrendingPage.fetchTrends()
+    trendingDataRow = self.createTrends(genre)
+    if trendingDataRow.getDataCount() > 0:
+      self.view.containerTrends.addWidget(trendingDataRow)
+    else:
+      labelNothing = LabelSubTitle("On dirait qu'il n'y a rien ici pour le moment. Essayez d'ajouter des pistes aux tendances !")
+      self.view.containerTrends.addWidget(labelNothing)
+    
 
   def refreshView(self):
     """Method to refresh the view with the latest trends"""

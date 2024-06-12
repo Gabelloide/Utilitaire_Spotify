@@ -26,3 +26,19 @@ class Track:
       string += f" {artist},"
     string = string[:-1]
     return string
+  
+  def get_track_genre(track_id, client):
+    """Function to get the genre of a track"""
+    # Get the track object
+    track = client.track(track_id)
+    
+    # Get the artist ID from the track object
+    artist_id = track['artists'][0]['id']
+    
+    # Get the artist object using the artist ID
+    artist = client.artist(artist_id)
+    
+    # Get the genre from the artist object
+    genre = artist['genres']
+    
+    return genre
