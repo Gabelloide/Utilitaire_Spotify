@@ -12,7 +12,9 @@ class SearchPage(QWidget):
 
     # Créer la barre de recherche
     self.searchBar = QHBoxLayout()
-
+    self.setStyleSheet("""
+      color: white;
+    """)
     # Créer un widget conteneur pour encapsuler l'icône et le champ de recherche
     searchContainer = QWidget()
     searchContainerLayout = QHBoxLayout(searchContainer)
@@ -39,6 +41,7 @@ class SearchPage(QWidget):
           border: none;
           background-color: transparent;
         }
+        
     """)
 
     # Ajouter l'icône de recherche
