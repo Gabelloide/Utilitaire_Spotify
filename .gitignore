@@ -1,4 +1,3 @@
-**/*.bat
 .env
 .cache
 __pycache__/
