@@ -1,4 +1,5 @@
 import json, os, mysql.connector
+from datetime import datetime
 from HistoryTrack import HistoryTrack
 
 class Database:
@@ -43,6 +44,12 @@ class Database:
     """tracklist : list of HistoryTrack objects, which are made to be inserted in the database"""
     cursor = self.mySQL.cursor()
     for history_track in tracklist:
+      # Convert the timestamp from ISO 8601 to MySQL compatible format
+      if history_track.ts:
+          mysql_ts = datetime.strptime(history_track.ts, '%Y-%m-%dT%H:%M:%SZ').strftime('%Y-%m-%d %H:%M:%S')
+      else:
+          mysql_ts = None
+      
       sql = "INSERT INTO History (ts, username, platform, ms_played, conn_country, \
       ip_addr_decrypted, user_agent_decrypted, master_metadata_track_name, \
       master_metadata_album_artist_name, master_metadata_album_album_name, \
@@ -50,7 +57,7 @@ class Database:
       reason_start, reason_end, shuffle, skipped, offline, offline_timestamp, incognito_mode) VALUES \
       (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
   
-      values = (history_track.ts, 
+      values = (mysql_ts, 
                 history_track.username, 
                 history_track.platform, 
                 history_track.ms_played, 
