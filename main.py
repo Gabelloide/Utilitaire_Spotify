@@ -1,6 +1,6 @@
 import os
 from pprint import pprint
-import utils
+import utils, argparser
 
 import Controller.SpotifyAPI as SpotifyAPI
 from Model import Artist, Track, Album, Playlist, User
@@ -106,6 +106,9 @@ spotipy_client = SpotifyAPI.get_spotify_client()
 
 
 # track = Track.Track(spotipy_client.current_user_recently_played()['items'][0]['track'])
+
+# Initialize arg parser
+argparser.init_argparser()
 
 # --- GUI ---
 
