@@ -2,7 +2,7 @@ import threading
 from PyQt6.QtWidgets import QWidget, QLabel, QHBoxLayout, QVBoxLayout
 from PyQt6.QtGui import QPixmap
 import requests
-import utils
+import utils, ui_utils
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QSpacerItem, QSizePolicy
 
@@ -13,6 +13,10 @@ class SearchResultRow(QWidget):
         
         self.setMaximumHeight(65)
         self.main_layout = QHBoxLayout(self)
+        self.setFont(ui_utils.getFont(10))
+        self.setStyleSheet("""
+            color: white;
+        """)
         
         # Image Track
         self.image_label = QLabel(self)
