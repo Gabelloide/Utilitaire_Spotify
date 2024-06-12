@@ -84,7 +84,7 @@ def wait_for_zip_file():
           
           # Fetch that into the database
           try:
-            db = Database("localhost", "root", "root", "spotify_history")
+            db = Database(constants.DB_ADDRESS, constants.DB_USER, constants.DB_PASSWORD, "spotify_history", constants.DB_PORT)
             
             if not db.check_history_table_existence():
               print("The table 'History' doesn't exist in the database, creating it...")

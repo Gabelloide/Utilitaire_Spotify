@@ -4,14 +4,14 @@ from HistoryTrack import HistoryTrack
 
 class Database:
   
-  def __init__(self, host, user, password, database) -> None:
+  def __init__(self, host, user, password, database, port) -> None:
     
     self.mySQL = mysql.connector.connect(
       host=host,
       user=user,
       password=password,
-      database=database)
-
+      database=database,
+      port=port)
 
   def create_history_table(self) -> None :
     cursor = self.mySQL.cursor()
