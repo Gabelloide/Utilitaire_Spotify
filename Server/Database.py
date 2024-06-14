@@ -16,12 +16,6 @@ class Database:
 
   def create_history_table(self) -> None :
     cursor = self.mySQL.cursor()
-
-    # Check table existence :
-    # if cursor.execute("SHOW TABLES LIKE 'History'") == 1:
-    #   print("History table exists, skipping creation...")
-    #   return
-
     cursor.execute("CREATE TABLE IF NOT EXISTS History \
                   (ts DATETIME, username VARCHAR(255), \
                   platform VARCHAR(255), ms_played INT, \
@@ -51,14 +45,14 @@ class Database:
 
   def create_user_table(self) -> None :
     cursor = self.mySQL.cursor()
-
-    # if cursor.execute("SHOW TABLES LIKE 'User'") == 1:
-    #   print("User table exists, skipping creation...")
-    #   return
-    
     cursor.execute("CREATE TABLE IF NOT EXISTS User (userID VARCHAR(255), username VARCHAR(255), PRIMARY KEY(userID) )")
-    
     self.mySQL.commit
+
+
+  def create_friends_table(self) -> None:
+    cursor = self.mySQL.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS Friends (userID VARCHAR(255), friendID VARCHAR(255), PRIMARY KEY(userID, friendID), FOREIGN KEY(userID) REFERENCES User(userID), FOREIGN KEY(friendID) REFERENCES User(userID))")
+    self.mySQL.commit()
 
 
   def populate_history_table(self, tracklist:list[HistoryTrack]) -> None:
@@ -111,3 +105,43 @@ class Database:
     if len(tables) > 0:
       return True
     return False
+
+
+  def check_user_exists(self, userID) -> bool:
+    """Checks if the userID is present in the User table"""
+    cursor = self.mySQL.cursor()
+    sql = "SELECT * FROM User WHERE userID = %s"
+    values = (userID,)
+    cursor.execute(sql, values)
+    user = cursor.fetchone()
+    if user:
+      return True
+    return False 
+  
+  
+  def insert_user(self, userID, username) -> bool:
+    """Inserts a user in the database, table User
+    Returns True/False depending of the success of the operation."""
+    try:
+      if self.check_user_exists(userID): # If the user is already in the database, we don't insert it again, and it's OK.
+        return True
+      
+      cursor = self.mySQL.cursor()
+      sql = "INSERT INTO User (userID, username) VALUES (%s, %s)"
+      values = (userID, username)
+      cursor.execute(sql, values)
+      self.mySQL.commit()
+      return True
+    except Exception as e:
+      print(f"Error during user insertion in database: {e}")
+      return False
+    
+    
+  def get_friends(self, userID) -> list[str]:
+    """Returns the list of friends of a user given its userID"""
+    cursor = self.mySQL.cursor()
+    sql = "SELECT friendID FROM Friends WHERE userID = %s"
+    values = (userID,)
+    cursor.execute(sql, values)
+    friends = cursor.fetchall()
+    return [friend[0] for friend in friends] # first element of each tuple in the list because fetchall returns a list of tuples (userID,)

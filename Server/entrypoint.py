@@ -8,6 +8,7 @@ def initialize_database():
   try:
     database = Database.Database(constants.DB_ADDRESS, constants.DB_USER, constants.DB_PASSWORD, "spotify_history", constants.DB_PORT)
     database.create_user_table()
+    database.create_friends_table()
     database.create_history_table()
     return database
   except Exception as e:

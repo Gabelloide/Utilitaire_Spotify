@@ -46,9 +46,8 @@ class ControllerLogin:
     self.view.buttonLogin.setText("Chargement de votre profil...")
     self.view.buttonLogin.repaint()
     
-    # TODO : abort connection if insert in SQL fails, but not crash the app, asking to restart
     infosSent = self.sendUserInfo(user)
-    if not infosSent:
+    if not infosSent: # If the SQL operation failed, we stop the login process, user can try again
       self.view.buttonLogin.setText("Impossible de se connecter au serveur ! Réessayez")
       self.view.buttonLogin.repaint()
       return
@@ -92,7 +91,7 @@ class ControllerLogin:
       with network.connect_to_userinfo_server() as s:
         s.sendall(b"SEND_USERINFO") # Waiting for approval
         
-        response = utils.receive_all(s)
+        response = network.receive_all(s)
         
         if response !=  b"READY":
           print(f"Server response: {response}")
@@ -103,7 +102,7 @@ class ControllerLogin:
         s.sendall(serialized_tuple)
         
         # Waiting for server response to know if SQL succeeded
-        response = utils.receive_all(s)
+        response = network.receive_all(s)
         if response != b"SQL_OK":
           return False
 

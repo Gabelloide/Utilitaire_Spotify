@@ -22,7 +22,6 @@ class ControllerTrendingPage:
     self.view.genreChangedSignal.connect(lambda genre: self.refreshFilteredByGenre(genre))
     # Creating a datarow to display trends
     trendingDataRow = self.createTrends("Tous les genres")
-    
 
     if trendingDataRow.getDataCount() > 0:
       self.view.containerTrends.addWidget(trendingDataRow)
@@ -31,11 +30,10 @@ class ControllerTrendingPage:
       self.view.containerTrends.addWidget(labelNothing)
 
 
-  def createTrends(self,selected_genre="Tous les genres"):
+  def createTrends(self, selected_genre="Tous les genres"):
     """Method to create the trends datarow"""
     trackIDs = [trackID for trackID in self.trends.keys()]
     trendingDataRow = MainWindow.createDataRow("Pistes du moment")
-    
     
     # Gathering all track objects from API
     client = SpotifyAPI.get_spotify_client()
@@ -59,9 +57,6 @@ class ControllerTrendingPage:
     self.view.genreFilter.setCurrentText(selected_genre)
     self.view.connectComboBox()
 
-    
-    
-    
     # Adding the track objects to the datarow
     for track in trackObjects:
       track_genre = Track.get_track_genre(track.id, client)
@@ -77,7 +72,8 @@ class ControllerTrendingPage:
         trendingDataRow.addComponent(label)
 
     return trendingDataRow
-  
+
+
   def refreshFilteredByGenre(self, genre:str):
     """Method to filter the trends by genre"""
     # Clearing the mainLayout, rebuilding the trends and adding them to the layout
@@ -93,7 +89,7 @@ class ControllerTrendingPage:
     else:
       labelNothing = LabelSubTitle("On dirait qu'il n'y a rien ici pour le moment. Essayez d'ajouter des pistes aux tendances !")
       self.view.containerTrends.addWidget(labelNothing)
-    
+
 
   def refreshView(self):
     """Method to refresh the view with the latest trends"""
@@ -154,7 +150,7 @@ class ControllerTrendingPage:
           s.sendall(b"SEND_TRACK") # Asking the authorization to send the track to be added to trends
           
           # Waiting for the server to be ready
-          response = utils.receive_all(s)
+          response = network.receive_all(s)
           
           if response != b"READY":
             print(f"Server response: {response}")
@@ -181,7 +177,7 @@ class ControllerTrendingPage:
           s.sendall(b"ASKING_TRENDS") # Send a simple string to request the trends
           
           # Receive the data : a json dict
-          data = utils.receive_all(s)
+          data = network.receive_all(s)
           # Deserialize the data
           trends = json.loads(data)
 
@@ -247,7 +243,7 @@ class ControllerTrendingPage:
           s.sendall(b"ASKING_UPVOTE")
           
           # Waiting for the server to be ready
-          response = utils.receive_all(s)
+          response = network.receive_all(s)
           if response != b"READY":
             print(f"Server response: {response}")
             return

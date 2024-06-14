@@ -15,6 +15,7 @@ class ControllerProfilePage:
 
     # Download the image and set it to the label
     self.view.profilePicture.downloadAndSetImage(self.user.getBigProfilePicture(), self.user.id)
+    self.view.profilePicture.attachedObject = self.user
 
     # Download the user's top tracks, artists and albums
     client = SpotifyAPI.get_spotify_client()

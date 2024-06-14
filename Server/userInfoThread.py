@@ -19,9 +19,8 @@ def log_user_in_database():
         
         # ---- WAIT FOR CORRECT ASKING MESSAGES TO RESPOND ----
         data = receive_all(connection)
-        
+
         try:
-          
           if data == b"SEND_USERINFO":
             print("Client asked to send userinfo")
             # Tell the client that we are ready to receive userinfo
@@ -30,12 +29,27 @@ def log_user_in_database():
             # Processing received data
             data = receive_all(connection)
             userID, username = pickle.loads(data)
+
+            database = entrypoint.getDatabaseObject()
+            if database.insert_user(userID, username):
+              connection.sendall(b"SQL_OK")
+        
+          elif data == b"GET_FRIENDS":
+            print("Client asked for friends list")
+            # Tell the client that we are ready to send the friends list
+            connection.sendall(b"READY")
             
-            print(userID)
-            print(username)
+            # Waiting for the user ID
+            userID = receive_all(connection).decode()
             
-            #TODO : sql ici pour insérer dans la talbe user
-            #TODO : renvoyer un message au client pour dire que le sql est bon
+            # Get friends list from the database (SQL)
+            database = entrypoint.getDatabaseObject()
+            friendsList = database.get_friends(userID)
+            
+            # Send the friends list to the client
+            serialized_friendsList = pickle.dumps(friendsList)
+            connection.sendall(serialized_friendsList)
+
         
         except Exception as e:
           print(f"Error in userinfo thread: {e}")

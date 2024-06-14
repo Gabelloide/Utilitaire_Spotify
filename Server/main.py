@@ -16,11 +16,7 @@ if __name__ == "__main__":
   # Creating one thread for this purpose
   threading.Thread(target=log_user_in_database).start()
   
-  
-  
   # Create one thread for zip file reception
   # Create one thread for trends
-  # threading.Thread(target=wait_for_zip_file).start()
-  # threading.Thread(target=trendThreadMainLoop).start()
-  
-  
+  threading.Thread(target=wait_for_zip_file).start()
+  threading.Thread(target=trendThreadMainLoop).start()
