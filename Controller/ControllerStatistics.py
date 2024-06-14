@@ -1,6 +1,8 @@
+from matplotlib import cm
 from Model.User import User
 from Model import Statistics
 from View.StatisticsPage import StatisticsPage
+from View.Components.PieGenre import PieGenre
 from Controller import SpotifyAPI
 from Controller.MainWindow import MainWindow
 
@@ -13,7 +15,6 @@ class ControllerStatistics:
     # Get model information to fill the view
 
     client = SpotifyAPI.get_spotify_client()
-
     figuresDataRow = MainWindow.createDataRow("Vos écoutes en chiffres")
 
     duration_ms = Statistics.getRecentListeningDuration(client)
@@ -38,5 +39,21 @@ class ControllerStatistics:
     labelAlbums = MainWindow.createFigureLabel(f"{Statistics.getNbPlayedAlbums(client)}", "albums différents écoutés")
     figuresDataRow.addComponent(labelAlbums)
     
-    self.view.mainLayout.addWidget(figuresDataRow)
 
+    canvaDataRow = MainWindow.createDataRow("Vos écoutes visuelement")
+
+    pieforGenre = PieGenre(self, width=5, height=4, dpi=100)
+
+    genres_data = Statistics.getRecentListeningGenres(client)
+    # Préparation des données pour le camembert
+    labels = [genre[0] for genre in genres_data]
+    sizes = [count[1] for count in genres_data]
+    colors = cm.Paired(range(len(labels)))
+
+    pieforGenre = PieGenre(self)
+    pieforGenre.plot_pie_chart(labels, sizes, colors)
+    canvaDataRow.addComponent(pieforGenre)
+
+
+    self.view.mainLayout.addWidget(figuresDataRow)
+    self.view.mainLayout.addWidget(canvaDataRow)
