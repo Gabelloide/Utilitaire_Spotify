@@ -13,8 +13,15 @@ class Database:
       database=database,
       port=port)
 
+
   def create_history_table(self) -> None :
     cursor = self.mySQL.cursor()
+
+    # Check table existence :
+    # if cursor.execute("SHOW TABLES LIKE 'History'") == 1:
+    #   print("History table exists, skipping creation...")
+    #   return
+
     cursor.execute("CREATE TABLE IF NOT EXISTS History \
                   (ts DATETIME, username VARCHAR(255), \
                   platform VARCHAR(255), ms_played INT, \
@@ -35,9 +42,23 @@ class Database:
                   offline VARCHAR(255), \
                   offline_timestamp VARCHAR(255), \
                   incognito_mode VARCHAR(255), \
-                  PRIMARY KEY (ts, username, spotify_track_uri))" #! One line is a track, listened at one unique date by one unique user.
+                  userID VARCHAR(255),  \
+                  PRIMARY KEY (ts, username, spotify_track_uri), \
+                  FOREIGN KEY(userID) REFERENCES User(userID))" #! One line is a track, listened at one unique date by one unique user.
                   )
     self.mySQL.commit()
+
+
+  def create_user_table(self) -> None :
+    cursor = self.mySQL.cursor()
+
+    # if cursor.execute("SHOW TABLES LIKE 'User'") == 1:
+    #   print("User table exists, skipping creation...")
+    #   return
+    
+    cursor.execute("CREATE TABLE IF NOT EXISTS User (userID VARCHAR(255), username VARCHAR(255), PRIMARY KEY(userID) )")
+    
+    self.mySQL.commit
 
 
   def populate_history_table(self, tracklist:list[HistoryTrack]) -> None:
