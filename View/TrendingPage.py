@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QPushButton, QComboBox
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import pyqtSignal, QSize
 import ui_utils as iu_utils
 
 class TrendingPage(QWidget):
@@ -18,8 +19,6 @@ class TrendingPage(QWidget):
     spacerItem_left = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     self.containerTitle.addItem(spacerItem_left)
     self.containerTitle.addWidget(self.labelTitle)
-    spacerItem_right = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-    self.containerTitle.addItem(spacerItem_right)
 
     # CSS
     with open("Assets/style.css", "r") as file:
@@ -28,14 +27,29 @@ class TrendingPage(QWidget):
    
     self.labelTitle.setStyleSheet(stylesheet)
     
-
     self.mainLayout.addLayout(self.containerTitle)
     self.setLayout(self.mainLayout)
 
 
-    self.refreshButton = QPushButton("Refresh")
-    self.refreshButton.setStyleSheet(stylesheet)
-    self.mainLayout.addWidget(self.refreshButton)
+    self.refreshButton = QPushButton()
+    self.refreshButton.setIcon(QIcon("Assets/icons/refresh.png"))
+    self.refreshButton.setStyleSheet("""
+          QPushButton {
+              border: 0px;
+              background-color: #211f1f;
+              border-radius: 10px;
+          }
+          QPushButton:hover {
+              background-color: #333333;
+          }
+        """)
+    self.refreshButton.setFixedSize(64, 64)
+    self.refreshButton.setIconSize(QSize(64, 64))
+    self.containerTitle.addWidget(self.refreshButton)
+    
+    spacerItem_right = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+    self.containerTitle.addItem(spacerItem_right)
+    
 
     self.genreFilterLayout = QHBoxLayout()
     self.labelFilter = QLabel("Filtrer par genre:")
@@ -49,13 +63,13 @@ class TrendingPage(QWidget):
 
     self.genreFilter.currentTextChanged.connect(self.genreChanged)
 
-    
-    self.genreFilter.setFont(iu_utils.getFont(12))
+    self.genreFilter.setFont(iu_utils.getFont(13))
     self.genreFilter.setStyleSheet("""
     QComboBox {
         color: white; 
         border-radius: 10px; 
-        border: 2px solid #000000;
+        border: 2px solid #FFFFFF;
+        padding: 10px 10px 10px 10px;
     }
     QComboBox::drop-down {
         border-radius: 10px;
@@ -65,12 +79,13 @@ class TrendingPage(QWidget):
         height: 25px;
         subcontrol-position: center right;
         subcontrol-origin: padding;
+        padding-right: 10px;
     }
     QComboBox QAbstractItemView {
         color: white;
     }
     """)
-    self.genreFilter.setFixedHeight(40)
+    self.genreFilter.setFixedHeight(50)
     self.genreFilter.setFixedWidth(180)
     self.genreFilterLayout.addWidget(self.genreFilter)
 

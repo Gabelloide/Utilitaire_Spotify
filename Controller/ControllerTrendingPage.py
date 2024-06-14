@@ -36,7 +36,6 @@ class ControllerTrendingPage:
     trackIDs = [trackID for trackID in self.trends.keys()]
     trendingDataRow = MainWindow.createDataRow("Pistes du moment")
     
-    
     # Gathering all track objects from API
     client = SpotifyAPI.get_spotify_client()
     trackObjects = ControllerTrendingPage.trackIDs_to_Objects(trackIDs, client)
@@ -59,9 +58,6 @@ class ControllerTrendingPage:
     self.view.genreFilter.setCurrentText(selected_genre)
     self.view.connectComboBox()
 
-    
-    
-    
     # Adding the track objects to the datarow
     for track in trackObjects:
       track_genre = Track.get_track_genre(track.id, client)
