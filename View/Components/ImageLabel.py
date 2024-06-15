@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 import requests
@@ -23,6 +23,8 @@ class ImageLabel(QWidget):
     self.text_label.setStyleSheet("color: white;")
     self.layout.addWidget(self.image_label)
     self.layout.addWidget(self.text_label)
+    spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.layout.addItem(spacer)
 
 
   def downloadAndSetImage(self, url, filename):
