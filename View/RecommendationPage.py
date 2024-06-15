@@ -1,5 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QPushButton, QStackedWidget
 
+from View.Components.ImageLabelSlider import ImageLabelSlider
+from Model import Statistics
 
 class RecommendationPage(QWidget):
   
@@ -45,34 +47,32 @@ class RecommendationPage(QWidget):
     QPushButton:hover {
       background-color: #333333;
     }
-    
-    
     """
-
-        
-    spacerItem_left = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-    spacerItem_right = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     
+    self.focusedButtonStyleSheet = """
+          QPushButton {
+            border: 0px;
+            text-decoration: underline;
+            text-decoration-color: green;
+          }
+          
+        """
     self.recommendationNavigation.addItem(spacerItem_left)
     self.recommendationNavigation.addWidget(self.trackButton)
     self.recommendationNavigation.addWidget(self.albumButton)
     self.recommendationNavigation.addWidget(self.artistButton)
     self.recommendationNavigation.addItem(spacerItem_right)
-    
-    # Create the QStackedWidget and the recommendation pages
-    self.recommendationPages = QStackedWidget()
-
-    self.albumPage = QWidget()  # Replace with your album recommendations widget
-    self.artistPage = QWidget()  # Replace with your artist recommendations widget
-    self.trackPage = QWidget()  # Replace with your track recommendations widget
-
-    self.recommendationPages.addWidget(self.albumPage)
-    self.recommendationPages.addWidget(self.artistPage)
-    self.recommendationPages.addWidget(self.trackPage)
 
     self.buttonsNavigation = [self.trackButton, self.albumButton, self.artistButton]
     self.mainLayout.addLayout(self.containerTitle)
     self.mainLayout.addLayout(self.recommendationNavigation)
-    self.mainLayout.addWidget(self.recommendationPages)
+    
     self.setStyleSheet(self.buttonStyleSheet)
     self.setLayout(self.mainLayout)
+    
+  def addRecommendationRow(self, title, row):
+    self.recommendationsLayout = QVBoxLayout()
+    self.recommendationsLabel = QLabel(title)
+    self.recommendationsLayout.addWidget(self.recommendationsLabel)
+    self.recommendationsLayout.addWidget(row)
+    self.mainLayout.addLayout(self.recommendationsLayout)
