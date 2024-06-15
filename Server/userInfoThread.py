@@ -66,7 +66,42 @@ def log_user_in_database():
             serialized_usersIDs = pickle.dumps(usersIDs)
             connection.sendall(serialized_usersIDs)
 
-        
+          elif data == b"ADD_FRIEND":
+            print("Client asked to add a friend")
+            # Tell the client that we are ready to receive the data
+            connection.sendall(b"READY")
+            
+            # Waiting for the data
+            data = receive_all(connection)
+            
+            # Data is (userID, friendID)
+            userID, friendID = pickle.loads(data)
+            
+            # Add the friend to the database (SQL)
+            database = entrypoint.getDatabaseObject()
+            
+            # Send the confirmation to the client
+            if database.add_friend(userID, friendID):
+              connection.sendall(b"SQL_OK")
+
+          elif data == b"REMOVE_FRIEND":
+            print("Client asked to remove a friend")
+            # Tell the client that we are ready to receive the data
+            connection.sendall(b"READY")
+            
+            # Waiting for the data
+            data = receive_all(connection)
+            
+            # Data is (userID, friendID)
+            userID, friendID = pickle.loads(data)
+            
+            # Remove the friend from the database (SQL)
+            database = entrypoint.getDatabaseObject()
+            
+            # Send the confirmation to the client
+            if database.remove_friend(userID, friendID):
+              connection.sendall(b"SQL_OK")
+
         except Exception as e:
           print(f"Error in userinfo thread: {e}")
 

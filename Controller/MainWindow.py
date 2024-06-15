@@ -87,9 +87,9 @@ class MainWindow(QMainWindow):
   
 
   @staticmethod
-  def createDataRow(title: str):
+  def createDataRow(title: str, parentView = None):
     """Creates a DataRow component."""
-    return DataRow(title)
+    return DataRow(title, parentView)
 
 
   @staticmethod

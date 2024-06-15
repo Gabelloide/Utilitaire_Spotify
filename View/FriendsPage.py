@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QLineEdit
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QLineEdit, QPushButton
+from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtGui import QPixmap, QIcon
 
 class FriendsPage(QWidget):
   
@@ -8,6 +8,7 @@ class FriendsPage(QWidget):
     super().__init__()
 
     self.parentView = parentView
+    self.controller = None # Initialized by the controllerLogin upon login
     
     self.friendsSection = QVBoxLayout()
     self.searchSection = QVBoxLayout()
@@ -20,6 +21,23 @@ class FriendsPage(QWidget):
     spacerItem_left = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     self.containerTitle.addItem(spacerItem_left)
     self.containerTitle.addWidget(self.labelTitle)
+    
+    self.refreshButton = QPushButton()
+    self.refreshButton.setIcon(QIcon("Assets/icons/refresh.png"))
+    self.refreshButton.setStyleSheet("""
+          QPushButton {
+              border: 0px;
+              background-color: #211f1f;
+              border-radius: 10px;
+          }
+          QPushButton:hover {
+              background-color: #333333;
+          }
+        """)
+    self.refreshButton.setFixedSize(64, 64)
+    self.refreshButton.setIconSize(QSize(64, 64))
+    self.containerTitle.addWidget(self.refreshButton)
+    
     spacerItem_right = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
     self.containerTitle.addItem(spacerItem_right)
     
@@ -40,9 +58,17 @@ class FriendsPage(QWidget):
 
     
     self.friendsSection.addLayout(self.containerTitle)
+    
+    self.dataFriends = QVBoxLayout() # This layout will be filled with the friends data
+    self.friendsSection.addLayout(self.dataFriends)
+    
+    # Adding spacer to push the friends data to the top
+    spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.friendsSection.addItem(spacer)
+
     self.searchSection.addLayout(self.containerTitleSearch)
     self.mainLayout.addLayout(self.friendsSection, 1)  # Stretch factor of 1 to spread evenly
-    
+
     self.searchBar = QHBoxLayout()
     searchContainer = QWidget()
     searchContainerLayout = QHBoxLayout(searchContainer)

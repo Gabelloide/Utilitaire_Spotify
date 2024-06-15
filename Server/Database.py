@@ -161,3 +161,31 @@ class Database:
     cursor.execute(sql, values)
     users = cursor.fetchall()
     return [user[0] for user in users] # first element of each tuple in the list because fetchall returns a list of tuples (userID,)
+  
+
+  def add_friend(self, userID, friendID) -> bool:
+    """Adds a friend to the user's friend list, returns True/False depending on the success of the operation"""
+    try:
+      cursor = self.mySQL.cursor()
+      sql = "INSERT INTO Friends (userID, friendID) VALUES (%s, %s)"
+      values = (userID, friendID)
+      cursor.execute(sql, values)
+      self.mySQL.commit()
+      return True
+    except Exception as e:
+      print(f"Error during friend insertion in database: {e}")
+      return False
+
+
+  def remove_friend(self, userID, friendID) -> bool:
+    """Removes a friend from the user's friend list, returns True/False depending on the success of the operation"""
+    try:
+      cursor = self.mySQL.cursor()
+      sql = "DELETE FROM Friends WHERE userID = %s AND friendID = %s"
+      values = (userID, friendID)
+      cursor.execute(sql, values)
+      self.mySQL.commit()
+      return True
+    except Exception as e:
+      print(f"Error during friend deletion in database: {e}")
+      return False

@@ -23,7 +23,7 @@ class ControllerFriendsPage:
     self.timer.setSingleShot(True)
     self.timer.timeout.connect(self.searchFriends)
     self.view.searchInput.textChanged.connect(lambda : self.timer.start(500))
-    
+    self.view.refreshButton.clicked.connect(self.refreshFriends)
 
 
   def fetchFriends(self):
@@ -59,13 +59,13 @@ class ControllerFriendsPage:
   def buildFriendsDisplay(self, friendsList):
     """Builds the display of the friends list"""
 
-    friendsDataRow = MainWindow.createDataRow("Les amis de " + self.user.display_name)
+    friendsDataRow = MainWindow.createDataRow("Les amis de " + self.user.display_name, self.view)
     
     client = SpotifyAPI.get_spotify_client()
     
     if friendsList is None or len(friendsList) == 0:
       labelNothing = LabelSubTitle("Vous n'avez pas encore d'amis. Essayez de chercher quelqu'un !")
-      self.view.friendsSection.addWidget(labelNothing)
+      self.view.dataFriends.addWidget(labelNothing)
       return
     
     for friend in friendsList:
@@ -77,7 +77,7 @@ class ControllerFriendsPage:
 
       friendsDataRow.addComponent(friendImageLabel)
     
-    self.view.friendsSection.addWidget(friendsDataRow)
+    self.view.dataFriends.addWidget(friendsDataRow)
 
 
   def searchFriends(self):
@@ -150,4 +150,94 @@ class ControllerFriendsPage:
   
     except Exception as e:
       print(f"Unexpected error in ControllerFriendsPage, fetchUsers: {e}")
+      return
+
+
+  def refreshFriends(self):
+    """Refreshes the friends list"""
+    # Clearing the dataFriends
+    while self.view.dataFriends.count():
+      child = self.view.dataFriends.takeAt(0)
+      if child.widget():
+        child.widget().deleteLater()
     
+    # Fetching the friends list again
+    self.friendsList = self.fetchFriends()
+    # Rebuilding the friends display
+    self.buildFriendsDisplay(self.friendsList)
+
+
+  def addFriend(self, friend: User):
+    """Adds a friend to the user's friend list
+    Will interrogate the server to ask it to perform the SQL operation"""
+    try:
+      with network.connect_to_userinfo_server() as s:
+        
+        s.sendall(b"ADD_FRIEND") # Asking for the users list
+        
+        response = network.receive_all(s)
+        
+        if response != b"READY":
+          print(f"Server response: {response}")
+          return
+        
+        # Sending the friend ID to the server to add the friend
+        data = (self.user.id, friend.id)
+        serialized_data = pickle.dumps(data)
+        s.sendall(serialized_data)
+        
+        # Waiting for the server to say that the SQL operation is OK
+        response = network.receive_all(s)
+        
+        if response != b"SQL_OK":
+          print("SQL operation failed")
+          return
+        
+        # Refreshing the friends list
+        self.refreshFriends()
+    
+    except socket.error as e:
+      print(f"Socket error on addFriend: {e}")
+      return
+    
+    except Exception as e:
+      print(f"Unexpected error in ControllerFriendsPage, addFriend: {e}")
+      return
+
+
+  def removeFriend(self, friend: User):
+    """Removes a friend from the user's friend list
+    Will interrogate the server to ask it to perform the SQL operation"""
+    try:
+      with network.connect_to_userinfo_server() as s:
+        
+        s.sendall(b"REMOVE_FRIEND") # Asking for the users list
+        
+        response = network.receive_all(s)
+        
+        if response != b"READY":
+          print(f"Server response: {response}")
+          return
+        
+        # Sending the friend ID to the server to remove the friend
+        data = (self.user.id, friend.id)
+        serialized_data = pickle.dumps(data)
+        s.sendall(serialized_data)
+        
+        # Waiting for the server to say that the SQL operation is OK
+        response = network.receive_all(s)
+        
+        if response != b"SQL_OK":
+          print("SQL operation failed")
+          return
+        
+        # Refreshing the friends list
+        self.refreshFriends()
+    
+    except socket.error as e:
+      print(f"Socket error on removeFriend: {e}")
+      return
+    
+    except Exception as e:
+      print(f"Unexpected error in ControllerFriendsPage, removeFriend: {e}")
+      return

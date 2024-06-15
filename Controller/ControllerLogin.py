@@ -61,7 +61,8 @@ class ControllerLogin:
     self.view.parentView.addPage("StatisticsPage", statsPage)
 
     friendsPage = FriendsPage(self.view.parentView)
-    ControllerFriendsPage(user, friendsPage)
+    controllerFriends = ControllerFriendsPage(user, friendsPage)
+    friendsPage.controller = controllerFriends
     self.view.parentView.addPage("FriendsPage", friendsPage)
     
     trendingPage = TrendingPage(self.view.parentView)
