@@ -140,8 +140,24 @@ class Database:
   def get_friends(self, userID) -> list[str]:
     """Returns the list of friends of a user given its userID"""
     cursor = self.mySQL.cursor()
+    # Commit once to be up to date
+    self.mySQL.commit()
+    # Fetch the friends
     sql = "SELECT friendID FROM Friends WHERE userID = %s"
     values = (userID,)
     cursor.execute(sql, values)
     friends = cursor.fetchall()
     return [friend[0] for friend in friends] # first element of each tuple in the list because fetchall returns a list of tuples (userID,)
+  
+  
+  def search_users(self, query) -> list[str]:
+    """Returns the list of users whose username is present the query"""
+    cursor = self.mySQL.cursor()
+    # Commit once to be up to date
+    self.mySQL.commit()
+    # Fetch the users
+    sql = "SELECT userID FROM User WHERE username LIKE %s"
+    values = (f"%{query}%",)
+    cursor.execute(sql, values)
+    users = cursor.fetchall()
+    return [user[0] for user in users] # first element of each tuple in the list because fetchall returns a list of tuples (userID,)

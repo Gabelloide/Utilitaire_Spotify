@@ -1,4 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QLineEdit
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPixmap
 
 class FriendsPage(QWidget):
   
@@ -40,6 +42,54 @@ class FriendsPage(QWidget):
     self.friendsSection.addLayout(self.containerTitle)
     self.searchSection.addLayout(self.containerTitleSearch)
     self.mainLayout.addLayout(self.friendsSection, 1)  # Stretch factor of 1 to spread evenly
+    
+    self.searchBar = QHBoxLayout()
+    searchContainer = QWidget()
+    searchContainerLayout = QHBoxLayout(searchContainer)
+    
+    self.searchInput = QLineEdit()
+    self.searchInput.setPlaceholderText("Rechercher un ami...")
+    
+    searchContainer.setStyleSheet("""
+        QWidget {
+            border: 2px solid gray;
+            border-radius: 20px;
+            padding: 15px;
+        }
+        QLineEdit {
+            border: none;
+            border-radius: 0px;
+            padding: 5px;
+            margin: 5px;
+            font-size: 14pt;
+        }
+        QLabel {
+          border: none;
+          background-color: transparent;
+        }
+        
+    """)
+    
+    searchIcon = QLabel()
+    searchIcon.setPixmap(QPixmap('Assets/icons/search_icon.png').scaled(25, 25, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+    
+    searchContainerLayout.addWidget(searchIcon)
+    searchContainerLayout.addWidget(self.searchInput)
+    searchContainerLayout.setContentsMargins(0, 0, 0, 0)
+    searchContainerLayout.setSpacing(5)
+    
+    self.searchBar.addWidget(searchContainer)
+    self.searchBar.setAlignment(Qt.AlignmentFlag.AlignLeft)
+    
+    self.searchSection.addWidget(searchContainer)
+    
+    self.results = QVBoxLayout()
+    self.searchSection.addLayout(self.results)
+    
+    spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.searchSection.addItem(spacer)
+    
+    
     self.mainLayout.addLayout(self.searchSection, 1)
     
     self.setLayout(self.mainLayout)

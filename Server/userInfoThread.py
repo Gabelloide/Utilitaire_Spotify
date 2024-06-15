@@ -49,6 +49,22 @@ def log_user_in_database():
             # Send the friends list to the client
             serialized_friendsList = pickle.dumps(friendsList)
             connection.sendall(serialized_friendsList)
+            
+          elif data == b"SEARCH_USERS":
+            print("Client asked to search users")
+            # Tell the client that we are ready to receive the query
+            connection.sendall(b"READY")
+            
+            # Waiting for the query
+            query = receive_all(connection).decode()
+            
+            # Get the users list from the database (SQL), according to the query
+            database = entrypoint.getDatabaseObject()
+            usersIDs = database.search_users(query)
+            
+            # Send the users list to the client
+            serialized_usersIDs = pickle.dumps(usersIDs)
+            connection.sendall(serialized_usersIDs)
 
         
         except Exception as e:

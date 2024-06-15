@@ -31,9 +31,14 @@ class SearchResultRow(QWidget):
         self.main_layout.addWidget(self.logo_label)
         
         self.attachedObject = None
-    
+
+    def getParent(self):
+      return self.parent()
+
+
     def set_logo(self, logo_path):
         self.logo_label.setPixmap(QPixmap(logo_path))
+
 
     def downloadAndSetImage(self, url, filename):
         """Downloads the image from the internet and sets it to the QLabel.
@@ -46,6 +51,7 @@ class SearchResultRow(QWidget):
         else:
             # Downloading the image in a separate thread
             threading.Thread(target=self.thread_download, args=(url, filename)).start()
+
 
     def thread_download(self, url, filename):
         """Used by a separate thread to download the image from the internet.
@@ -61,7 +67,8 @@ class SearchResultRow(QWidget):
             self.set_image(data)
         except requests.RequestException as e:
             print(f"Error downloading image: {e}")
-            
+
+
     def set_image(self, data):
         """Sets the image to the QLabel."""
         pixmap = QPixmap()
@@ -69,6 +76,7 @@ class SearchResultRow(QWidget):
         self.image_label.setPixmap(pixmap)
         self.image_label.setScaledContents(True)
         self.image_label.setMaximumWidth(50)
+
 
 
 class TrackResult(SearchResultRow):
@@ -87,6 +95,7 @@ class TrackResult(SearchResultRow):
         self.main_layout.insertWidget(3,self.duration_label)
         self.mousePressEvent = self.showInfo
 
+
     def showInfo(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             from View.Components.OverlayInfo import OverlayTrackInfo
@@ -94,20 +103,25 @@ class TrackResult(SearchResultRow):
             overlay = OverlayTrackInfo(mainWindow)
             overlay.createContent(self.attachedObject)
             overlay.show()
-    
+
+
     def contextMenuEvent(self, event):
         from View.Components.RightClickMenu import TrackRightClickMenu
         contextMenu = TrackRightClickMenu(self)
         contextMenu.exec(event.globalPos())
-    
+
+
     def set_title(self, title):
         self.title_label.setText(title)
-    
+
+
     def set_artist(self, artist):
         self.artist_label.setText(artist)
-    
+
+
     def set_duration(self, duration):
         self.duration_label.setText(duration)
+
 
 
 class ArtistResult(SearchResultRow):
@@ -125,13 +139,16 @@ class ArtistResult(SearchResultRow):
         self.main_layout.insertSpacerItem(2, spacer)
         
         self.mousePressEvent = self.showInfo
-        
+
+
     def set_artist(self, artist):
         self.artist_label.setText(artist)
-    
+
+
     def set_listeners(self, listeners):
         self.listeners_label.setText(listeners)
-        
+
+
     def showInfo(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             from View.Components.OverlayInfo import OverlayArtistInfo
@@ -139,11 +156,13 @@ class ArtistResult(SearchResultRow):
             overlay = OverlayArtistInfo(mainWindow)
             overlay.createContent(self.attachedObject)
             overlay.show()
-            
+
+
     def contextMenuEvent(self, event):
         from View.Components.RightClickMenu import ArtistRightClickMenu
         contextMenu = ArtistRightClickMenu(self)
         contextMenu.exec(event.globalPos())
+
 
 
 class AlbumResult(SearchResultRow):
@@ -161,13 +180,16 @@ class AlbumResult(SearchResultRow):
         self.main_layout.insertSpacerItem(2, spacer)
         
         self.mousePressEvent = self.showInfo
-        
+
+
     def set_album_title(self, title):
         self.album_title_label.setText(title)
-    
+
+
     def set_artist(self, artist):
         self.artist_label.setText(artist)
-        
+
+
     def showInfo(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             from View.Components.OverlayInfo import OverlayAlbumInfo
@@ -176,7 +198,49 @@ class AlbumResult(SearchResultRow):
             overlay.createContent(self.attachedObject)
             overlay.show()
 
+
     def contextMenuEvent(self, event):
         from View.Components.RightClickMenu import AlbumRightClickMenu
         contextMenu = AlbumRightClickMenu(self)
         contextMenu.exec(event.globalPos())
+
+
+
+class ProfileResult(SearchResultRow):
+  
+  def __init__(self, parent=None):
+    super().__init__(parent)
+    
+    self.profile_label = QLabel("ProfileName", self)
+    self.info_layout.addWidget(self.profile_label)
+    
+    spacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+    self.main_layout.insertSpacerItem(2, spacer)
+    
+
+  def set_profile(self, profile):
+    self.profile_label.setText(profile)
+    
+  
+  def contextMenuEvent(self, event):
+    from View.Components.RightClickMenu import ProfilePictureRightClickMenu
+    contextMenu = ProfilePictureRightClickMenu(self)
+    contextMenu.exec(event.globalPos())
+    
+
+  # Overriding the method to use the profile picture placeholder
+  def thread_download(self, url, filename):
+    try:
+      response = requests.get(url)
+      response.raise_for_status()
+      data = response.content
+      # utils.save_to_cache(filename, data)
+      self.set_image(data)
+
+    except requests.RequestException as e:
+      print(f"Error downloading image, fallback on default profile picture.")
+      # print(e)
+      # Fallback on the image placeholder
+      with open("Assets/icons/user_placeholder.png", "rb") as file:
+        data = file.read()
+        self.set_image(data)
