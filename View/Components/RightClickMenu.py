@@ -2,8 +2,11 @@ from PyQt6.QtWidgets import QMenu, QLabel
 from PyQt6.QtGui import QAction
 from PyQt6.QtGui import QFontDatabase, QFont
 import ui_utils
+from Model.User import User
 from View.Components.ImageLabel import ImageLabel
 from View.Components.OverlayInfo import OverlayTrackInfo, OverlayArtistInfo, OverlayAlbumInfo
+from View.Components.SearchResultRow import ProfileResult
+from Controller import SpotifyAPI
 
 class RightClickMenu(QMenu):
   def __init__(self, parent=None):
@@ -91,8 +94,22 @@ class ProfilePictureRightClickMenu(RightClickMenu):
   def __init__(self, parent=None):
     super().__init__(parent)
     
-    self.itsYou = QAction("C'est vous !", self)
-    self.addAction(self.itsYou)
+    client = SpotifyAPI.get_spotify_client()
+    userID = User(client.current_user()).id
+    
+    # Define the action "addFriend" only if the menu is launched from a profile picture present in a search result object (SearchResultRow.ProfileResult)
+    if isinstance(parent, ProfileResult):
+
+      if self.parentComponent.attachedObject.id != userID:
+        # TODO ne pas proposer d'ajouter en ami si c'est déjà un ami
+        self.addFriend = QAction("Ajouter en ami", self)
+        self.addAction(self.addFriend)
+        self.addFriend.triggered.connect(self.addingFriendRoutine)
+      else:
+        self.itsYou = QAction("C'est vous !", self)
+        self.addAction(self.itsYou)
 
 
+  def addingFriendRoutine(self):
+    print("Adding friend")
 
