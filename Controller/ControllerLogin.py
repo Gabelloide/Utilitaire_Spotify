@@ -18,6 +18,8 @@ from Controller.ControllerSearchPage import ControllerSearchPage
 from Controller.ControllerZipUpload import ControllerZipUpload
 from Controller import SpotifyAPI
 
+import socket, pickle, utils
+import network
 
 class ControllerLogin:
   
@@ -44,17 +46,23 @@ class ControllerLogin:
     self.view.buttonLogin.setText("Chargement de votre profil...")
     self.view.buttonLogin.repaint()
     
+    infosSent = self.sendUserInfo(user)
+    if not infosSent: # If the SQL operation failed, we stop the login process, user can try again
+      self.view.buttonLogin.setText("Impossible de se connecter au serveur ! Réessayez")
+      self.view.buttonLogin.repaint()
+      return
+    
     profilePage = ProfilePage(self.view.parentView)
     ControllerProfilePage(user, profilePage) # Controller for the profile page
     self.view.parentView.addPage("ProfilePage", profilePage)
-    self.view.parentView.showPage("ProfilePage")
     
     statsPage = StatisticsPage(self.view.parentView)
     ControllerStatistics(user, statsPage)
     self.view.parentView.addPage("StatisticsPage", statsPage)
 
     friendsPage = FriendsPage(self.view.parentView)
-    ControllerFriendsPage(user, friendsPage)
+    controllerFriends = ControllerFriendsPage(user, friendsPage)
+    friendsPage.controller = controllerFriends
     self.view.parentView.addPage("FriendsPage", friendsPage)
     
     trendingPage = TrendingPage(self.view.parentView)
@@ -73,4 +81,34 @@ class ControllerLogin:
     ControllerZipUpload(zipUploadPage)
     self.view.parentView.addPage("ZipUploadPage", zipUploadPage)
 
+    # Showing page after everything loaded
+    self.view.parentView.showPage("ProfilePage")
 
+
+  def sendUserInfo(self, user: User):
+    """Sends userinfo to server via socket.
+    Returns True/False if the operations failed/succeeded"""
+    try:
+      with network.connect_to_userinfo_server() as s:
+        s.sendall(b"SEND_USERINFO") # Waiting for approval
+        
+        response = network.receive_all(s)
+        
+        if response !=  b"READY":
+          print(f"Server response: {response}")
+          return
+
+        data = (user.id, user.display_name)
+        serialized_tuple = pickle.dumps(data)
+        s.sendall(serialized_tuple)
+        
+        # Waiting for server response to know if SQL succeeded
+        response = network.receive_all(s)
+        if response != b"SQL_OK":
+          return False
+
+        return True
+      
+    except socket.error as e:
+      print(f"Socket error: {e}")
+      return False

@@ -27,6 +27,10 @@ class ImageLabel(QWidget):
     self.layout.addItem(spacer)
 
 
+  def getParent(self):
+    return self.parent()
+
+
   def downloadAndSetImage(self, url, filename):
     """Downloads the image from the internet and sets it to the QLabel.
     - Checks for the image existence in the cache.

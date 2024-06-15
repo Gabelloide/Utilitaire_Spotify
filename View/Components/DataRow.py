@@ -10,6 +10,7 @@ class DataRow(QWidget):
 
   def __init__(self, title: str, parent=None):
     super().__init__(parent)
+    self.parentView = parent
 
     self.mainLayout = QVBoxLayout()
 
@@ -35,3 +36,7 @@ class DataRow(QWidget):
   def getDataCount(self):
     """Returns the number of data components in the layout."""
     return self.data_layout.count()
+
+
+  def getParent(self):
+    return self.parentView

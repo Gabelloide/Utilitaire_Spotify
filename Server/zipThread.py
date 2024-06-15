@@ -1,7 +1,7 @@
 import zipfile, os, json, shutil, socket
 import constants
+import entrypoint
 
-from Database import Database
 from HistoryTrack import HistoryTrack
 
 # Constants
@@ -40,9 +40,9 @@ def wait_for_zip_file():
     print("zipThread is listening on {0}".format(server_socket.getsockname()))
 
     while True:
-      connection, adress = server_socket.accept()
+      connection, address = server_socket.accept()
       with connection:
-        print(f"Connected by {adress}")
+        print(f"Connected by {address}")
 
         # Check if the save path exists, if not create it
         if not os.path.exists(SAVE_PATH):
@@ -84,7 +84,7 @@ def wait_for_zip_file():
           
           # Fetch that into the database
           try:
-            db = Database(constants.DB_ADDRESS, constants.DB_USER, constants.DB_PASSWORD, "spotify_history", constants.DB_PORT)
+            db = entrypoint.getDatabaseObject()
             
             if not db.check_history_table_existence():
               print("The table 'History' doesn't exist in the database, creating it...")
