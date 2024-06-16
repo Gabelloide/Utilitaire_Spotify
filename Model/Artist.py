@@ -18,7 +18,12 @@ class Artist:
   def __str__(self) -> str:
     return self.name
 
-
+  def __eq__(self, other) -> bool:
+    return self.id == other.id
+  
+  def __hash__(self) -> int:
+    return hash(self.id)
+  
   def getTotalFollowers(self):
     return self.followers['total']
   

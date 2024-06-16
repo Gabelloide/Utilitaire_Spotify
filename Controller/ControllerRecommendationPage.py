@@ -18,16 +18,16 @@ class ControllerRecommendationPage:
     self.spotify = SpotifyAPI.get_spotify_client()
     self.client = SpotifyAPI.get_spotify_client()
 
-    self.user_top_tracks = Statistics.getTopTracks(self.client, limit=2)
-    self.user_top_artists = Statistics.getTopArtists(self.client, limit=5)
+    self.user_top_tracks = Statistics.getTopTracks(self.client, limit=8)[:2]
+    self.user_top_artists = Statistics.getTopArtists(self.client, limit=8)[:5]
     self.user_recent_genres = Statistics.getRecentListeningGenres(self.client, limit=5)
     
+    self.artists_reco = {}
     
     self.recommendedTracks = self.getTracksRecommendation()
     self.recommendedArtists = self.getArtistsRecommendation()
     self.recommendedAlbums = self.getAlbumsRecommendation()
 
-    self.view.trackButton.clicked.connect(lambda: self.showTracksRecommendation())
     
     self.track_image_label = []
     for track in self.recommendedTracks:
@@ -79,7 +79,12 @@ class ControllerRecommendationPage:
   def getArtistsRecommendation(self):
     artist_reco_list = set()
     for artist in self.user_top_artists:
-      artists_reco = self.spotify.artist_related_artists(artist.id)
+      if artist.id in self.artists_reco:
+        artists_reco = self.artists_reco[artist.id]
+        print("Artist reco in cache")
+      else:
+        artists_reco = self.spotify.artist_related_artists(artist.id)
+        self.artists_reco[artist.id] = artists_reco
       for artist in artists_reco['artists']:
         artist_reco_list.add(Artist(artist))
         
@@ -91,13 +96,16 @@ class ControllerRecommendationPage:
     album_reco_list = set()
     artist_reco_list = set()
     for artist in self.user_top_artists[:3]:
-      artists_reco = self.spotify.artist_related_artists(artist.id)
-      for artist in artists_reco['artists']:
-        artist_reco_list.add(Artist(artist))
+      if artist.id in self.artists_reco:
+        artists_reco = self.artists_reco[artist.id]
+        print("Artist reco in cache")
+      else:
+        artists_reco = self.spotify.artist_related_artists(artist.id)
+        self.artists_reco[artist.id] = artists_reco
+      [artist_reco_list.add(Artist(artist)) for artist in artists_reco['artists']]
     for artist in artist_reco_list:
       albums = self.spotify.artist_albums(artist.id, limit=2, album_type='album')
-      for album in albums['items']:
-        album_reco_list.add(Album(album))
+      [album_reco_list.add(Album(album)) for album in albums['items']]
         
     album_reco_list = list(album_reco_list)
     random.shuffle(album_reco_list)

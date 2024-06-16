@@ -22,7 +22,12 @@ class Album:
     self.tracks                 : list[Track.Track] = [Track.Track(track) for track in album_dict.get('tracks', {}).get('items', [])]
     self.uri                    : str = album_dict.get('uri')
 
-
+  def __eq__(self, other) -> bool:
+    return self.id == other.id
+  
+  def __hash__(self) -> int:
+    return hash(self.id)
+  
   def __str__(self) -> str:
     return self.name
 
