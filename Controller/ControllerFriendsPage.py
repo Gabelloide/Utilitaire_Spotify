@@ -88,7 +88,7 @@ class ControllerFriendsPage:
     
     search = self.view.searchInput.text()
     client = SpotifyAPI.get_spotify_client()
-    currentUserID = User(client.current_user()).id
+    currentUserID = self.user.id
 
     if search.strip():
       
