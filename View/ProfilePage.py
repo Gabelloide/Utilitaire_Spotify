@@ -43,19 +43,19 @@ class ProfilePage(QWidget):
     spacerUsernameTracks = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
     self.mainLayout.addItem(spacerUsernameTracks)
     
-    self.containerTracks = MainWindow.MainWindow.createDataRow("Titres les plus écoutés")
+    self.containerTracks = MainWindow.MainWindow.createDataRow("Titres les plus écoutés récemment")
     self.mainLayout.addWidget(self.containerTracks)
     
     spacerTracksArtists = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
     self.mainLayout.addItem(spacerTracksArtists)
 
-    self.containerArtists = MainWindow.MainWindow.createDataRow("Artistes les plus écoutés")
+    self.containerArtists = MainWindow.MainWindow.createDataRow("Artistes les plus écoutés récemment")
     self.mainLayout.addWidget(self.containerArtists)
     
     spacerArtistsAlbums = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
     self.mainLayout.addItem(spacerArtistsAlbums)
     
-    self.containerAlbums = MainWindow.MainWindow.createDataRow("Albums les plus écoutés")
+    self.containerAlbums = MainWindow.MainWindow.createDataRow("Albums les plus écoutés récemment")
     self.mainLayout.addWidget(self.containerAlbums)
   
     spacerBottom = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)

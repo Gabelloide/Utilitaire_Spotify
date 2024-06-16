@@ -33,6 +33,19 @@ class ImageLabelSlider(QWidget):
         spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         self.layout.addItem(spacer)
 
+        self.buttonStyleSheet = """
+        QPushButton {
+            border: 0px;
+            border: 0px;
+            margin-right: 30px;
+            border-radius: 10px;
+        }
+        QPushButton:hover {
+            background-color: #333333;
+        }
+        """
+        
+        self.setStyleSheet(self.buttonStyleSheet)
         
     def show_prev_widgets(self):
         self.widget_index = (self.widget_index - 1) % len(self.widgets)
