@@ -3,6 +3,17 @@ import os
 
 spotify_client = None
 
+# Variables filled at startup & refresh to prevent multiple calls to the API
+# If we are saving calls in a dictionary, the key is the parameters that were used to get the data, the value is the data itself
+recently_played_tracks_cache = None
+recently_played_artists_cache = None
+recently_played_albums_cache = None
+top_artists_cache = {}
+top_tracks_cache = {}
+top_albums_cache = {}
+recent_listening_genres_cache = {}
+
+
 def setup_client(client_id, client_secret, redirect_uri, scope):
   global spotify_client
   spotify_client = spotipy.Spotify(auth_manager=spotipy.SpotifyOAuth(client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, scope=scope))

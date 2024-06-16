@@ -3,6 +3,7 @@ from Model.Artist import Artist
 from Model.Track import Track
 from Model.User import User
 from Model.Playlist import Playlist
+from Controller import SpotifyAPI
 
 from typing import List
 
@@ -21,15 +22,25 @@ def getRecentListeningDuration(client):
 
 def get_50_recently_played_tracks(client):
   """Returns a dictionary containing the 50 most recently played tracks associated with their played_at date."""
+  if SpotifyAPI.recently_played_tracks_cache is not None:
+    print("Returning cached tracks.")
+    return SpotifyAPI.recently_played_tracks_cache
+
   recently_played_tracks = client.current_user_recently_played()
   recently_played_tracks = recently_played_tracks['items']
   recently_played_dict = {Track(track['track']): track['played_at'] for track in recently_played_tracks}
+  
+  SpotifyAPI.recently_played_tracks_cache = recently_played_dict
   return recently_played_dict
 
 
 def get_recently_played_artists(client):
   """Returns a list of Artist objects present in the 50 most recently played tracks.
   If an artist is present multiple times, it will only be counted once."""
+  if SpotifyAPI.recently_played_artists_cache is not None:
+    print("Returning cached artists.")
+    return SpotifyAPI.recently_played_artists_cache
+  
   recently_played_dict = get_50_recently_played_tracks(client)
   artists = []
   for track in recently_played_dict.keys():
@@ -37,23 +48,36 @@ def get_recently_played_artists(client):
       # Before adding, check if artist id is already in the list
       if artist.id not in [a.id for a in artists]:
         artists.append(artist)
+
+  SpotifyAPI.recently_played_artists_cache = artists
   return artists
 
 
 def get_recently_played_albums(client):
   """Returns a list of Album objects present in the 50 most recently played tracks.
   If an album is present multiple times, it will only be counted once."""
+  if SpotifyAPI.recently_played_albums_cache is not None:
+    print("Returning cached albums.")
+    return SpotifyAPI.recently_played_albums_cache
+  
   recently_played_dict = get_50_recently_played_tracks(client)
   albums = []
   for track in recently_played_dict.keys():
     # Before adding, check if album id is already in the list
     if track.album.id not in [a.id for a in albums]:
       albums.append(track.album)
+  
+  SpotifyAPI.recently_played_albums_cache = albums
   return albums
 
 
 def getTopArtists(client, limit=5, time_range="short_term") -> List[Artist]:
   """Returns the top {limit} artists of the user in the last {time_range}."""
+  parameters = (limit, time_range)
+  if parameters in SpotifyAPI.top_artists_cache :
+    print("Returning cached top artists.")
+    return SpotifyAPI.top_artists_cache[parameters]
+  
   if time_range not in ['short_term', 'medium_term', 'long_term']:
     raise ValueError("Time range must be 'short_term', 'medium_term' or 'long_term'.")
   results = client.current_user_top_artists(time_range=time_range) # 4 weeks
@@ -63,12 +87,19 @@ def getTopArtists(client, limit=5, time_range="short_term") -> List[Artist]:
     results = client.next(results)
     items.extend(results['items'])
   
-  # Creating Artist objects
-  return [Artist(artist) for artist in items[:limit]]
+  # Caching results
+  topArtists = [Artist(artist) for artist in items[:limit]]
+  SpotifyAPI.top_artists_cache[parameters] = topArtists
+  return topArtists
 
 
 def getTopTracks(client, limit=5, time_range="short_term") -> List[Track]:
   """Returns the top {limit} tracks of the user in the last {time_range}."""
+  parameters = (limit, time_range)
+  if parameters in SpotifyAPI.top_tracks_cache :
+    print("Returning cached top tracks.")
+    return SpotifyAPI.top_tracks_cache[parameters]
+  
   if time_range not in ['short_term', 'medium_term', 'long_term']:
     raise ValueError("Time range must be 'short_term', 'medium_term' or 'long_term'.")
   results = client.current_user_top_tracks(time_range=time_range) # 4 weeks
@@ -78,12 +109,19 @@ def getTopTracks(client, limit=5, time_range="short_term") -> List[Track]:
     results = client.next(results)
     items.extend(results['items'])
 
-  # Creating Track objects
-  return [Track(track) for track in items[:limit]] # Limiting the number of tracks to {limit}
+  # Caching results
+  topTracks = [Track(track) for track in items[:limit]] # Limiting the number of tracks to {limit}
+  SpotifyAPI.top_tracks_cache[parameters] = topTracks
+  return topTracks
 
 
 def getTopAlbums(client, limit=5, time_range="short_term") -> List[Album]:
   """Returns the top {limit} albums of the user in the last {time_range}."""
+  parameters = (limit, time_range)
+  if parameters in SpotifyAPI.top_albums_cache :
+    print("Returning cached top albums.")
+    return SpotifyAPI.top_albums_cache[parameters]
+  
   if time_range not in ['short_term', 'medium_term', 'long_term']:
     raise ValueError("Time range must be 'short_term', 'medium_term' or 'long_term'.")
   topTracks = getTopTracks(client, limit=150, time_range=time_range) # Limit will increase accuracy of score checking
@@ -98,11 +136,17 @@ def getTopAlbums(client, limit=5, time_range="short_term") -> List[Album]:
   sortedAlbumsIDs = [k for k, v in sorted(albumsScores.items(), key=lambda item: item[1], reverse=True)]
   sortedAlbums = [idAlbums[albumID] for albumID in sortedAlbumsIDs][:limit]
   
+  SpotifyAPI.top_albums_cache[parameters] = sortedAlbums
   return sortedAlbums
 
 
 def getRecentListeningGenres(client, limit=5):
   """Returns the top {limit} genres of the user's recent tracks."""
+  parameters = limit
+  if parameters in SpotifyAPI.recent_listening_genres_cache:
+    print("Returning cached genres.")
+    return SpotifyAPI.recent_listening_genres_cache[parameters]
+  
   recently_played_tracks = get_50_recently_played_tracks(client)
   genres_count = {}
   
@@ -131,7 +175,9 @@ def getRecentListeningGenres(client, limit=5):
   # Sorting the dictionary by values
   sorted_genres = sorted(genres_count.items(), key=lambda item: item[1], reverse=True)
   
-  return sorted_genres[:limit]
+  genres = sorted_genres[:limit]
+  SpotifyAPI.recent_listening_genres_cache[parameters] = genres
+  return genres
 
 
 def getNbPlayedTracks(client):
