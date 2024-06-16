@@ -2,6 +2,9 @@ from typing import List, Dict
 from Model import Artist, Album
 
 class Track:
+  
+  tracks_genres_cache = {} # Cache : key is track id, value is genre list
+  
   def __init__(self, track_dict: Dict):
     self.album            : Album.Album = Album.Album(track_dict.get('album', {}))
     self.artists          : list = [Artist.Artist(artist) for artist in track_dict.get('artists', [])]
@@ -30,13 +33,16 @@ class Track:
 
   def get_track_genre(self, client):
     """Function to get the genre of a track"""
+    if self.id in Track.tracks_genres_cache:
+      print(f"Returning cached genre for {self.id}.")
+      return Track.tracks_genres_cache[self.id]
+    
     # Get the artist ID from the track object
     artist_id = self.artists[0].id
-    
     # Get the artist object using the artist ID
     artist = client.artist(artist_id)
-    
     # Get the genre from the artist object
     genre = artist['genres']
 
+    Track.tracks_genres_cache[self.id] = genre
     return genre

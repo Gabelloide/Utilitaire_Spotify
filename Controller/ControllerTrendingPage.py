@@ -31,47 +31,52 @@ class ControllerTrendingPage:
 
 
   def createTrends(self, selected_genre="Tous les genres"):
-    """Method to create the trends datarow"""
-    trackIDs = [trackID for trackID in self.trends.keys()]
-    trendingDataRow = MainWindow.createDataRow("Pistes du moment")
-    
-    # Gathering all track objects from API
-    client = SpotifyAPI.get_spotify_client()
-    trackObjects = ControllerTrendingPage.trackIDs_to_Objects(trackIDs, client)
-    currentUserID = self.user.id
-    
-    # Create a set to store unique genres and add the genres to the genreFilter(comboBox)
-    self.view.clearComboBox()
-    unique_genres = set()
-    for track in trackObjects:
+      """Method to create the trends datarow"""
+      trackIDs = [trackID for trackID in self.trends.keys()]
+      trendingDataRow = MainWindow.createDataRow("Pistes du moment")
+      
+      # Gathering all track objects from API
+      client = SpotifyAPI.get_spotify_client()
+      trackObjects = ControllerTrendingPage.trackIDs_to_Objects(trackIDs, client)
+      currentUserID = self.user.id
+      
+      # Create a set to store unique genres and add the genres to the genreFilter(comboBox)
+      self.view.clearComboBox()
+      self.addGenresToFilter(trackObjects, client, selected_genre)
+
+      # Adding the track objects to the datarow
+      for track in trackObjects:
         track_genre = track.get_track_genre(client)
-        # Add the genre to the set of unique genres
-        unique_genres.update(track_genre)
-    # Convert the set back to a list
-    unique_genres = list(unique_genres)
-    # adding unique genres to the genreFilter of the DataRow
-    self.view.genreFilter.addItem("Tous les genres")
-    for genre in unique_genres:
-          self.view.genreFilter.addItem(genre)
+        # If the genre is in the selected genre or if the selected genre is "Tous les genres"
+        if selected_genre in track_genre or selected_genre == "Tous les genres":
+          trackScore = self.trends[track.id]['upvotes']
+          addedBy = ControllerTrendingPage.userID_to_User(self.trends[track.id]['addedBy'], client)
+          upvoteState = currentUserID in self.trends[track.id]['upvotedBy']
 
-    self.view.genreFilter.setCurrentText(selected_genre)
-    self.view.connectComboBox()
+          label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, upvoteState, track, self)
+          label.downloadAndSetImage(track.album.getBigCover(), track.id)
 
-    # Adding the track objects to the datarow
-    for track in trackObjects:
-      track_genre = track.get_track_genre(client)
-      # If the genre is in the selected genre or if the selected genre is "Tous les genres"
-      if selected_genre in track_genre or selected_genre == "Tous les genres":
-        trackScore = self.trends[track.id]['upvotes']
-        addedBy = ControllerTrendingPage.userID_to_User(self.trends[track.id]['addedBy'], client)
-        upvoteState = currentUserID in self.trends[track.id]['upvotedBy']
+          trendingDataRow.addComponent(label)
 
-        label = MainWindow.createTrendImageLabel(f"{track.name} : ajoutée par {addedBy.display_name}", trackScore, upvoteState, track, self)
-        label.downloadAndSetImage(track.album.getBigCover(), track.id)
+      return trendingDataRow
 
-        trendingDataRow.addComponent(label)
 
-    return trendingDataRow
+  def addGenresToFilter(self, trackObjects, client, selected_genre):
+      """Method to add unique genres to the genreFilter"""
+      unique_genres = set()
+      for track in trackObjects:
+          track_genre = track.get_track_genre(client)
+          # Add the genre to the set of unique genres
+          unique_genres.update(track_genre)
+      # Convert the set back to a list
+      unique_genres = list(unique_genres)
+      # adding unique genres to the genreFilter of the DataRow
+      self.view.genreFilter.addItem("Tous les genres")
+      for genre in unique_genres:
+            self.view.genreFilter.addItem(genre)
+
+      self.view.genreFilter.setCurrentText(selected_genre)
+      self.view.connectComboBox()
 
 
   def refreshFilteredByGenre(self, genre:str):
