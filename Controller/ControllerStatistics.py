@@ -39,21 +39,9 @@ class ControllerStatistics:
     
     labelAlbums = MainWindow.createFigureLabel(f"{Statistics.getNbPlayedAlbums(client)}", "albums différents écoutés")
     figuresDataRow.addComponent(labelAlbums)
-    
 
     canvasDataRow = MainWindow.createDataRow("Vos écoutes visuellement")
     genres_data = Statistics.getRecentListeningGenres(client)
-
-    # pieforGenre = PieGenre(self, width=5, height=4, dpi=100)
-
-    # # Préparation des données pour le camembert
-    # labels = [genre[0] for genre in genres_data]
-    # sizes = [count[1] for count in genres_data]
-    # colors = cm.Paired(range(len(labels)))
-
-    # pieforGenre = PieGenre(self)
-    # pieforGenre.plot_pie_chart(labels, sizes, colors)
-    # canvasDataRow.addComponent(pieforGenre)
 
     chartGenre = PieChartGenre(genres_data)
     canvasDataRow.addComponent(chartGenre.generateView())
