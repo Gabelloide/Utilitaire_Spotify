@@ -44,7 +44,7 @@ class ControllerTrendingPage:
     self.view.clearComboBox()
     unique_genres = set()
     for track in trackObjects:
-        track_genre = Track.get_track_genre(track.id, client) 
+        track_genre = track.get_track_genre(client)
         # Add the genre to the set of unique genres
         unique_genres.update(track_genre)
     # Convert the set back to a list
@@ -59,7 +59,7 @@ class ControllerTrendingPage:
 
     # Adding the track objects to the datarow
     for track in trackObjects:
-      track_genre = Track.get_track_genre(track.id, client)
+      track_genre = track.get_track_genre(client)
       # If the genre is in the selected genre or if the selected genre is "Tous les genres"
       if selected_genre in track_genre or selected_genre == "Tous les genres":
         trackScore = self.trends[track.id]['upvotes']
