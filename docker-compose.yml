@@ -1,0 +1,32 @@
+version: '3.8'
+
+# Creating 3 containers : python-app, db and phpmyadmin
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: pr0j3t_1nf0***
+      MYSQL_DATABASE: spotify_history
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: pr0j3t_1nf0***
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  python-app:
+    build: .
+    ports:
+      - "23456:23456"
+      - "23457:23457"
+      - "23458:23458"
+    depends_on:
+      - db
