@@ -1,4 +1,3 @@
-from matplotlib import cm
 from Model.User import User
 from Model import Statistics
 from View.StatisticsPage import StatisticsPage
