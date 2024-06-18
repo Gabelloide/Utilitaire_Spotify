@@ -25,8 +25,12 @@ EXPOSE 23456 23457 23458
 # Container will exit as soon as the script is done, so we need to keep it running with a simple command workaround
 #CMD ["tail", "-f", "/dev/null"]
 
+# Copy a script to wait for mysql
+COPY wait-for-mysql.sh /app
+RUN chmod +x /app/wait-for-mysql.sh
 
-# Run python main.py --db_address bd --db_port 3306 --db_user root --db_password pr0j3t_1nf0*** --zip_port 23456 --trend_port 23457 --userinfo_port 23458
+CMD /app/wait-for-mysql.sh bd 3306 root pr0j3t_1nf0*** "python3 main.py --db_address db --db_port 3306 --db_user root --db_password pr0j3t_1nf0*** --zip_port 23456 --trend_port 23457 --userinfo_port 23458"
+# Run python main.py --db_address db --db_port 3306 --db_user root --db_password pr0j3t_1nf0*** --zip_port 23456 --trend_port 23457 --userinfo_port 23458
 
-# Database host is 'bd', defined in docker-compose.yml
-CMD ["python3", "main.py", "--db_address", "bd", "--db_port", "3306", "--db_user", "root", "--db_password", "pr0j3t_1nf0***", "--zip_port", "23456", "--trend_port", "23457", "--userinfo_port", "23458"]
+# Database host is 'db', defined in docker-compose.yml
+#CMD ["python3", "main.py", "--db_address", "db", "--db_port", "3306", "--db_user", "root", "--db_password", "pr0j3t_1nf0***", "--zip_port", "23456", "--trend_port", "23457", "--userinfo_port", "23458"]
