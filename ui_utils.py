@@ -14,9 +14,21 @@ def getFont(taille):
 
 def getScrollBarStyle():
   return """
-QScrollBar:vertical {
-    border: none;
-    background: transparent;
-    width: 10px;
-    margin: 0px 0px 0px 0px;
-}"""
+
+            QScrollBar::handle:vertical {
+                background: #363333;
+                border-radius: 6px;
+            }
+
+            QScrollBar::handle:vertical:hover {
+                background: #000000
+            }
+
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                background: none;
+                height: 0px;
+            }
+
+            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+                background: none;
+            }"""
