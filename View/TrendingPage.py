@@ -37,8 +37,7 @@ class TrendingPage(QScrollArea):
     # CSS
     with open("Assets/style.css", "r") as file:
       stylesheet = file.read()
-    #font
-   
+
     self.labelTitle.setStyleSheet(stylesheet)
     
     self.mainLayout.addLayout(self.containerTitle)
