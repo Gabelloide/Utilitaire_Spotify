@@ -20,10 +20,10 @@ class ImageLabel(QWidget, AbstractImageSetter):
     self.text_label = QLabel(text)
     self.text_label.setWordWrap(True)
     self.text_label.setStyleSheet("color: white;")
+    self.text_label.setAlignment(Qt.AlignmentFlag.AlignTop)
+    
     self.layout.addWidget(self.image_label)
     self.layout.addWidget(self.text_label)
-    spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.layout.addItem(spacer)
 
 
   def getParent(self):

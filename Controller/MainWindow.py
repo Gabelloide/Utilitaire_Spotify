@@ -96,3 +96,6 @@ class MainWindow(QMainWindow):
   def createFigureLabel(number: str, text: str):
     """Creates a FigureLabel component."""
     return FigureLabel(number, text)
+  
+  def getNavbarWidth(self):
+    return self.navBar.width()

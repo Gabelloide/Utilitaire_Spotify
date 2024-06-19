@@ -1,15 +1,28 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QPushButton, QComboBox
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QPushButton, QComboBox, QScrollArea
 from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import pyqtSignal, QSize
+from PyQt6.QtCore import pyqtSignal, QSize, Qt
 import ui_utils as iu_utils
 
-class TrendingPage(QWidget):
+class TrendingPage(QScrollArea):
 
   genreChangedSignal = pyqtSignal(str)
   def __init__(self, parentView) -> None:
     super().__init__()
 
     self.parentView = parentView
+    
+    # ScrollPane settings
+    self.setWidgetResizable(True)
+    
+    # Adapt the base size of the scroll area to the window size
+    navBarWidth = self.parentView.getNavbarWidth()
+    totalWindowWidth = self.parentView.width()
+    totalWindowHeight = self.parentView.height()
+    
+    centralWidgetWidth = totalWindowWidth - int(navBarWidth*1.2) # 1.2 is a magic number to make this widget a little bit smaller than the window
+    self.setFixedSize(centralWidgetWidth, totalWindowHeight)
+    
+    self.centralWidget = QWidget()
     
     self.mainLayout = QVBoxLayout()
     
@@ -28,7 +41,9 @@ class TrendingPage(QWidget):
     self.labelTitle.setStyleSheet(stylesheet)
     
     self.mainLayout.addLayout(self.containerTitle)
-    self.setLayout(self.mainLayout)
+    
+    self.centralWidget.setLayout(self.mainLayout)
+    self.setWidget(self.centralWidget)
 
 
     self.refreshButton = QPushButton()
@@ -93,6 +108,10 @@ class TrendingPage(QWidget):
 
     self.containerTrends = QVBoxLayout()
     self.mainLayout.addLayout(self.containerTrends)
+    
+    # Spacer at bottom to push the data to the top, underneath the title
+    spacerItem = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+    self.mainLayout.addItem(spacerItem)
 
   def genreChanged(self, genre):
     self.genreChangedSignal.emit(genre)

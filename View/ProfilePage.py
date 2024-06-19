@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel, QHBoxLayout, QVBoxLayout, QSpacerItem, QSizePolicy, QScrollArea
 from PyQt6 import QtCore, uic
 from PyQt6.QtGui import QFontDatabase, QFont, QPixmap
 from PyQt6.QtNetwork import QNetworkAccessManager
@@ -7,7 +7,7 @@ import ui_utils
 from Controller import MainWindow
 from View.Components.FlowLayout import FlowLayout
 
-class ProfilePage(QWidget):
+class ProfilePage(QScrollArea):
   """This class is responsible for displaying the user's profile page.
   UI elements are loaded from the ProfilePage.ui file.
   CSS is loaded from the assets/style.css file."""
@@ -17,14 +17,25 @@ class ProfilePage(QWidget):
     
     # Attributes
     self.parentView = parentView
+    
+    # ScrollPane settings
+    self.setWidgetResizable(True)
+    
+    # Adapt the base size of the scroll area to the window size
+    totalWindowWidth = self.parentView.width()
+    totalWindowHeight = self.parentView.height()
+    
+    centralWidgetWidth = totalWindowWidth - 100 # magic number to make this widget a little bit smaller than the window
+    
+    self.setFixedSize(centralWidgetWidth, totalWindowHeight)
+    
+    self.centralWidget = QWidget()
+    
     # Providing a QNetworkAccessManager to download images
     self.manager = QNetworkAccessManager(self)
     
     # UI elements
     self.mainLayout = QVBoxLayout()
-      
-    spacerTop = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.mainLayout.addItem(spacerTop)
 
     self.layoutProfilePicture = QHBoxLayout()
     spacerItem_left = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -40,28 +51,17 @@ class ProfilePage(QWidget):
     
     self.mainLayout.addLayout(self.layoutProfilePicture)
     
-    spacerUsernameTracks = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.mainLayout.addItem(spacerUsernameTracks)
-    
     self.containerTracks = MainWindow.MainWindow.createDataRow("Titres les plus écoutés récemment")
     self.mainLayout.addWidget(self.containerTracks)
-    
-    spacerTracksArtists = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.mainLayout.addItem(spacerTracksArtists)
 
     self.containerArtists = MainWindow.MainWindow.createDataRow("Artistes les plus écoutés récemment")
     self.mainLayout.addWidget(self.containerArtists)
     
-    spacerArtistsAlbums = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.mainLayout.addItem(spacerArtistsAlbums)
-    
     self.containerAlbums = MainWindow.MainWindow.createDataRow("Albums les plus écoutés récemment")
     self.mainLayout.addWidget(self.containerAlbums)
-  
-    spacerBottom = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-    self.mainLayout.addItem(spacerBottom)
-    
-    self.setLayout(self.mainLayout)
+
+    self.centralWidget.setLayout(self.mainLayout)
+    self.setWidget(self.centralWidget)
     
     # Add the custom font
     font = ui_utils.getFont(20)
