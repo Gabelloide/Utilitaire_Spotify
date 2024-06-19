@@ -10,3 +10,13 @@ def getFont(taille):
     font_families = QFontDatabase.applicationFontFamilies(font_id)
     custom_font = font_families[0]
     return QFont(custom_font, taille)
+
+
+def getScrollBarStyle():
+  return """
+QScrollBar:vertical {
+    border: none;
+    background: transparent;
+    width: 10px;
+    margin: 0px 0px 0px 0px;
+}"""

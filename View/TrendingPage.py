@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QPushButton, QComboBox, QScrollArea
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import pyqtSignal, QSize, Qt
-import ui_utils as iu_utils
+import ui_utils
 
 class TrendingPage(QScrollArea):
 
@@ -10,6 +10,7 @@ class TrendingPage(QScrollArea):
     super().__init__()
 
     self.parentView = parentView
+    self.setStyleSheet(ui_utils.getScrollBarStyle())
     
     # ScrollPane settings
     self.setWidgetResizable(True)
@@ -71,14 +72,14 @@ class TrendingPage(QScrollArea):
     self.labelFilter.setStyleSheet("""
       color: white;
     """)
-    self.labelFilter.setFont(iu_utils.getFont(14))
+    self.labelFilter.setFont(ui_utils.getFont(14))
     self.genreFilterLayout.addWidget(self.labelFilter)
     self.genreFilter = QComboBox(self)
     self.genreFilter.addItem("Tous les genres")
 
     self.genreFilter.currentTextChanged.connect(self.genreChanged)
 
-    self.genreFilter.setFont(iu_utils.getFont(13))
+    self.genreFilter.setFont(ui_utils.getFont(13))
     self.genreFilter.setStyleSheet("""
     QComboBox {
         color: white; 

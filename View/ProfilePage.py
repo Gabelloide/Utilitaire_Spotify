@@ -17,6 +17,7 @@ class ProfilePage(QScrollArea):
     
     # Attributes
     self.parentView = parentView
+    self.setStyleSheet(ui_utils.getScrollBarStyle())
     
     # ScrollPane settings
     self.setWidgetResizable(True)

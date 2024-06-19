@@ -3,6 +3,7 @@ from PyQt6.QtCore import Qt
 from View.Components.ImageLabelSlider import ImageLabelSlider
 from Model import Statistics
 from View.Components.LabelSubTitle import LabelSubTitle
+import ui_utils
 
 class RecommendationPage(QScrollArea):
   
@@ -10,6 +11,7 @@ class RecommendationPage(QScrollArea):
     super().__init__()
     
     self.parentView = parentView
+    self.setStyleSheet(ui_utils.getScrollBarStyle())
     
     # ScrollPane settings
     self.setWidgetResizable(True)
