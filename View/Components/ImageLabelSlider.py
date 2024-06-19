@@ -14,7 +14,6 @@ class ImageLabelSlider(QWidget):
 
         self.widget_container = QWidget()
         self.widget_layout = QHBoxLayout(self.widget_container)
-
         self.update_widgets()
         
         # Create the previous button with a left arrow icon
@@ -30,8 +29,7 @@ class ImageLabelSlider(QWidget):
         self.next_button.setIcon(QIcon('Assets/icons/right.png'))
         self.next_button.clicked.connect(self.show_next_widgets)
         self.layout.addWidget(self.next_button)
-        spacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-        self.layout.addItem(spacer)
+
 
         self.buttonStyleSheet = """
         QPushButton {

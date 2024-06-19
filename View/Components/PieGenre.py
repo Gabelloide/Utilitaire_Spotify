@@ -29,7 +29,7 @@ class PieChartGenre(QChart):
 
     self.legend().setVisible(False)
     self.setBackgroundVisible(False)
-    self.setMinimumSize(600, 300)
+    self.setMinimumSize(600, 350)
 
     self.addSeries(self.series)
     
@@ -40,6 +40,9 @@ class PieChartGenre(QChart):
     chartView.setRenderHint(QPainter.RenderHint.Antialiasing)
     chartView.setRenderHint(QPainter.RenderHint.TextAntialiasing)
     chartView.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+    chartView.setStyleSheet("""
+      padding-top:10px;
+    """)
     return chartView
 
 

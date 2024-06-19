@@ -35,5 +35,6 @@ class RecommendationPage(QWidget):
     self.recommendationsLayout = QVBoxLayout()
     self.recommendationsLabel = LabelSubTitle(title)
     self.recommendationsLayout.addWidget(self.recommendationsLabel)
+    row.setMinimumHeight(200)
     self.recommendationsLayout.addWidget(row)
     self.mainLayout.addLayout(self.recommendationsLayout)
