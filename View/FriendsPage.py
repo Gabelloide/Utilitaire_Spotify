@@ -88,12 +88,12 @@ class FriendsPage(QWidget):
             padding: 5px;
             margin: 5px;
             font-size: 14pt;
+            color: white;
         }
         QLabel {
           border: none;
           background-color: transparent;
         }
-        
     """)
     
     searchIcon = QLabel()

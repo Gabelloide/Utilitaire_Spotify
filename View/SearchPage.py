@@ -39,8 +39,7 @@ class SearchPage(QWidget):
         QLabel {
           border: none;
           background-color: transparent;
-        }
-        
+        }       
     """)
 
     # Ajouter l'icône de recherche
@@ -56,6 +55,7 @@ class SearchPage(QWidget):
     # Ajouter le widget conteneur à la barre de recherche
     self.searchBar.addWidget(searchContainer)
     self.searchBar.setAlignment(Qt.AlignmentFlag.AlignLeft)
+    
 
     # Créer le layout principal
     self.results = QVBoxLayout()
