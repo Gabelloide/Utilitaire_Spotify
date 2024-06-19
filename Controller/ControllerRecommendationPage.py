@@ -81,7 +81,7 @@ class ControllerRecommendationPage:
     for artist in self.user_top_artists:
       if artist.id in self.artists_reco:
         artists_reco = self.artists_reco[artist.id]
-        print("Artist reco in cache")
+        print("Returning cached artist recommendation")
       else:
         artists_reco = self.spotify.artist_related_artists(artist.id)
         self.artists_reco[artist.id] = artists_reco
@@ -98,7 +98,7 @@ class ControllerRecommendationPage:
     for artist in self.user_top_artists[:3]:
       if artist.id in self.artists_reco:
         artists_reco = self.artists_reco[artist.id]
-        print("Artist reco in cache")
+        print("Returning cached artist recommendation")
       else:
         artists_reco = self.spotify.artist_related_artists(artist.id)
         self.artists_reco[artist.id] = artists_reco
