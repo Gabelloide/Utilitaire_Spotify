@@ -3,10 +3,11 @@ from PyQt6.QtWidgets import QWidget, QLabel, QHBoxLayout, QVBoxLayout
 from PyQt6.QtGui import QPixmap
 import requests
 import utils, ui_utils
+from View.Components.AbstractImageSetter import AbstractImageSetter
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QSpacerItem, QSizePolicy
 
-class SearchResultRow(QWidget):
+class SearchResultRow(QWidget, AbstractImageSetter):
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -20,6 +21,7 @@ class SearchResultRow(QWidget):
         
         # Image Track
         self.image_label = QLabel(self)
+        self.image_label.setMaximumWidth(50)
         self.main_layout.addWidget(self.image_label)
         
         # Layout for the information
@@ -38,45 +40,6 @@ class SearchResultRow(QWidget):
 
     def set_logo(self, logo_path):
         self.logo_label.setPixmap(QPixmap(logo_path))
-
-
-    def downloadAndSetImage(self, url, filename):
-        """Downloads the image from the internet and sets it to the QLabel.
-        - Checks for the image existence in the cache.
-        - If the image is not in the cache, it downloads it in a separate thread.
-        """
-        if utils.exists_in_cache(filename):
-            data = utils.load_from_cache(filename)
-            self.set_image(data)
-        else:
-            # Downloading the image in a separate thread
-            threading.Thread(target=self.thread_download, args=(url, filename)).start()
-
-
-    def thread_download(self, url, filename):
-        """Used by a separate thread to download the image from the internet.
-        - Gets the image data from the URL via a GET request.
-        - Saves the image data to the cache.
-        - Sets the image to the QLabel using the data downloaded.
-        """
-        try:
-            print(f"Downloading image: {url}")
-            response = requests.get(url)
-            response.raise_for_status()
-            data = response.content
-            self.set_image(data)
-        except requests.RequestException as e:
-            print(f"Error downloading image: {e}")
-
-
-    def set_image(self, data):
-        """Sets the image to the QLabel."""
-        pixmap = QPixmap()
-        pixmap.loadFromData(data)
-        self.image_label.setPixmap(pixmap)
-        self.image_label.setScaledContents(True)
-        self.image_label.setMaximumWidth(50)
-
 
 
 class TrackResult(SearchResultRow):
