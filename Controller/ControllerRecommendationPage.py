@@ -31,6 +31,7 @@ class ControllerRecommendationPage:
 
     if len(self.recommendedTracks) == 0 :
       label = LabelSubTitle("Pas de pistes recommandées pour le moment, essayez d'écouter plus de musique !")
+      label.setFixedHeight(170)
       self.view.mainLayout.addWidget(label)
     else:
       self.track_image_label = []
@@ -41,11 +42,13 @@ class ControllerRecommendationPage:
         label.downloadAndSetImage(track.album.getBigCover(), track.id)
         self.track_image_label.append(label)
       trackSlider = ImageLabelSlider(self.track_image_label)
+      
       self.view.addRecommendationRow("Titres que vous pourriez aimer", trackSlider)
 
 
     if len(self.recommendedArtists) == 0 :
       label = LabelSubTitle("Pas d'artistes recommandés pour le moment, essayez d'écouter plus de musique !")
+      label.setFixedHeight(170)
       self.view.mainLayout.addWidget(label)
     else:
       self.artist_image_label = []
@@ -61,6 +64,7 @@ class ControllerRecommendationPage:
 
     if len(self.recommendedAlbums) == 0:
       label = LabelSubTitle("Pas d'albums recommandés pour le moment, essayez d'écouter plus de musique !")
+      label.setFixedHeight(170)
       self.view.mainLayout.addWidget(label)
     else:
       self.album_image_label = []
