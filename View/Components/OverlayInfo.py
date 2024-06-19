@@ -21,7 +21,7 @@ class OverlayInfo(QWidget):
 
     # Create a child widget for the content
     self.contentWidget = QWidget(self)
-    self.contentWidget.setStyleSheet("background-color: #282828; border-radius: 10px;")
+    self.contentWidget.setStyleSheet("background-color: #282828; border-radius: 10px; color: white;")
     self.contentWidget.setFixedSize(400, 400)
     self.contentWidget.move((self.width() - self.contentWidget.width()) // 2, (self.height() - self.contentWidget.height()) // 2)
 
