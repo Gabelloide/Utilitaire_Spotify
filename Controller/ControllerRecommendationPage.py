@@ -8,6 +8,7 @@ from Model.Track import Track
 from Model.Artist import Artist
 from Model.Album import Album
 from View.Components.ImageLabel import TrackImageLabel, ArtistImageLabel, AlbumImageLabel
+from View.Components.LabelSubTitle import LabelSubTitle
 
 class ControllerRecommendationPage:
   
@@ -28,43 +29,52 @@ class ControllerRecommendationPage:
     self.recommendedArtists = self.getArtistsRecommendation()
     self.recommendedAlbums = self.getAlbumsRecommendation()
 
-    
-    self.track_image_label = []
-    for track in self.recommendedTracks:
-      label = TrackImageLabel(track.name)
-      label.setMaximumSize(100, 100)
-      label.attachedObject = track
-      label.downloadAndSetImage(track.album.getBigCover(), track.id)
-      self.track_image_label.append(label)
-    
-    trackSlider = ImageLabelSlider(self.track_image_label)
-    
-    self.artist_image_label = []
-    for artist in self.recommendedArtists:
-      label = ArtistImageLabel(artist.name)
-      label.setMaximumSize(100, 100)
-      label.attachedObject = artist
-      label.downloadAndSetImage(artist.getBigPicture(), artist.id)
-      self.artist_image_label.append(label)
-      
-    artistSlider = ImageLabelSlider(self.artist_image_label)
-    
-    self.album_image_label = []
-    for album in self.recommendedAlbums:
-      label = AlbumImageLabel(album.name)
-      label.setMaximumSize(100, 100)
-      label.attachedObject = album
-      label.downloadAndSetImage(album.getBigCover(), album.id)
-      self.album_image_label.append(label)
-    
-    albumSlider = ImageLabelSlider(self.album_image_label)
-    self.view.addRecommendationRow("Titres que vous pourriez aimer", trackSlider)
-    self.view.addRecommendationRow("Artistes que vous pourriez aimer", artistSlider)
-    self.view.addRecommendationRow("Albums que vous pourriez aimer", albumSlider)
-   
-    
+    if len(self.recommendedTracks) == 0 :
+      label = LabelSubTitle("Pas de pistes recommandées pour le moment, essayez d'écouter plus de musique !")
+      self.view.mainLayout.addWidget(label)
+    else:
+      self.track_image_label = []
+      for track in self.recommendedTracks:
+        label = TrackImageLabel(track.name)
+        label.setMaximumSize(100, 100)
+        label.attachedObject = track
+        label.downloadAndSetImage(track.album.getBigCover(), track.id)
+        self.track_image_label.append(label)
+      trackSlider = ImageLabelSlider(self.track_image_label)
+      self.view.addRecommendationRow("Titres que vous pourriez aimer", trackSlider)
+
+
+    if len(self.recommendedArtists) == 0 :
+      label = LabelSubTitle("Pas d'artistes recommandés pour le moment, essayez d'écouter plus de musique !")
+      self.view.mainLayout.addWidget(label)
+    else:
+      self.artist_image_label = []
+      for artist in self.recommendedArtists:
+        label = ArtistImageLabel(artist.name)
+        label.setMaximumSize(100, 100)
+        label.attachedObject = artist
+        label.downloadAndSetImage(artist.getBigPicture(), artist.id)
+        self.artist_image_label.append(label)
+      artistSlider = ImageLabelSlider(self.artist_image_label)
+      self.view.addRecommendationRow("Artistes que vous pourriez aimer", artistSlider)
+
+
+    if len(self.recommendedAlbums) == 0:
+      label = LabelSubTitle("Pas d'albums recommandés pour le moment, essayez d'écouter plus de musique !")
+      self.view.mainLayout.addWidget(label)
+    else:
+      self.album_image_label = []
+      for album in self.recommendedAlbums:
+        label = AlbumImageLabel(album.name)
+        label.setMaximumSize(100, 100)
+        label.attachedObject = album
+        label.downloadAndSetImage(album.getBigCover(), album.id)
+        self.album_image_label.append(label)
+      albumSlider = ImageLabelSlider(self.album_image_label)
+      self.view.addRecommendationRow("Albums que vous pourriez aimer", albumSlider)
+
+
   def getTracksRecommendation(self):
-      
     top_tracks_uri = [track.uri for track in self.user_top_tracks]
     top_artists_uri = [artist.uri for artist in self.user_top_artists[:2]]
     recent_genres_name = [self.user_recent_genres[0][0]]
@@ -73,9 +83,9 @@ class ControllerRecommendationPage:
     tracks = set()
     for track in tracks_reco['tracks']:
       tracks.add(Track(track))
-    
     return tracks
-    
+
+
   def getArtistsRecommendation(self):
     artist_reco_list = set()
     for artist in self.user_top_artists:
@@ -91,7 +101,8 @@ class ControllerRecommendationPage:
     artist_reco_list = list(artist_reco_list)
     random.shuffle(artist_reco_list)
     return artist_reco_list[:20]
-  
+
+
   def getAlbumsRecommendation(self):
     album_reco_list = set()
     artist_reco_list = set()
@@ -110,7 +121,8 @@ class ControllerRecommendationPage:
     album_reco_list = list(album_reco_list)
     random.shuffle(album_reco_list)
     return album_reco_list[:20]
-  
+
+
   def setFocusedIcon(self, focusedButton):
     for button in self.view.buttonsNavigation:
       if button == focusedButton:
