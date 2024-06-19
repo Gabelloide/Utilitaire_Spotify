@@ -1,7 +1,7 @@
 from Model.User import User
 from Model import Statistics
+from Model.AudioFeature import AudioFeature, AudioFeatureAverage
 from View.StatisticsPage import StatisticsPage
-# from View.Components.PieGenre import PieGenre
 from View.Components.PieGenre import PieChartGenre
 from Controller import SpotifyAPI
 from Controller.MainWindow import MainWindow
@@ -44,6 +44,19 @@ class ControllerStatistics:
 
     chartGenre = PieChartGenre(genres_data)
     canvasDataRow.addComponent(chartGenre.generateView())
+    
+    # Music acoustic features
+    top_tracks = Statistics.get_50_recently_played_tracks(client)
+    acoustics = [AudioFeature(track) for track in top_tracks]
+    average = AudioFeatureAverage(acoustics)
+    
+    values_between_0_1 = [average.danceability, average.energy, average.instrumentalness, average.speechiness, average.valence]
+    
+    # Creating polar chart for values between 0 and 1
+    
+    
+    
+    
 
     self.view.mainLayout.addWidget(figuresDataRow)
     self.view.mainLayout.addWidget(canvasDataRow)
