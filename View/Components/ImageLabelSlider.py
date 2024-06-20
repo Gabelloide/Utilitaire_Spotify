@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QStackedWidget, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QPushButton, QHBoxLayout
 from PyQt6.QtGui import QIcon
 
 

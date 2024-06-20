@@ -1,6 +1,4 @@
 from PyQt6.QtWidgets import QLabel
-from PyQt6.QtGui import QFontDatabase, QFont
-from PyQt6.QtCore import Qt
 import ui_utils
 
 class LabelSubTitle(QLabel):

@@ -6,7 +6,7 @@ from View.Components.LabelSubTitle import LabelSubTitle
 from Controller import SpotifyAPI
 from Controller.MainWindow import MainWindow
 
-import constants, utils, network
+import network
 import socket, pickle, json
 
 class ControllerTrendingPage:
