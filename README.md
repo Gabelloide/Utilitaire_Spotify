@@ -64,5 +64,7 @@ The python server image is built using the dockerfile : you can create an image 
 docker-compose up --build
 ```
 
+**Examples passwords, users and ports are provided in the docker-compose file. You can change them if you want.**
+
 Docker will launch MySQL, PHPMyAdmin, and the server. You can access PHPMyAdmin on `localhost:8080` and the server ports are exposed, you can see them in the Dockerfile & docker-compose file.
 You can then launch a client with matching ports (see earlier). If docker is running on the same machine, server address is `localhost`, otherwise you need to provide the IP address of the server.
