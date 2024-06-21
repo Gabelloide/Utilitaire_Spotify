@@ -52,16 +52,16 @@ class ControllerStatistics:
     average = AudioFeatureAverage(acoustics)
 
     values_between_0_1 = {
-      "Danceability": average.danceability,
-      "Energy": average.energy,
-      "Instrumentalness": average.instrumentalness,
-      "Speechiness": average.speechiness,
-      "Valence": average.valence
+      "Dancabilité": average.danceability,
+      "Energie": average.energy,
+      "Instrumentalité": average.instrumentalness,
+      "Taux de paroles": average.speechiness,
+      "Positivité": average.valence
     }
 
     # Creating polar chart for values between 0 and 1
     polarChart = PolarChart(values_between_0_1)
-    canvasDataRow.addComponent(polarChart.generateView())
+    canvasDataRow.addComponent(polarChart)
     
     # Figure datarow for audio features in %
     featuresDataRow = MainWindow.createDataRow("Vos écoutes sont en moyenne...")
@@ -81,6 +81,6 @@ class ControllerStatistics:
     labelValence = MainWindow.createFigureLabel(f"{average.valence * 100:.1f}%", "positives")
     featuresDataRow.addComponent(labelValence)
     
-    self.view.mainLayout.addWidget(featuresDataRow)
     self.view.mainLayout.addWidget(figuresDataRow)
+    self.view.mainLayout.addWidget(featuresDataRow)
     self.view.mainLayout.addWidget(canvasDataRow)
