@@ -59,14 +59,13 @@ class ControllerFriendsPage:
   def buildFriendsDisplay(self, friendsList):
     """Builds the display of the friends list"""
 
-    friendsDataRow = MainWindow.createDataRow("Les amis de " + self.user.display_name, self.view)
-    
-    client = SpotifyAPI.get_spotify_client()
-    
     if friendsList is None or len(friendsList) == 0:
       labelNothing = LabelSubTitle("Vous n'avez pas encore d'amis. Essayez de chercher quelqu'un !")
       self.view.dataFriends.addWidget(labelNothing)
       return
+
+    friendsDataRow = MainWindow.createDataRow("Les amis de " + self.user.display_name, self.view)
+    client = SpotifyAPI.get_spotify_client()
     
     for friend in friendsList:
       friend_user = User(client.user(friend))
@@ -76,7 +75,6 @@ class ControllerFriendsPage:
       friendImageLabel.downloadAndSetImage(friend_user.getBigProfilePicture(), friend_user.id)
 
       friendsDataRow.addComponent(friendImageLabel)
-    
     self.view.dataFriends.addWidget(friendsDataRow)
 
 
