@@ -19,8 +19,8 @@ class PolarChart(FigureCanvas):
         
         # Figure creation
         screen_dpi = QApplication.primaryScreen().logicalDotsPerInch()
-        width = 450/screen_dpi
-        height = 350/screen_dpi
+        width = 450 / screen_dpi
+        height = 350 / screen_dpi
         fig, ax = plt.subplots(figsize=(width, height), subplot_kw=dict(polar=True))
         
         fig.set_facecolor("none")
@@ -31,12 +31,10 @@ class PolarChart(FigureCanvas):
         ax.set_theta_direction(-1)
         plt.xticks(angles[:-1], categories, color="white")
         
-        
         ax.plot(angles, values, linewidth=1, linestyle='solid', color="#1ED760")
         ax.fill(angles, values, '#143921', alpha=1)
         ax.spines['polar'].set_color('grey')
         ax.grid(color='grey', linestyle='-', linewidth=0.5)
-        
         
         plt.yticks([0.2, 0.4, 0.6, 0.8], ['0.2', '0.4', '0.6', '0.8'], color="grey", size=7)
         plt.ylim(0, 1)
