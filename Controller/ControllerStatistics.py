@@ -3,6 +3,7 @@ from Model import Statistics
 from Model.AudioFeature import AudioFeature, AudioFeatureAverage
 from View.StatisticsPage import StatisticsPage
 from View.Components.PieGenre import PieChartGenre
+from View.Components.PolarChart import PolarChart
 from Controller import SpotifyAPI
 from Controller.MainWindow import MainWindow
 
@@ -49,14 +50,37 @@ class ControllerStatistics:
     top_tracks = Statistics.get_50_recently_played_tracks(client)
     acoustics = [AudioFeature(track) for track in top_tracks]
     average = AudioFeatureAverage(acoustics)
-    
-    values_between_0_1 = [average.danceability, average.energy, average.instrumentalness, average.speechiness, average.valence]
-    
-    # Creating polar chart for values between 0 and 1
-    
-    
-    
-    
 
+    values_between_0_1 = {
+      "Danceability": average.danceability,
+      "Energy": average.energy,
+      "Instrumentalness": average.instrumentalness,
+      "Speechiness": average.speechiness,
+      "Valence": average.valence
+    }
+
+    # Creating polar chart for values between 0 and 1
+    polarChart = PolarChart(values_between_0_1)
+    canvasDataRow.addComponent(polarChart.generateView())
+    
+    # Figure datarow for audio features in %
+    featuresDataRow = MainWindow.createDataRow("Vos écoutes sont en moyenne...")
+    
+    labelDanceability = MainWindow.createFigureLabel(f"{average.danceability * 100:.1f}%", "dansantes")
+    featuresDataRow.addComponent(labelDanceability)
+    
+    labelEnergy = MainWindow.createFigureLabel(f"{average.energy * 100:.1f}%", "énergiques")
+    featuresDataRow.addComponent(labelEnergy)
+    
+    labelInstrumentalness = MainWindow.createFigureLabel(f"{average.instrumentalness * 100:.1f}%", "instrumentales")
+    featuresDataRow.addComponent(labelInstrumentalness)
+    
+    labelSpeechiness = MainWindow.createFigureLabel(f"{average.speechiness * 100:.1f}%", "parlées")
+    featuresDataRow.addComponent(labelSpeechiness)
+    
+    labelValence = MainWindow.createFigureLabel(f"{average.valence * 100:.1f}%", "positives")
+    featuresDataRow.addComponent(labelValence)
+    
+    self.view.mainLayout.addWidget(featuresDataRow)
     self.view.mainLayout.addWidget(figuresDataRow)
     self.view.mainLayout.addWidget(canvasDataRow)
