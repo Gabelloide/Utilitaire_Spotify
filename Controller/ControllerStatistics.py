@@ -3,9 +3,9 @@ from Model import Statistics
 from Model.AudioFeature import AudioFeature, AudioFeatureAverage
 from View.StatisticsPage import StatisticsPage
 from View.Components.PieGenre import PieChartGenre
-from View.Components.PolarChart import PolarChart
 from Controller import SpotifyAPI
 from Controller.MainWindow import MainWindow
+import os
 
 class ControllerStatistics:
   
@@ -60,8 +60,11 @@ class ControllerStatistics:
     }
 
     # Creating polar chart for values between 0 and 1
-    polarChart = PolarChart(values_between_0_1)
-    canvasDataRow.addComponent(polarChart)
+    # Only on windows
+    if os.name == 'nt':
+      from View.Components.PolarChart import PolarChart
+      polarChart = PolarChart(values_between_0_1)
+      canvasDataRow.addComponent(polarChart)
     
     # Figure datarow for audio features in %
     featuresDataRow = MainWindow.createDataRow("Vos écoutes sont en moyenne...")

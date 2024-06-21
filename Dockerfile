@@ -12,12 +12,14 @@ RUN apt-get update && apt-get install -y \
 RUN python3 -m venv /opt/venv
 # Venv to PATH & install modules
 ENV PATH="/opt/venv/bin:$PATH"
-RUN pip install --no-cache-dir mysql-connector-python
 
 WORKDIR /app
 
 # Copy the app's server to the container
 COPY Server /app
+
+# Install requirements
+RUN pip install -r requirements.txt
 
 # Expose the port the app runs on
 EXPOSE 23456 23457 23458
